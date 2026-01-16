@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.util.Optional;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -28,6 +30,83 @@ public class Main extends Application {
 			
 
 			AddBranch ab=new AddBranch();
+			
+			ab.getAdd().setOnAction(e -> {
+
+			    String idt = ab.getbIDT().getText().trim();
+			    String name = ab.getbNT().getText().trim();
+			    String address = ab.getAddT().getText().trim();
+			    String phone = ab.getPnT().getText().trim();
+			    String email = ab.geteT().getText().trim();
+
+			    if (idt.isEmpty() || name.isEmpty() || address.isEmpty() || phone.isEmpty() || email.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("please fill all fields");
+			        a.setContentText("please fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idt);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("invalid branch ID");
+			        a.setContentText("invalid branch ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            INSERT INTO Branch (BranchID, BranchName, Address, PhoneNumber, Email)
+			            VALUES (?, ?, ?, ?, ?)
+			            """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ps.setString(2, name);
+			        ps.setString(3, address);
+			        ps.setString(4, phone);
+			        ps.setString(5, email);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("done");
+			            a.setContentText("done");
+			            a.showAndWait();
+
+			            ab.getbIDT().clear();
+			            ab.getbNT().clear();
+			            ab.getAddT().clear();
+			            ab.getPnT().clear();
+			            ab.geteT().clear();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			ab.getClear().setOnAction(e -> {
+			    ab.getbIDT().clear();
+			    ab.getbNT().clear();
+			    ab.getMidT().clear();
+			    ab.getAddT().clear();
+			    ab.getPnT().clear();
+			    ab.geteT().clear();
+			    ab.getWsT().clear();
+			    ab.getWeT().clear();
+			    ab.gethT().clear();
+			});
+
+			
 			DeleteBranch db=new DeleteBranch();
 			UpdateBranch ub=new UpdateBranch(); 
 			BranchTableView bt=new BranchTableView();
@@ -516,19 +595,23 @@ public class Main extends Application {
 
 			        for (int i = 0; i < params.size(); i++) {
 			            Object val = params.get(i);
-
-			            if (val instanceof Integer) ps.setInt(i + 1, (Integer) val);
-			            else if (val instanceof Double) ps.setDouble(i + 1, (Double) val);
-			            else ps.setString(i + 1, val.toString());
+			            if (val instanceof Integer) {
+			            	ps.setInt(i + 1, (Integer) val);
+			            }
+			            else if (val instanceof Double) {
+			            	ps.setDouble(i + 1, (Double) val);
+			            }
+			            else {
+			            	ps.setString(i + 1, val.toString());
+			            }
 			        }
 
 			        int rows = ps.executeUpdate();
 
 			        if (rows > 0) {
 			            Alert a = new Alert(Alert.AlertType.INFORMATION);
-			            a.setTitle("Updated");
-			            a.setHeaderText(null);
-			            a.setContentText("employee updated successfuly!");
+			            a.setTitle("employee updated succesfuly");
+			            a.setContentText("employee updated succesfuly");
 			            a.showAndWait();
 
 			            ue.getEmpIDT().clear();
@@ -538,35 +621,208 @@ public class Main extends Application {
 			            ue.getBidT().clear();
 			        } else {
 			            Alert a = new Alert(Alert.AlertType.ERROR);
-			            a.setTitle("Not Found");
-			            a.setHeaderText(null);
-			            a.setContentText("Employee ID not found!");
+			            a.setTitle("employee not found");
+			            a.setContentText("employee not found");
 			            a.showAndWait();
 			        }
 
 			    } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
 			        Alert a = new Alert(Alert.AlertType.ERROR);
-			        a.setTitle("Update Failed");
-			        a.setHeaderText(null);
-			        a.setContentText("BranchID not found OR constraint error!");
+			        a.setTitle("update failed");
+			        a.setContentText("update failed");
 			        a.showAndWait();
 			    } catch (Exception ex) {
 			        ex.printStackTrace();
 			        Alert a = new Alert(Alert.AlertType.ERROR);
-			        a.setTitle("Database Error");
-			        a.setHeaderText(null);
-			        a.setContentText("Error while updating employee!");
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
 			        a.showAndWait();
 			    }
 			});
+			ue.getClear().setOnAction(e -> {
+			    ue.getSearchT().clear();
+			    ue.getEmpIDT().clear();
+			    ue.getEmpNT().clear();
+			    ue.getqT().clear();
+			    ue.getPlnT().clear();
+			    ue.getAddT().clear();
+			    ue.getNaT().clear();
+			    ue.getPnT().clear();
+			    ue.geteT().clear();
+			    ue.getsT().clear();
+			    ue.getBidT().clear();
 
-			
+			    ue.getEdit().setDisable(true);
+			});
+
 			EmployeeTableView et=new EmployeeTableView();
+			et.getRef().setOnAction(e -> {
+			    et.getTable().setItems(loadAllEmployes());
+			    Alert a = new Alert(Alert.AlertType.INFORMATION);
+			    a.setTitle("done");
+			    a.setContentText("done");
+			    a.showAndWait();
+			});
+			et.getSearchB().setOnAction(e -> {
+
+			    String idT = et.getSearchT().getText().trim();
+			    if (idT.isEmpty()) {
+			        et.getTable().setItems(loadAllEmployes());
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("all employees");
+			        a.setContentText("all employees");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("invalid input employee ID must be integer");
+			        a.setContentText("invalid input employee ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ObservableList<Employee> result = searchEmployeeById(id);
+
+			    if (result.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("not found");
+			        a.setContentText("not found");
+			        a.showAndWait();
+
+			        et.getTable().setItems(FXCollections.observableArrayList());
+			        return;
+			    }
+
+			    et.getTable().setItems(result);
+			});
+			et.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+			    if (newVal != null) {
+			        et.getDeleteB().setDisable(false);
+			        et.getUpdateB().setDisable(false);
+			    } else {
+			        et.getDeleteB().setDisable(true);
+			        et.getUpdateB().setDisable(true);
+			    }
+			});
+			et.getDeleteB().setOnAction(e -> {
+
+			    Employee selected = et.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("no selection employee");
+			        a.setContentText("no selection employee");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("are you sure you want to delete this employee?");
+			    confirm.setContentText("are you sure you want to delete this employee?");
+			    confirm.showAndWait();
+
+			    if (confirm.getResult() != javafx.scene.control.ButtonType.OK) {
+			        return;
+			    }
+
+			    String sql = "DELETE FROM Employee WHERE EmpID=?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, selected.getEmpID());
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("employee deleted succesfuly!");
+			            a.setContentText("employee deleted succesfuly!");
+			            a.showAndWait();
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("not found");
+			            a.setContentText("not found");
+			            a.showAndWait();
+			        }
+
+			        et.getTable().setItems(loadAllEmployes());
+			        et.getTable().getSelectionModel().clearSelection();
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			Scene uescene = new Scene(ue.getAll(),400,400);
+
+			et.getUpdateB().setOnAction(e -> {
+
+			    Employee selected = et.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("no selection employee");
+			        a.setContentText("no selection employee");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ue.getEmpIDT().setText(selected.getEmpID()+"");
+			    ue.getEmpNT().setText(selected.getFullName());
+			    ue.getqT().setText(selected.getQualification());
+			    ue.getPnT().setText(selected.getPhoneNumber());
+			    ue.getsT().setText(selected.getSalary()+"");
+			    ue.getBidT().setText(selected.getBranchID()+"");
+
+			    ue.getEdit().setDisable(false);
+
+			    primaryStage.setScene(uescene);
+			});
+
 			EmployeeBranchTableView ebt=new EmployeeBranchTableView();
-			
+			ebt.getRef().setOnAction(e -> {
+			    ebt.getSearchT().clear();
+			    ebt.getTable().setItems(loadEmployeeBranchData());
+			    ebt.getTable().getSelectionModel().clearSelection();
+			});
+			ebt.getSearchB().setOnAction(e -> {
+			    String text = ebt.getSearchT().getText().trim();
+
+			    if (text.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("please enter branch ID");
+			        a.setContentText("please enter branch ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int branchID;
+			    try {
+			        branchID = Integer.parseInt(text);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("invalid");
+			        a.setContentText("invalid");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ObservableList<EmployeeBranch> result = searchEmployeeBranchID(branchID);
+
+			    ebt.getTable().setItems(result);
+			});
+
 			Scene aescene = new Scene(ae.getAll(),400,400);
 			Scene descene = new Scene(de.getAll(),400,400);
-			Scene uescene = new Scene(ue.getAll(),400,400);
 			Scene etscene = new Scene(et.getAll(),400,400);
 			Scene ebtscene = new Scene(ebt.getAll(),400,400);
 
@@ -580,9 +836,11 @@ public class Main extends Application {
 				primaryStage.setScene(uescene);
 			});
 			mb.getEt().setOnAction(e->{
+				et.getTable().setItems(loadAllEmployes());
 				primaryStage.setScene(etscene);
 			});
 			mb.getEbt().setOnAction(e->{
+			    ebt.getTable().setItems(loadEmployeeBranchData());
 				primaryStage.setScene(ebtscene);
 			});
 			
@@ -1151,4 +1409,126 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
+	private ObservableList<Employee> loadAllEmployes() {
+	    ObservableList<Employee> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	        SELECT EmpID, FullName, Qualification, PhoneNumber, Salary, BranchID
+	        FROM Employee
+	    """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            Employee emp = new Employee(
+	                    rs.getInt("EmpID"),
+	                    rs.getString("FullName"),
+	                    rs.getString("Qualification"),
+	                    rs.getString("PhoneNumber"),
+	                    rs.getDouble("Salary"),
+	                    rs.getInt("BranchID")
+	            );
+	            list.add(emp);
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+	private ObservableList<Employee> searchEmployeeById(int id) {
+	    ObservableList<Employee> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	        SELECT EmpID, FullName, Qualification, PhoneNumber, Salary, BranchID
+	        FROM Employee
+	        WHERE EmpID = ?
+	    """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, id);
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            Employee emp = new Employee(
+	                    rs.getInt("EmpID"),
+	                    rs.getString("FullName"),
+	                    rs.getString("Qualification"),
+	                    rs.getString("PhoneNumber"),
+	                    rs.getDouble("Salary"),
+	                    rs.getInt("BranchID")
+	            );
+	            list.add(emp);
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+	private ObservableList<EmployeeBranch> loadEmployeeBranchData() {
+	    ObservableList<EmployeeBranch> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	            SELECT e.FullName, e.Qualification, e.Salary, b.BranchName
+	            FROM Employee e
+	            JOIN Branch b ON e.BranchID = b.BranchID
+	            """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            list.add(new EmployeeBranch(
+	                    rs.getString("FullName"),
+	                    rs.getString("Qualification"),
+	                    rs.getDouble("Salary"),
+	                    rs.getString("BranchName")
+	            ));
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+	    return list;
+	}
+	private ObservableList<EmployeeBranch> searchEmployeeBranchID(int branchID) {
+	    ObservableList<EmployeeBranch> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	            SELECT e.FullName, e.Qualification, e.Salary, b.BranchName
+	            FROM Employee e
+	            JOIN Branch b ON e.BranchID = b.BranchID
+	            WHERE b.BranchID = ?
+	            """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, branchID);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                list.add(new EmployeeBranch(
+	                        rs.getString("FullName"),
+	                        rs.getString("Qualification"),
+	                        rs.getDouble("Salary"),
+	                        rs.getString("BranchName")
+	                ));
+	            }
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+	    return list;
+	}
+
 }

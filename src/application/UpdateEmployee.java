@@ -139,7 +139,7 @@ public class UpdateEmployee {
 		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		edit.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		all.getChildren().addAll(editEmp,empIDH,empNH,qH,plnH,addH,naH,pnH,eH,sH,bidH,buttons);
+		all.getChildren().addAll(editEmp,searchH,empIDH,empNH,qH,plnH,addH,naH,pnH,eH,sH,bidH,buttons);
 		editEmp.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
       
 		edit.setDisable(true);
