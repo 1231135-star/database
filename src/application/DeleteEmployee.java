@@ -8,12 +8,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class DeleteEmployee {
 	private Label dEmp=new Label("Delete Employee");
 	private Image ph=new Image("bb.jpg");
 	private ImageView phVM=new ImageView(ph);
 	
+	private Image searchM=new Image("icons8-search-100.png");
+	private ImageView searchVM=new ImageView(searchM);
+	private Button searchB=new Button("Search",searchVM);
+	private Label searchL=new Label("put id :");
+	private TextField searchT=new TextField();
+
+	private HBox searchH=new HBox();
 	private Label empIDL=new Label("Employee ID :");
 	private TextField empIDT=new TextField();
 	private HBox empIDH=new HBox();
@@ -70,6 +79,17 @@ public class DeleteEmployee {
 	private VBox all=new VBox();
 	
 	public DeleteEmployee() {
+		searchL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+
+		searchL.setFont(Font.font(null,FontWeight.BOLD,20));
+		searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		searchVM.setFitWidth(42);
+		searchVM.setFitHeight(42);
+		
+		searchH.getChildren().addAll(searchL,searchT,searchB);
+		searchH.setSpacing(10);
+		searchH.setAlignment(Pos.CENTER);
+		
 		empIDH.getChildren().addAll(empIDL,empIDT);
 		empIDT.setEditable(false);
 		empIDT.setVisible(true);
@@ -136,11 +156,62 @@ public class DeleteEmployee {
 		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		all.getChildren().addAll(dEmp,empIDH,empNH,qH,plnH,addH,naH,pnH,eH,sH,bidH,buttons);
+        delete.setDisable(true);
+		all.getChildren().addAll(dEmp,searchH,empIDH,empNH,qH,plnH,addH,naH,pnH,eH,sH,bidH,buttons);
 		dEmp.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
 		all.setAlignment(Pos.CENTER);
-		all.setSpacing(20);
+		all.setSpacing(15);
 		all.setStyle("-fx-background-color: #a2c4c9;");
+	}
+
+	
+
+	public Image getSearchM() {
+		return searchM;
+	}
+
+	public void setSearchM(Image searchM) {
+		this.searchM = searchM;
+	}
+
+	public ImageView getSearchVM() {
+		return searchVM;
+	}
+
+	public void setSearchVM(ImageView searchVM) {
+		this.searchVM = searchVM;
+	}
+
+	public Button getSearchB() {
+		return searchB;
+	}
+
+	public void setSearchB(Button searchB) {
+		this.searchB = searchB;
+	}
+
+	public Label getSearchL() {
+		return searchL;
+	}
+
+	public void setSearchL(Label searchL) {
+		this.searchL = searchL;
+	}
+
+	public TextField getSearchT() {
+		return searchT;
+	}
+
+	public void setSearchT(TextField searchT) {
+		this.searchT = searchT;
+	}
+
+	public HBox getSearchH() {
+		return searchH;
+	}
+
+	public void setSearchH(HBox searchH) {
+		this.searchH = searchH;
 	}
 
 	protected Label getdEmp() {

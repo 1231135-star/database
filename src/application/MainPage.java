@@ -128,19 +128,25 @@ public class MainPage {
 	private MenuItem et = new MenuItem("Employees");
 	private MenuItem ebt = new MenuItem("Retrieve employee names, qualification, salaries");
 
+	private Menu account = new Menu("Account");
+	private MenuItem logout = new MenuItem("Logout");
+	
 	private TabPane tabs = new TabPane();
 	private Tab tab = new Tab("show");
 	private Tab statTab = new Tab("Statistcs System");
 	private VBox all = new VBox();
 	
 	public MainPage() {
-		menuBar.getMenus().addAll(fileM,branch,cat,e,cus,doctor,ic,in,iv,ivi,ip,med,pay,per,perMed,pur,sup,exitM);
+		menuBar.getMenus().addAll(account,fileM,branch,cat,e,cus,doctor,ic,in,iv,ivi,ip,med,pay,per,perMed,pur,sup,exitM);
 		fileM.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 15;");
 		exitM.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		tab.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		statTab.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		fileM.getItems().addAll(readDictionry,writeDictionry);
 		
+		account.getItems().addAll(logout);
+		account.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
+
 		branch.getItems().addAll(ab,db,ub,bt,napt);
 		branch.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
 
@@ -193,9 +199,88 @@ public class MainPage {
 		tabs.getTabs().addAll(tab, statTab);
 		
 		all.getChildren().addAll(menuBar, tabs);
+		
 	}
 
 	
+	public Menu getAccount() {
+		return account;
+	}
+
+
+	public void setAccount(Menu account) {
+		this.account = account;
+	}
+
+
+	public MenuItem getLogout() {
+		return logout;
+	}
+
+
+	public void setLogout(MenuItem logout) {
+		this.logout = logout;
+	}
+
+
+	public void applyRole(String role) {
+
+	    // everything
+	    if (role.equals("Admin")) {
+	        return;
+	    }
+
+	    // manager
+	    if (role.equals("Manager")) {
+	        branch.setVisible(false);
+	        ic.setVisible(false);
+	        ip.setVisible(false);
+	        per.setVisible(false);
+	        perMed.setVisible(false);
+	        doctor.setVisible(false);
+	        return;
+	    }
+
+	    // employee
+	    if (role.equals("Employee")) {
+	        branch.setVisible(false);
+	        cat.setVisible(false);
+	        cus.setVisible(false);
+	        doctor.setVisible(false);
+	        ic.setVisible(false);
+	        ip.setVisible(false);
+	        per.setVisible(false);
+	        perMed.setVisible(false);
+	        pur.setVisible(false);
+	        sup.setVisible(false);
+	        e.setVisible(false);
+	        in.getItems().removeAll(ain, din, uin);
+
+	        return;
+	    }
+
+	    // customer
+	    if (role.equals("Customer")) {
+	        branch.setVisible(false);
+	        cat.setVisible(false);
+	        e.setVisible(false);
+	        cus.setVisible(false);
+	        doctor.setVisible(false);
+	        ic.setVisible(false);
+	        in.setVisible(false);
+	        ivi.setVisible(false);
+	        ip.setVisible(false);
+	        pay.setVisible(false);
+	        per.setVisible(false);
+	        perMed.setVisible(false);
+	        pur.setVisible(false);
+	        sup.setVisible(false);
+	        iv.getItems().removeAll(aiv, div, uiv);
+	        med.getItems().removeAll(amed, dmed, umed);
+
+	        return;
+	    }
+	}
 
 	public MenuItem getMostSold() {
 		return mostSold;

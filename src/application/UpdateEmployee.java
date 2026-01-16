@@ -8,11 +8,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class UpdateEmployee {
 	private Label editEmp=new Label("Edit Employee");
 	private Image ph=new Image("bb.jpg");
 	private ImageView phVM=new ImageView(ph);
+	
+	private Image searchM=new Image("icons8-search-100.png");
+	private ImageView searchVM=new ImageView(searchM);
+	private Button searchB=new Button("Search",searchVM);
+	private Label searchL=new Label("put id :");
+	private TextField searchT=new TextField();
+
+	private HBox searchH=new HBox();
 	
 	private Label empIDL=new Label("Employee ID :");
 	private TextField empIDT=new TextField();
@@ -70,6 +80,17 @@ public class UpdateEmployee {
 	private VBox all=new VBox();
 	
 	public UpdateEmployee() {
+		searchL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+
+		searchL.setFont(Font.font(null,FontWeight.BOLD,20));
+		searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		searchVM.setFitWidth(42);
+		searchVM.setFitHeight(42);
+		
+		searchH.getChildren().addAll(searchL,searchT,searchB);
+		searchH.setSpacing(10);
+		searchH.setAlignment(Pos.CENTER);
+		
 		empIDH.getChildren().addAll(empIDL,empIDT);
 		empIDT.setEditable(false);
 		empIDT.setVisible(true);
@@ -120,361 +141,411 @@ public class UpdateEmployee {
 		edit.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		all.getChildren().addAll(editEmp,empIDH,empNH,qH,plnH,addH,naH,pnH,eH,sH,bidH,buttons);
 		editEmp.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
+      
+		edit.setDisable(true);
 		all.setAlignment(Pos.CENTER);
-		all.setSpacing(20);
+		all.setSpacing(15);
 		all.setStyle("-fx-background-color: #a2c4c9;");
 	}
 
-	protected Label getEditEmp() {
+	public Label getEditEmp() {
 		return editEmp;
 	}
 
-	protected void setEditEmp(Label editEmp) {
+	public void setEditEmp(Label editEmp) {
 		this.editEmp = editEmp;
 	}
 
-	protected Image getPh() {
+	public Image getPh() {
 		return ph;
 	}
 
-	protected void setPh(Image ph) {
+	public void setPh(Image ph) {
 		this.ph = ph;
 	}
 
-	protected ImageView getPhVM() {
+	public ImageView getPhVM() {
 		return phVM;
 	}
 
-	protected void setPhVM(ImageView phVM) {
+	public void setPhVM(ImageView phVM) {
 		this.phVM = phVM;
 	}
 
-	protected Label getEmpIDL() {
+	public Image getSearchM() {
+		return searchM;
+	}
+
+	public void setSearchM(Image searchM) {
+		this.searchM = searchM;
+	}
+
+	public ImageView getSearchVM() {
+		return searchVM;
+	}
+
+	public void setSearchVM(ImageView searchVM) {
+		this.searchVM = searchVM;
+	}
+
+	public Button getSearchB() {
+		return searchB;
+	}
+
+	public void setSearchB(Button searchB) {
+		this.searchB = searchB;
+	}
+
+	public Label getSearchL() {
+		return searchL;
+	}
+
+	public void setSearchL(Label searchL) {
+		this.searchL = searchL;
+	}
+
+	public TextField getSearchT() {
+		return searchT;
+	}
+
+	public void setSearchT(TextField searchT) {
+		this.searchT = searchT;
+	}
+
+	public HBox getSearchH() {
+		return searchH;
+	}
+
+	public void setSearchH(HBox searchH) {
+		this.searchH = searchH;
+	}
+
+	public Label getEmpIDL() {
 		return empIDL;
 	}
 
-	protected void setEmpIDL(Label empIDL) {
+	public void setEmpIDL(Label empIDL) {
 		this.empIDL = empIDL;
 	}
 
-	protected TextField getEmpIDT() {
+	public TextField getEmpIDT() {
 		return empIDT;
 	}
 
-	protected void setEmpIDT(TextField empIDT) {
+	public void setEmpIDT(TextField empIDT) {
 		this.empIDT = empIDT;
 	}
 
-	protected HBox getEmpIDH() {
+	public HBox getEmpIDH() {
 		return empIDH;
 	}
 
-	protected void setEmpIDH(HBox empIDH) {
+	public void setEmpIDH(HBox empIDH) {
 		this.empIDH = empIDH;
 	}
 
-	protected Label getEmpNL() {
+	public Label getEmpNL() {
 		return empNL;
 	}
 
-	protected void setEmpNL(Label empNL) {
+	public void setEmpNL(Label empNL) {
 		this.empNL = empNL;
 	}
 
-	protected TextField getEmpNT() {
+	public TextField getEmpNT() {
 		return empNT;
 	}
 
-	protected void setEmpNT(TextField empNT) {
+	public void setEmpNT(TextField empNT) {
 		this.empNT = empNT;
 	}
 
-	protected HBox getEmpNH() {
+	public HBox getEmpNH() {
 		return empNH;
 	}
 
-	protected void setEmpNH(HBox empNH) {
+	public void setEmpNH(HBox empNH) {
 		this.empNH = empNH;
 	}
 
-	protected Label getqL() {
+	public Label getqL() {
 		return qL;
 	}
 
-	protected void setqL(Label qL) {
+	public void setqL(Label qL) {
 		this.qL = qL;
 	}
 
-	protected TextField getqT() {
+	public TextField getqT() {
 		return qT;
 	}
 
-	protected void setqT(TextField qT) {
+	public void setqT(TextField qT) {
 		this.qT = qT;
 	}
 
-	protected HBox getqH() {
+	public HBox getqH() {
 		return qH;
 	}
 
-	protected void setqH(HBox qH) {
+	public void setqH(HBox qH) {
 		this.qH = qH;
 	}
 
-	protected Label getPlnL() {
+	public Label getPlnL() {
 		return plnL;
 	}
 
-	protected void setPlnL(Label plnL) {
+	public void setPlnL(Label plnL) {
 		this.plnL = plnL;
 	}
 
-	protected TextField getPlnT() {
+	public TextField getPlnT() {
 		return plnT;
 	}
 
-	protected void setPlnT(TextField plnT) {
+	public void setPlnT(TextField plnT) {
 		this.plnT = plnT;
 	}
 
-	protected HBox getPlnH() {
+	public HBox getPlnH() {
 		return plnH;
 	}
 
-	protected void setPlnH(HBox plnH) {
+	public void setPlnH(HBox plnH) {
 		this.plnH = plnH;
 	}
 
-	protected Label getAddL() {
+	public Label getAddL() {
 		return addL;
 	}
 
-	protected void setAddL(Label addL) {
+	public void setAddL(Label addL) {
 		this.addL = addL;
 	}
 
-	protected TextField getAddT() {
+	public TextField getAddT() {
 		return addT;
 	}
 
-	protected void setAddT(TextField addT) {
+	public void setAddT(TextField addT) {
 		this.addT = addT;
 	}
 
-	protected HBox getAddH() {
+	public HBox getAddH() {
 		return addH;
 	}
 
-	protected void setAddH(HBox addH) {
+	public void setAddH(HBox addH) {
 		this.addH = addH;
 	}
 
-	protected Label getNaL() {
+	public Label getNaL() {
 		return naL;
 	}
 
-	protected void setNaL(Label naL) {
+	public void setNaL(Label naL) {
 		this.naL = naL;
 	}
 
-	protected TextField getNaT() {
+	public TextField getNaT() {
 		return naT;
 	}
 
-	protected void setNaT(TextField naT) {
+	public void setNaT(TextField naT) {
 		this.naT = naT;
 	}
 
-	protected HBox getNaH() {
+	public HBox getNaH() {
 		return naH;
 	}
 
-	protected void setNaH(HBox naH) {
+	public void setNaH(HBox naH) {
 		this.naH = naH;
 	}
 
-	protected Label getPnL() {
+	public Label getPnL() {
 		return pnL;
 	}
 
-	protected void setPnL(Label pnL) {
+	public void setPnL(Label pnL) {
 		this.pnL = pnL;
 	}
 
-	protected TextField getPnT() {
+	public TextField getPnT() {
 		return pnT;
 	}
 
-	protected void setPnT(TextField pnT) {
+	public void setPnT(TextField pnT) {
 		this.pnT = pnT;
 	}
 
-	protected HBox getPnH() {
+	public HBox getPnH() {
 		return pnH;
 	}
 
-	protected void setPnH(HBox pnH) {
+	public void setPnH(HBox pnH) {
 		this.pnH = pnH;
 	}
 
-	protected Label geteL() {
+	public Label geteL() {
 		return eL;
 	}
 
-	protected void seteL(Label eL) {
+	public void seteL(Label eL) {
 		this.eL = eL;
 	}
 
-	protected TextField geteT() {
+	public TextField geteT() {
 		return eT;
 	}
 
-	protected void seteT(TextField eT) {
+	public void seteT(TextField eT) {
 		this.eT = eT;
 	}
 
-	protected HBox geteH() {
+	public HBox geteH() {
 		return eH;
 	}
 
-	protected void seteH(HBox eH) {
+	public void seteH(HBox eH) {
 		this.eH = eH;
 	}
 
-	protected Label getsL() {
+	public Label getsL() {
 		return sL;
 	}
 
-	protected void setsL(Label sL) {
+	public void setsL(Label sL) {
 		this.sL = sL;
 	}
 
-	protected TextField getsT() {
+	public TextField getsT() {
 		return sT;
 	}
 
-	protected void setsT(TextField sT) {
+	public void setsT(TextField sT) {
 		this.sT = sT;
 	}
 
-	protected HBox getsH() {
+	public HBox getsH() {
 		return sH;
 	}
 
-	protected void setsH(HBox sH) {
+	public void setsH(HBox sH) {
 		this.sH = sH;
 	}
 
-	protected Label getBidL() {
+	public Label getBidL() {
 		return bidL;
 	}
 
-	protected void setBidL(Label bidL) {
+	public void setBidL(Label bidL) {
 		this.bidL = bidL;
 	}
 
-	protected TextField getBidT() {
+	public TextField getBidT() {
 		return bidT;
 	}
 
-	protected void setBidT(TextField bidT) {
+	public void setBidT(TextField bidT) {
 		this.bidT = bidT;
 	}
 
-	protected HBox getBidH() {
+	public HBox getBidH() {
 		return bidH;
 	}
 
-	protected void setBidH(HBox bidH) {
+	public void setBidH(HBox bidH) {
 		this.bidH = bidH;
 	}
 
-	protected Image getEditM() {
+	public Image getEditM() {
 		return editM;
 	}
 
-	protected void setEditM(Image editM) {
+	public void setEditM(Image editM) {
 		this.editM = editM;
 	}
 
-	protected ImageView getEditVM() {
+	public ImageView getEditVM() {
 		return editVM;
 	}
 
-	protected void setEditVM(ImageView editVM) {
+	public void setEditVM(ImageView editVM) {
 		this.editVM = editVM;
 	}
 
-	protected Button getEdit() {
+	public Button getEdit() {
 		return edit;
 	}
 
-	protected void setEdit(Button edit) {
+	public void setEdit(Button edit) {
 		this.edit = edit;
 	}
 
-	protected Image getBackM() {
+	public Image getBackM() {
 		return backM;
 	}
 
-	protected void setBackM(Image backM) {
+	public void setBackM(Image backM) {
 		this.backM = backM;
 	}
 
-	protected ImageView getBackVM() {
+	public ImageView getBackVM() {
 		return backVM;
 	}
 
-	protected void setBackVM(ImageView backVM) {
+	public void setBackVM(ImageView backVM) {
 		this.backVM = backVM;
 	}
 
-	protected Button getBack() {
+	public Button getBack() {
 		return back;
 	}
 
-	protected void setBack(Button back) {
+	public void setBack(Button back) {
 		this.back = back;
 	}
 
-	protected Image getClearM() {
+	public Image getClearM() {
 		return clearM;
 	}
 
-	protected void setClearM(Image clearM) {
+	public void setClearM(Image clearM) {
 		this.clearM = clearM;
 	}
 
-	protected ImageView getClearVM() {
+	public ImageView getClearVM() {
 		return clearVM;
 	}
 
-	protected void setClearVM(ImageView clearVM) {
+	public void setClearVM(ImageView clearVM) {
 		this.clearVM = clearVM;
 	}
 
-	protected Button getClear() {
+	public Button getClear() {
 		return clear;
 	}
 
-	protected void setClear(Button clear) {
+	public void setClear(Button clear) {
 		this.clear = clear;
 	}
 
-	protected HBox getButtons() {
+	public HBox getButtons() {
 		return buttons;
 	}
 
-	protected void setButtons(HBox buttons) {
+	public void setButtons(HBox buttons) {
 		this.buttons = buttons;
 	}
 
-	protected VBox getAll() {
+	public VBox getAll() {
 		return all;
 	}
 
-	protected void setAll(VBox all) {
+	public void setAll(VBox all) {
 		this.all = all;
 	}
-	
+
 }

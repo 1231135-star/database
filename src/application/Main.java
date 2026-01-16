@@ -1,8 +1,15 @@
 package application;
 	
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 
 
@@ -12,6 +19,13 @@ public class Main extends Application {
 		try {
 			BorderPane root = new BorderPane();
 			MainPage mb=new MainPage();
+			LoginPage login=new LoginPage();
+			SignUpCustomer signupC = new SignUpCustomer();
+			Scene signupScene = new Scene(signupC.getAll(), 450, 450);
+			login.getSignup().setOnAction(e -> {
+			    primaryStage.setScene(signupScene);
+			});
+			
 
 			AddBranch ab=new AddBranch();
 			DeleteBranch db=new DeleteBranch();
@@ -111,8 +125,442 @@ public class Main extends Application {
 			});
 			
 			AddEmployee ae=new AddEmployee();
+			ae.getAdd().setOnAction(e->{
+				    String idt = ae.getEmpIDT().getText().trim();
+				    String name = ae.getEmpNT().getText().trim();
+				    String position = ae.getPnT().getText().trim();
+				    String st = ae.getsT().getText().trim();
+				    String bid = ae.getBidT().getText().trim();
+
+				    if (idt.isEmpty() || name.isEmpty() || position.isEmpty() || st.isEmpty() || bid.isEmpty()) {
+				        Alert a = new Alert(Alert.AlertType.ERROR);
+				        a.setTitle("check null feilds and fill them");
+				        a.setContentText("check null feilds and fill them");
+				        a.showAndWait();
+				        return;
+				    }
+
+				    int id, branchID;
+				    double salary;
+
+				    try {
+				        id = Integer.parseInt(idt);
+				        branchID = Integer.parseInt(bid);
+				        salary = Double.parseDouble(st);
+				    } catch (Exception ex) {
+				        Alert a = new Alert(Alert.AlertType.ERROR);
+				        a.setTitle("ID must be integer value");
+				        a.setContentText("ID must be integer value");
+				        a.showAndWait();
+				        return;
+				    }
+
+				    String sql = """
+				        INSERT INTO Employee (EmpID, FullName, Position, Salary, BranchID)
+				        VALUES (?, ?, ?, ?, ?)
+				    """;
+
+				    try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+
+				        ps.setInt(1, id);
+				        ps.setString(2, name);
+				        ps.setString(3, position);
+				        ps.setDouble(4, salary);
+				        ps.setInt(5, branchID);
+
+				        int rows = ps.executeUpdate();
+
+				        if (rows > 0) {
+				            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				            alert.setTitle("employee inserted succesfuly");
+				            alert.setContentText("employee inserted succesfuly");
+				            alert.showAndWait();
+				            ae.getEmpIDT().clear();
+				            ae.getEmpNT().clear();
+				            ae.getPnT().clear();
+				            ae.getsT().clear();
+				            ae.getBidT().clear();
+				        }
+
+				    } catch (Exception ex) {
+				        Alert alert = new Alert(Alert.AlertType.ERROR);
+				        alert.setTitle(ex.getMessage());
+				        alert.setContentText(ex.getMessage());
+				        alert.showAndWait();
+				    }
+				});
+
+			ae.getClear().setOnAction(e -> {
+			    ae.getEmpIDT().clear();
+			    ae.getEmpNT().clear();
+			    ae.getqT().clear();
+			    ae.getPlnT().clear();
+			    ae.getAddT().clear();
+			    ae.getNaT().clear();
+			    ae.getPnT().clear();
+			    ae.geteT().clear();
+			    ae.getsT().clear();
+			    ae.getBidT().clear();
+
+			    ae.getAdd().setDisable(true);
+			});
 			DeleteEmployee de=new DeleteEmployee();
+			de.getSearchB().setOnAction(e -> {
+
+			    String idt = de.getSearchT().getText().trim();
+
+			    if (idt.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("please enter employee id");
+			        a.setContentText("please enter employee id");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idt);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("employee ID must be an integer");
+			        a.setContentText("employee ID must be an integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			        SELECT EmpID, FullName, Qualification, Professionalേഴ്LicenseNumber, Address,
+			               NationalID, PhoneNumber, Email, Salary, BranchID
+			        FROM Employee
+			        WHERE EmpID = ?
+			    """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+
+			            de.getEmpIDT().setText(rs.getString("EmpID"));
+			            de.getEmpNT().setText(rs.getString("FullName"));
+			            de.getqT().setText(rs.getString("Qualification"));
+			            de.getPlnT().setText(rs.getString("ProfessionalLicenseNumber"));
+			            de.getAddT().setText(rs.getString("Address"));
+			            de.getNaT().setText(rs.getString("NationalID"));
+			            de.getPnT().setText(rs.getString("PhoneNumber"));
+			            de.geteT().setText(rs.getString("Email"));
+			            de.getsT().setText(String.valueOf(rs.getDouble("Salary")));
+			            de.getBidT().setText(String.valueOf(rs.getInt("BranchID")));
+
+			            de.getDelete().setDisable(false);
+
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("employee found succesfuly");
+			            a.setContentText("employee found succesfuly");
+			            a.showAndWait();
+
+			        } else {
+
+			            de.getEmpIDT().clear();
+			            de.getEmpNT().clear();
+			            de.getqT().clear();
+			            de.getPlnT().clear();
+			            de.getAddT().clear();
+			            de.getNaT().clear();
+			            de.getPnT().clear();
+			            de.geteT().clear();
+			            de.getsT().clear();
+			            de.getBidT().clear();
+
+			            de.getDelete().setDisable(true);
+
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("no employee found with this ID");
+			            a.setContentText("no employee found with this ID ");
+			            a.showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			de.getDelete().setOnAction(e -> {
+				 String idT = de.getEmpIDT().getText().trim();
+
+				    if (idT.isEmpty()) {
+				        Alert a = new Alert(Alert.AlertType.ERROR);
+				        a.setTitle("please enter emplyee id");
+				        a.setContentText("please enter emplyee id");
+				        a.showAndWait();
+				        return;
+				    }
+			        int id = Integer.parseInt(idT);
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("are you sure you want to delete this employee?");
+			    confirm.setContentText("are you sure you want to delete this employee?");
+			    Optional<ButtonType> result = confirm.showAndWait();
+			    if (result.isEmpty() || result.get() != ButtonType.OK) {
+			        return;
+			    }
+
+
+			        String sql = "DELETE FROM Employee WHERE EmpID=?";
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, id);
+			            int rows = ps.executeUpdate();
+
+			            if (rows > 0) {
+			                Alert a = new Alert(Alert.AlertType.INFORMATION);
+			                a.setTitle("employee deleted succesfuly!");
+			                a.setContentText("employee deleted succesfuly!");
+			                a.showAndWait();
+			                de.getSearchT().clear();
+						    de.getEmpIDT().clear();
+						    de.getEmpNT().clear();
+						    de.getqT().clear();
+						    de.getPlnT().clear();
+						    de.getAddT().clear();
+						    de.getNaT().clear();
+						    de.getPnT().clear();
+						    de.geteT().clear();
+						    de.getsT().clear();
+						    de.getBidT().clear();
+
+						    de.getDelete().setDisable(true);
+			            } else {
+			                Alert a = new Alert(Alert.AlertType.ERROR);
+			                a.setTitle("not found");
+			                a.setContentText("not found");
+			                a.showAndWait();
+			            }
+
+			        } catch (Exception ex) {
+			            ex.printStackTrace();
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle(ex.getMessage());
+			            a.setContentText(ex.getMessage());
+			            a.showAndWait();
+			        }
+			});
+			de.getClear().setOnAction(e -> {
+
+			    de.getSearchT().clear();
+			    de.getEmpIDT().clear();
+			    de.getEmpNT().clear();
+			    de.getqT().clear();
+			    de.getPlnT().clear();
+			    de.getAddT().clear();
+			    de.getNaT().clear();
+			    de.getPnT().clear();
+			    de.geteT().clear();
+			    de.getsT().clear();
+			    de.getBidT().clear();
+
+			    de.getDelete().setDisable(true);
+			});
+
 			UpdateEmployee ue=new UpdateEmployee();
+			ue.getSearchB().setOnAction(e -> {
+
+			    String idt = ue.getSearchT().getText().trim();
+
+			    if (idt.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("please enter employee id");
+			        a.setContentText("please enter employee id");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idt);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("employee ID must be an integer");
+			        a.setContentText("employee ID must be an integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			        SELECT EmpID, FullName, Qualification, ProfessionalLicenseNumber, Address,
+			               NationalID, PhoneNumber, Email, Salary, BranchID
+			        FROM Employee
+			        WHERE EmpID = ?
+			    """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+
+			            ue.getEmpIDT().setText(rs.getString("EmpID"));
+			            ue.getEmpNT().setText(rs.getString("FullName"));
+			            ue.getqT().setText(rs.getString("Qualification"));
+			            ue.getPlnT().setText(rs.getString("ProfessionalLicenseNumber"));
+			            ue.getAddT().setText(rs.getString("Address"));
+			            ue.getNaT().setText(rs.getString("NationalID"));
+			            ue.getPnT().setText(rs.getString("PhoneNumber"));
+			            ue.geteT().setText(rs.getString("Email"));
+			            ue.getsT().setText(String.valueOf(rs.getDouble("Salary")));
+			            ue.getBidT().setText(String.valueOf(rs.getInt("BranchID")));
+
+			            ue.getEdit().setDisable(false);
+
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("employee found succesfuly");
+			            a.setContentText("employee found succesfuly");
+			            a.showAndWait();
+
+			        } else {
+
+			            ue.getEmpIDT().clear();
+			            ue.getEmpNT().clear();
+			            ue.getqT().clear();
+			            ue.getPlnT().clear();
+			            ue.getAddT().clear();
+			            ue.getNaT().clear();
+			            ue.getPnT().clear();
+			            ue.geteT().clear();
+			            ue.getsT().clear();
+			            ue.getBidT().clear();
+
+			            ue.getEdit().setDisable(true);
+
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("no employee found with this ID");
+			            a.setContentText("no employee found with this ID");
+			            a.showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			ue.getEdit().setOnAction(e -> {
+
+			    String idt = ue.getEmpIDT().getText().trim();
+			    int id = Integer.parseInt(idt);
+			   
+
+			    String name = ue.getEmpNT().getText().trim();
+			    String position = ue.getPnT().getText().trim();
+			    String st = ue.getsT().getText().trim();
+			    String btt = ue.getBidT().getText().trim();
+
+			    StringBuilder sql = new StringBuilder("UPDATE Employee SET ");
+			    java.util.ArrayList<Object> params = new java.util.ArrayList<>();
+
+			    if (!name.isEmpty()) {
+			        sql.append("FullName=?, ");
+			        params.add(name);
+			    }
+			    if (!position.isEmpty()) {
+			        sql.append("Position=?, ");
+			        params.add(position);
+			    }
+			    if (!st.isEmpty()) {
+			        try {
+			            double salary = Double.parseDouble(st);
+			            sql.append("Salary=?, ");
+			            params.add(salary);
+			        } catch (Exception ex) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle(ex.getMessage());
+			            a.setContentText(ex.getMessage());
+			            a.showAndWait();
+			            return;
+			        }
+			    }
+			    if (!btt.isEmpty()) {
+			        try {
+			            int branchID = Integer.parseInt(btt);
+			            sql.append("BranchID=?, ");
+			            params.add(branchID);
+			        } catch (Exception ex) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle(ex.getMessage());
+			            a.setContentText(ex.getMessage());
+			            a.showAndWait();
+			            return;
+			        }
+			    }
+
+			    sql.setLength(sql.length() - 2);
+			    sql.append(" WHERE EmpID=?");
+			    params.add(id);
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+			        for (int i = 0; i < params.size(); i++) {
+			            Object val = params.get(i);
+
+			            if (val instanceof Integer) ps.setInt(i + 1, (Integer) val);
+			            else if (val instanceof Double) ps.setDouble(i + 1, (Double) val);
+			            else ps.setString(i + 1, val.toString());
+			        }
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Updated");
+			            a.setHeaderText(null);
+			            a.setContentText("employee updated successfuly!");
+			            a.showAndWait();
+
+			            ue.getEmpIDT().clear();
+			            ue.getEmpNT().clear();
+			            ue.getPnT().clear();
+			            ue.getsT().clear();
+			            ue.getBidT().clear();
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setHeaderText(null);
+			            a.setContentText("Employee ID not found!");
+			            a.showAndWait();
+			        }
+
+			    } catch (java.sql.SQLIntegrityConstraintViolationException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setHeaderText(null);
+			        a.setContentText("BranchID not found OR constraint error!");
+			        a.showAndWait();
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Database Error");
+			        a.setHeaderText(null);
+			        a.setContentText("Error while updating employee!");
+			        a.showAndWait();
+			    }
+			});
+
+			
 			EmployeeTableView et=new EmployeeTableView();
 			EmployeeBranchTableView ebt=new EmployeeBranchTableView();
 			
@@ -424,240 +872,275 @@ public class Main extends Application {
 				primaryStage.close();
 			});
 			
-			Scene scene = new Scene(mb.getAll(),400,400);
+			Scene scene = new Scene(login.getAll(),400,400);
+			Scene mainScene = new Scene(mb.getAll(), 900, 600);
+			login.getLogin().setOnAction(e -> {
+
+			    if (!login.isValidLogin()) {
+			        javafx.scene.control.Alert a = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+			        a.setTitle("login failed");
+			        a.setHeaderText("invalid username or password");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String role = login.getRoleC().getValue();
+			    mb.applyRole(role);
+
+			    primaryStage.setScene(mainScene);
+			});
+			mb.getLogout().setOnAction(e -> {
+
+			    javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Logout");
+			    confirm.setHeaderText("are you sure you want to logout?");
+			    confirm.setContentText("you will return to login page");
+
+			    confirm.showAndWait().ifPresent(res -> {
+			        if (res == javafx.scene.control.ButtonType.OK) {
+			            primaryStage.setScene(scene);
+			        }
+			    });
+			    login.getPassT().setText(null);
+			    login.getUserT().setText(null);
+			});
+
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			
+			signupC.getBack().setOnAction(e -> {
+			    primaryStage.setScene(scene);
+			});
 			ab.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			db.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ub.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			ain.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			din.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			uin.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			acs.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dcs.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ucs.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			ac.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dc.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			uc.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			ad.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dd.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ud.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			ae.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			de.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ue.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			aic.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dic.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			uic.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			aiv.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			div.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			uiv.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			aivi.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			divi.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			uivi.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			aip.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dip.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			uip.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			amed.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dmed.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			umed.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			apay.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dpay.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			upay.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			apermed.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dpermed.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			upermed.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			aper.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dper.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			uper.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			apur.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dpur.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			upur.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			
 			asup.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dsup.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			usup.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			bt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			mt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			it.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			st.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			iit.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			et.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ct.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			catt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			dt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ict.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ipt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			payt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			pert.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			purt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			intt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			napt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			ebt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			intqt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			mebt.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			mebt2.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			medStock.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			supMedInv.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			medByCat.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			most.getBack().setOnAction(e->{
-				primaryStage.setScene(scene);
+				primaryStage.setScene(mainScene);
 			});
 			primaryStage.show();
 		} catch(Exception e) {
