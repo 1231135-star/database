@@ -33,8 +33,8 @@ public class Main extends Application {
 			
 			ab.getAdd().setOnAction(e -> {
 
-			    String idt = ab.getbIDT().getText().trim();
-			    String name = ab.getbNT().getText().trim();
+			    String idt = ab.getBidT().getText().trim();
+			    String name = ab.getBnT().getText().trim();
 			    String address = ab.getAddT().getText().trim();
 			    String phone = ab.getPnT().getText().trim();
 			    String email = ab.geteT().getText().trim();
@@ -80,8 +80,8 @@ public class Main extends Application {
 			            a.setContentText("done");
 			            a.showAndWait();
 
-			            ab.getbIDT().clear();
-			            ab.getbNT().clear();
+			            ab.getBidT().clear();
+			            ab.getBnT().clear();
 			            ab.getAddT().clear();
 			            ab.getPnT().clear();
 			            ab.geteT().clear();
@@ -94,29 +94,402 @@ public class Main extends Application {
 			        a.showAndWait();
 			    }
 			});
-			ab.getClear().setOnAction(e -> {
-			    ab.getbIDT().clear();
-			    ab.getbNT().clear();
-			    ab.getMidT().clear();
-			    ab.getAddT().clear();
-			    ab.getPnT().clear();
-			    ab.geteT().clear();
-			    ab.getWsT().clear();
-			    ab.getWeT().clear();
-			    ab.gethT().clear();
-			});
+			
 
 			
 			DeleteBranch db=new DeleteBranch();
+			db.getClear().setOnAction(e -> {
+			    db.getSearchT().clear();
+
+			    db.getBidT().clear();
+			    db.getBnT().clear();
+			    db.getAddT().clear();
+			    db.getPnT().clear();
+			    db.geteT().clear();
+
+			    db.getDelete().setDisable(true);
+			});
+			db.getSearchB().setOnAction(e -> {
+
+		        String sql = "SELECT * FROM Branch WHERE BranchID = ?";
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        if (db.getSearchT().getText().trim().isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing ID");
+			            a.setHeaderText("Missing ID");
+			            a.setContentText("Please enter Branch ID.");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(db.getSearchT().getText().trim());
+			        ps.setInt(1, id);
+
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            db.getBidT().setText(rs.getString("BranchID"));
+			            db.getBnT().setText(rs.getString("BranchName"));
+			            db.getAddT().setText(rs.getString("Address"));
+			            db.getPnT().setText(rs.getString("PhoneNumber"));
+			            db.geteT().setText(rs.getString("Email"));
+
+			            db.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setHeaderText("Branch Not Found");
+			            a.setContentText("No branch with ID = " + id);
+			            a.showAndWait();
+
+			            db.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			db.getDelete().setOnAction(e -> {
+	            String sql = "DELETE FROM Branch WHERE BranchID = ?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(db.getBidT().getText().trim());
+
+			        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			        confirm.setTitle("Confirm Delete");
+			        confirm.setHeaderText("Are you sure?");
+			        confirm.setContentText("Delete Branch ID: " + id);
+
+			        if (confirm.showAndWait().get().getText().equals("OK")) {
+			            ps.setInt(1, id);
+
+			            int deleted = ps.executeUpdate();
+			            ps.close();
+
+			            if (deleted > 0) {
+			                Alert done = new Alert(Alert.AlertType.INFORMATION);
+			                done.setTitle("Done");
+			                done.setHeaderText("Branch Deleted Successfully");
+			                done.setContentText("Branch ID: " + id);
+			                done.showAndWait();
+
+			                db.getSearchT().clear();
+			                db.getBidT().clear();
+			                db.getBnT().clear();
+			                db.getAddT().clear();
+			                db.getPnT().clear();
+			                db.geteT().clear();
+			                db.getDelete().setDisable(true);
+			            }
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
 			UpdateBranch ub=new UpdateBranch(); 
 			BranchTableView bt=new BranchTableView();
-			BranchNAPTable napt=new BranchNAPTable();
+			bt.getRef().setOnAction(e -> {
+			    bt.getSearchT().clear();
+			    bt.getTable().setItems(loadAllBranches());
+			    bt.getTable().getSelectionModel().clearSelection();
+			});
 
+			bt.getSearchB().setOnAction(e -> {
+
+			    String idT = bt.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        bt.getTable().setItems(loadAllBranches());
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("All branches");
+			        a.setContentText("All branches loaded");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Branch ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    var result = searchBranchById(id);
+
+			    if (result.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Not found");
+			        a.setContentText("No branch with this ID");
+			        a.showAndWait();
+			        bt.getTable().setItems(FXCollections.observableArrayList());
+			        return;
+			    }
+
+			    bt.getTable().setItems(result);
+			});
+			bt.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+			    if (newV != null) {
+			        bt.getDeleteB().setDisable(false);
+			        bt.getUpdateB().setDisable(false);
+			    } else {
+			        bt.getDeleteB().setDisable(true);
+			        bt.getUpdateB().setDisable(true);
+			    }
+			});
+			bt.getDeleteB().setOnAction(e -> {
+
+			    Branch selected = bt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a branch first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm delete");
+			    confirm.setContentText("Delete this branch?");
+			    confirm.showAndWait();
+
+			    if (confirm.getResult() != ButtonType.OK) return;
+
+			    String sql = "DELETE FROM Branch WHERE BranchID=?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, selected.getBranchID());
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Deleted");
+			            a.setContentText("Branch deleted successfully!");
+			            a.showAndWait();
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not found");
+			            a.setContentText("Not found");
+			            a.showAndWait();
+			        }
+
+			        bt.getTable().setItems(loadAllBranches());
+			        bt.getTable().getSelectionModel().clearSelection();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			TopBranchTableView tbt = new TopBranchTableView();
+
+			Scene tbtscene = new Scene(tbt.getAll(),400,400);
 			Scene abscene = new Scene(ab.getAll(),400,400);
+			ab.getClear().setOnAction(e -> {
+			    ab.getBidT().clear();
+			    ab.getBnT().clear();
+			    ab.getAddT().clear();
+			    ab.getPnT().clear();
+			    ab.geteT().clear();
+			});
+			ab.getAdd().setOnAction(e -> {
+		        String sql = "INSERT INTO Branch (BranchID, BranchName, Address, PhoneNumber, Email) VALUES (?, ?, ?, ?, ?)";
+
+				 try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+					 if (ab.getBidT().getText().trim().isEmpty() ||ab.getBnT().getText().trim().isEmpty() ||ab.getAddT().getText().trim().isEmpty() ||ab.getPnT().getText().trim().isEmpty() ||ab.geteT().getText().trim().isEmpty()) {
+
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing Data");
+			            a.setHeaderText("Missing Data");
+			            a.setContentText("Please fill all fields.");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(ab.getBidT().getText().trim());
+			        String name = ab.getBnT().getText().trim();
+			        String address = ab.getAddT().getText().trim();
+			        String phone = ab.getPnT().getText().trim();
+			        String email = ab.geteT().getText().trim();
+
+			        ps.setInt(1, id);
+			        ps.setString(2, name);
+			        ps.setString(3, address);
+			        ps.setString(4, phone);
+			        ps.setString(5, email);
+
+			        ps.executeUpdate();
+			        ps.close();
+
+			        Alert done = new Alert(Alert.AlertType.INFORMATION);
+			        done.setTitle("Done");
+			        done.setHeaderText("Branch Added Successfully");
+			        done.setContentText("Branch ID: " + id);
+			        done.showAndWait();
+
+			        ab.getBidT().clear();
+			        ab.getBnT().clear();
+			        ab.getAddT().clear();
+			        ab.getPnT().clear();
+			        ab.geteT().clear();
+
+			    
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
 			Scene dbscene = new Scene(db.getAll(),400,400);
 			Scene ubscene = new Scene(ub.getAll(),400,400);
+			ub.getClear().setOnAction(e -> {
+			    ub.getSearchT().clear();
+
+			    ub.getBidT().clear();
+			    ub.getBnT().clear();
+			    ub.getAddT().clear();
+			    ub.getPnT().clear();
+			    ub.geteT().clear();
+
+			    ub.getEdit().setDisable(true);
+			});
+			ub.getSearchB().setOnAction(e -> {
+		        String sql = "SELECT * FROM Branch WHERE BranchID = ?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        if (ub.getSearchT().getText().trim().isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing ID");
+			            a.setHeaderText("Missing ID");
+			            a.setContentText("Please enter Branch ID.");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(ub.getSearchT().getText().trim());
+
+			        ps.setInt(1, id);
+
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            ub.getBidT().setText(rs.getString("BranchID"));
+			            ub.getBnT().setText(rs.getString("BranchName"));
+			            ub.getAddT().setText(rs.getString("Address"));
+			            ub.getPnT().setText(rs.getString("PhoneNumber"));
+			            ub.geteT().setText(rs.getString("Email"));
+
+			            ub.getEdit().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setHeaderText("Branch Not Found");
+			            a.setContentText("No branch with ID = " + id);
+			            a.showAndWait();
+
+			            ub.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			ub.getEdit().setOnAction(e -> {
+		        String sql = "UPDATE Branch SET BranchName=?, Address=?, PhoneNumber=?, Email=? WHERE BranchID=?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(ub.getBidT().getText().trim());
+
+			        if (ub.getBnT().getText().trim().isEmpty() ||ub.getAddT().getText().trim().isEmpty() ||ub.getPnT().getText().trim().isEmpty() || ub.geteT().getText().trim().isEmpty()) {
+
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing Data");
+			            a.setHeaderText("Missing Data");
+			            a.setContentText("Please fill all fields.");
+			            a.showAndWait();
+			            return;
+			        }
+
+
+			        ps.setString(1, ub.getBnT().getText().trim());
+			        ps.setString(2, ub.getAddT().getText().trim());
+			        ps.setString(3, ub.getPnT().getText().trim());
+			        ps.setString(4, ub.geteT().getText().trim());
+			        ps.setInt(5, id);
+
+			        int updated = ps.executeUpdate();
+			        ps.close();
+
+			        if (updated > 0) {
+			            Alert done = new Alert(Alert.AlertType.INFORMATION);
+			            done.setTitle("Done");
+			            done.setHeaderText("Branch Updated Successfully");
+			            done.setContentText("Branch ID: " + id);
+			            done.showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			bt.getUpdateB().setOnAction(e -> {
+
+			    Branch selected = bt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a branch first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ub.getBidT().setText(selected.getBranchID() + "");
+			    ub.getBnT().setText(selected.getBranchName());
+			    ub.getAddT().setText(selected.getAddress());
+			    ub.getPnT().setText(selected.getPhoneNumber());
+			    ub.geteT().setText(selected.getEmail());
+
+			    primaryStage.setScene(ubscene);
+			});
 			Scene btscene = new Scene(bt.getAll(),400,400);
-			Scene naptscene = new Scene(napt.getAll(),400,400);
 
 			mb.getAb().setOnAction(e->{
 				primaryStage.setScene(abscene);
@@ -130,20 +503,360 @@ public class Main extends Application {
 			mb.getBt().setOnAction(e->{
 				primaryStage.setScene(btscene);
 			});
-			mb.getNapt().setOnAction(e->{
-				primaryStage.setScene(naptscene);
+			BranchQ5TableView q5 = new BranchQ5TableView();
+			Scene bq5scene = new Scene(q5.getAll(), 400, 400);
+
+			mb.getQ5().setOnAction(e ->{
+				primaryStage.setScene(bq5scene);
 			});
 			
+			mb.getQ20().setOnAction(e -> {
+			    primaryStage.setScene(tbtscene);
+			});
 			AddCategory ac=new AddCategory();
+			ac.getClear().setOnAction(e -> {
+			    ac.getCatIDT().clear();
+			    ac.getCatNT().clear();
+			    ac.getdT().clear();
+			});
+			ac.getAdd().setOnAction(e -> {
+
+			    String idT = ac.getCatIDT().getText().trim();
+			    String name = ac.getCatNT().getText().trim();
+			    String desc = ac.getdT().getText().trim();
+
+			    if (idT.isEmpty() || name.isEmpty() || desc.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing");
+			        a.setContentText("Fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Category ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = "INSERT INTO Category (CategoryID, CategoryName, Description) VALUES (?, ?, ?)";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ps.setString(2, name);
+			        ps.setString(3, desc);
+
+			        ps.executeUpdate();
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("Done");
+			        a.setContentText("Category Added Successfully!");
+			        a.showAndWait();
+
+			        ac.getCatIDT().clear();
+			        ac.getCatNT().clear();
+			        ac.getdT().clear();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			DeleteCategory dc=new DeleteCategory();
+			dc.getClear().setOnAction(e -> {
+			    dc.getSearchT().clear();
+			    dc.getCatIDT().clear();
+			    dc.getCatNT().clear();
+			    dc.getdT().clear();
+			    dc.getDelete().setDisable(true);
+			});
+			dc.getSearchB().setOnAction(e -> {
+
+			    String idT = dc.getSearchT().getText().trim();
+			    if (idT.isEmpty()) return;
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idT);
+			    } catch (Exception ex) {
+			        return;
+			    }
+
+			    String sql = "SELECT * FROM Category WHERE CategoryID=?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dc.getCatIDT().setText(rs.getInt("CategoryID") + "");
+			            dc.getCatNT().setText(rs.getString("CategoryName"));
+			            dc.getdT().setText(rs.getString("Description"));
+			            dc.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No category with this ID");
+			            a.showAndWait();
+
+			            dc.getDelete().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			    }
+			});
+			dc.getDelete().setOnAction(e -> {
+
+			    String idT = dc.getCatIDT().getText().trim();
+			    if (idT.isEmpty()) return;
+
+			    int id = Integer.parseInt(idT);
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm Delete");
+			    confirm.setHeaderText("Are you sure you want to delete this category?");
+			    confirm.setContentText("Category ID: " + id);
+
+			    if (confirm.showAndWait().get().getText().equals("OK")) {
+
+			        String sql = "DELETE FROM Category WHERE CategoryID=?";
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, id);
+			            ps.executeUpdate();
+
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Category Deleted Successfully!");
+			            a.showAndWait();
+
+			            dc.getSearchT().clear();
+			            dc.getCatIDT().clear();
+			            dc.getCatNT().clear();
+			            dc.getdT().clear();
+			            dc.getDelete().setDisable(true);
+
+			        } catch (Exception ex) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Failed");
+			            a.setContentText(ex.getMessage());
+			            a.showAndWait();
+			        }
+			    }
+			});
+
 			UpdateCategory uc=new UpdateCategory();
+			uc.getSearchB().setOnAction(e -> {
+
+			    String idT = uc.getSearchT().getText().trim();
+			    if (idT.isEmpty()) return;
+
+			    int id;
+			    try { id = Integer.parseInt(idT); }
+			    catch (Exception ex) { return; }
+
+			    String sql = "SELECT * FROM Category WHERE CategoryID=?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            uc.getCatIDT().setText(rs.getInt("CategoryID") + "");
+			            uc.getCatNT().setText(rs.getString("CategoryName"));
+			            uc.getdT().setText(rs.getString("Description"));
+			            uc.getEdit().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No category with this ID");
+			            a.showAndWait();
+			            uc.getEdit().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			    }
+			});
+			uc.getEdit().setOnAction(e -> {
+
+			    String idT = uc.getCatIDT().getText().trim();
+			    String name = uc.getCatNT().getText().trim();
+			    String desc = uc.getdT().getText().trim();
+
+			    if (name.isEmpty() || desc.isEmpty()) return;
+
+			    int id = Integer.parseInt(idT);
+
+			    String sql = "UPDATE Category SET CategoryName=?, Description=? WHERE CategoryID=?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setString(1, name);
+			        ps.setString(2, desc);
+			        ps.setInt(3, id);
+
+			        ps.executeUpdate();
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("Done");
+			        a.setContentText("Category Updated Successfully!");
+			        a.showAndWait();
+
+			        uc.getSearchT().clear();
+			        uc.getCatIDT().clear();
+			        uc.getCatNT().clear();
+			        uc.getdT().clear();
+			        uc.getEdit().setDisable(true);
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			    }
+			});
+
 			CategoryTableView catt=new CategoryTableView();
 			
 			Scene acscene = new Scene(ac.getAll(),400,400);
 			Scene dcscene = new Scene(dc.getAll(),400,400);
 			Scene ucscene = new Scene(uc.getAll(),400,400);
 			Scene cattscene = new Scene(catt.getAll(),400,400);
+			
+			catt.getRef().setOnAction(e -> {
+			    catt.getSearchT().clear();
+			    catt.getTable().setItems(loadAllCategories());
+			    catt.getTable().getSelectionModel().clearSelection();
+			});
+			catt.getSearchB().setOnAction(e -> {
 
+			    String idT = catt.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        catt.getTable().setItems(loadAllCategories());
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("All Categories");
+			        a.setContentText("All categories loaded");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Category ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    var result = searchCategoryById(id);
+
+			    if (result.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Not found");
+			        a.setContentText("No category with this ID");
+			        a.showAndWait();
+			        catt.getTable().setItems(FXCollections.observableArrayList());
+			        return;
+			    }
+
+			    catt.getTable().setItems(result);
+			});
+			catt.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+			    if (newV != null) {
+			        catt.getDeleteB().setDisable(false);
+			        catt.getUpdateB().setDisable(false);
+			    } else {
+			        catt.getDeleteB().setDisable(true);
+			        catt.getUpdateB().setDisable(true);
+			    }
+			});
+			catt.getDeleteB().setOnAction(e -> {
+
+			    Category selected = catt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a category first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm delete");
+			    confirm.setContentText("Delete this category?");
+			    confirm.showAndWait();
+
+			    if (confirm.getResult() != ButtonType.OK) return;
+
+			    String sql = "DELETE FROM Category WHERE CategoryID=?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, selected.getCategoryID());
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Deleted");
+			            a.setContentText("Category deleted successfully!");
+			            a.showAndWait();
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not found");
+			            a.setContentText("Not found");
+			            a.showAndWait();
+			        }
+
+			        catt.getTable().setItems(loadAllCategories());
+			        catt.getTable().getSelectionModel().clearSelection();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			catt.getUpdateB().setOnAction(e -> {
+
+			    Category selected = catt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a category first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    uc.getCatIDT().setText(selected.getCategoryID() + "");
+			    uc.getCatNT().setText(selected.getCategoryName());
+			    uc.getdT().setText(selected.getDescription());
+
+			    primaryStage.setScene(ucscene);
+			});
 			mb.getAc().setOnAction(e->{
 				primaryStage.setScene(acscene);
 			});
@@ -158,8 +871,267 @@ public class Main extends Application {
 			});
 			
 			AddCustomer acs=new AddCustomer();
+			acs.getClear().setOnAction(e -> {
+			    acs.getCidT().clear();
+			    acs.getNameT().clear();
+			    acs.getPnT().clear();
+			    acs.geteT().clear();
+			    acs.getAddT().clear();
+			});
+			acs.getAdd().setOnAction(e -> {
+		        String sql = "INSERT INTO Customer (CustomerID, FullName, PhoneNumber, Email, Address) VALUES (?, ?, ?, ?, ?)";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        if (acs.getCidT().getText().trim().isEmpty() ||acs.getNameT().getText().trim().isEmpty() ||acs.getPnT().getText().trim().isEmpty() ||acs.geteT().getText().trim().isEmpty() ||acs.getAddT().getText().trim().isEmpty()) {
+
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing Data");
+			            a.setHeaderText("Missing Data");
+			            a.setContentText("Please fill all fields.");
+			            a.showAndWait();
+			            return;
+			        }
+
+			     int id = Integer.parseInt(acs.getCidT().getText().trim());
+			        String name = acs.getNameT().getText().trim();
+			        String phone = acs.getPnT().getText().trim();
+			        String email = acs.geteT().getText().trim();
+			        String address = acs.getAddT().getText().trim();
+
+
+			        ps.setInt(1, id);
+			        ps.setString(2, name);
+			        ps.setString(3, phone);
+			        ps.setString(4, email);
+			        ps.setString(5, address);
+
+			        ps.executeUpdate();
+			        ps.close();
+
+			        Alert done = new Alert(Alert.AlertType.INFORMATION);
+			        done.setTitle("Done");
+			        done.setHeaderText("Customer Added Successfully");
+			        done.setContentText("Customer ID: " + id);
+			        done.showAndWait();
+
+			        acs.getCidT().clear();
+			        acs.getNameT().clear();
+			        acs.getPnT().clear();
+			        acs.geteT().clear();
+			        acs.getAddT().clear();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
 			DeleteCustomer dcs=new DeleteCustomer();
+			dcs.getClear().setOnAction(e -> {
+			    dcs.getSearchT().clear();
+			    dcs.getCidT().clear();
+			    dcs.getNameT().clear();
+			    dcs.getPnT().clear();
+			    dcs.geteT().clear();
+			    dcs.getAddT().clear();
+			    dcs.getDelete().setDisable(true);
+			});
+
+		
+			dcs.getSearchB().setOnAction(e -> {
+		        String sql = "SELECT * FROM Customer WHERE CustomerID = ?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        if (dcs.getSearchT().getText().trim().isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing ID");
+			            a.setHeaderText("Missing ID");
+			            a.setContentText("Please enter Customer ID.");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(dcs.getSearchT().getText().trim());
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dcs.getCidT().setText(rs.getString("CustomerID"));
+			            dcs.getNameT().setText(rs.getString("FullName"));
+			            dcs.getPnT().setText(rs.getString("PhoneNumber"));
+			            dcs.geteT().setText(rs.getString("Email"));
+			            dcs.getAddT().setText(rs.getString("Address"));
+
+			            dcs.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setHeaderText("Customer Not Found");
+			            a.setContentText("No customer with ID = " + id);
+			            a.showAndWait();
+
+			            dcs.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			
+			dcs.getDelete().setOnAction(e -> {
+	            String sql = "DELETE FROM Customer WHERE CustomerID = ?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(dcs.getCidT().getText().trim());
+
+			        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			        confirm.setTitle("Confirm Delete");
+			        confirm.setHeaderText("Are you sure?");
+			        confirm.setContentText("Delete Customer ID: " + id);
+
+			        if (confirm.showAndWait().get().getText().equals("OK")) {
+			            ps.setInt(1, id);
+
+			            int deleted = ps.executeUpdate();
+			            ps.close();
+
+			            if (deleted > 0) {
+			                Alert done = new Alert(Alert.AlertType.INFORMATION);
+			                done.setTitle("Done");
+			                done.setHeaderText("Customer Deleted Successfully");
+			                done.setContentText("Customer ID: " + id);
+			                done.showAndWait();
+
+			                dcs.getClear().fire();
+			            }
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
 			UpdateCustomer ucs=new UpdateCustomer();
+
+			ucs.getClear().setOnAction(e -> {
+			    ucs.getSearchT().clear();
+			    ucs.getCidT().clear();
+			    ucs.getNameT().clear();
+			    ucs.getPnT().clear();
+			    ucs.geteT().clear();
+			    ucs.getAddT().clear();
+			    ucs.getEdit().setDisable(true);
+			});
+
+			
+			ucs.getSearchB().setOnAction(e -> {
+		        String sql = "SELECT * FROM Customer WHERE CustomerID = ?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        if (ucs.getSearchT().getText().trim().isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing ID");
+			            a.setHeaderText("Missing ID");
+			            a.setContentText("Please enter Customer ID.");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(ucs.getSearchT().getText().trim());
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            ucs.getCidT().setText(rs.getString("CustomerID"));
+			            ucs.getNameT().setText(rs.getString("FullName"));
+			            ucs.getPnT().setText(rs.getString("PhoneNumber"));
+			            ucs.geteT().setText(rs.getString("Email"));
+			            ucs.getAddT().setText(rs.getString("Address"));
+
+			            ucs.getEdit().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setHeaderText("Customer Not Found");
+			            a.setContentText("No customer with ID = " + id);
+			            a.showAndWait();
+
+			            ucs.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			ucs.getEdit().setOnAction(e -> {
+		        String sql = "UPDATE Customer SET FullName=?, PhoneNumber=?, Email=?, Address=? WHERE CustomerID=?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(ucs.getCidT().getText().trim());
+
+			        if (ucs.getNameT().getText().trim().isEmpty() ||
+			            ucs.getPnT().getText().trim().isEmpty() ||
+			            ucs.geteT().getText().trim().isEmpty() ||
+			            ucs.getAddT().getText().trim().isEmpty()) {
+
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing Data");
+			            a.setHeaderText("Missing Data");
+			            a.setContentText("Please fill all fields.");
+			            a.showAndWait();
+			            return;
+			        }
+
+
+			        ps.setString(1, ucs.getNameT().getText().trim());
+			        ps.setString(2, ucs.getPnT().getText().trim());
+			        ps.setString(3, ucs.geteT().getText().trim());
+			        ps.setString(4, ucs.getAddT().getText().trim());
+			        ps.setInt(5, id);
+
+			        int updated = ps.executeUpdate();
+			        ps.close();
+
+			        if (updated > 0) {
+			            Alert done = new Alert(Alert.AlertType.INFORMATION);
+			            done.setTitle("Done");
+			            done.setHeaderText("Customer Updated Successfully");
+			            done.setContentText("Customer ID: " + id);
+			            done.showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle(ex.getMessage());
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			CustomerTableView ct=new CustomerTableView();
 
 			Scene acsscene = new Scene(acs.getAll(),400,400);
@@ -309,7 +1281,7 @@ public class Main extends Application {
 			    }
 
 			    String sql = """
-			        SELECT EmpID, FullName, Qualification, Professionalേഴ്LicenseNumber, Address,
+			        SELECT EmpID, FullName, Qualification, ProfessionalLicenseNumber, Address,
 			               NationalID, PhoneNumber, Email, Salary, BranchID
 			        FROM Employee
 			        WHERE EmpID = ?
@@ -820,7 +1792,11 @@ public class Main extends Application {
 
 			    ebt.getTable().setItems(result);
 			});
+			TopEmployeeTableView tet = new TopEmployeeTableView();
+			EmployeeQ7TableView q7page = new EmployeeQ7TableView();
+			Scene q7scene = new Scene(q7page.getAll(), 700, 550);
 
+			Scene tetscene = new Scene(tet.getAll(), 500, 500);
 			Scene aescene = new Scene(ae.getAll(),400,400);
 			Scene descene = new Scene(de.getAll(),400,400);
 			Scene etscene = new Scene(et.getAll(),400,400);
@@ -843,6 +1819,24 @@ public class Main extends Application {
 			    ebt.getTable().setItems(loadEmployeeBranchData());
 				primaryStage.setScene(ebtscene);
 			});
+
+			EmployeeQ6TableView q6 = new EmployeeQ6TableView();
+			EmployeeQ7TableView q7 = new EmployeeQ7TableView();
+			EmployeeQ8TableView q8 = new EmployeeQ8TableView();
+
+			Scene q6scene = new Scene(q6.getAll(), 400, 400);
+			Scene q8scene = new Scene(q8.getAll(), 400, 400);
+
+			mb.getQ6().setOnAction(e ->{
+				primaryStage.setScene(q6scene);
+			});
+			mb.getQ7().setOnAction(e ->{
+				primaryStage.setScene(q7scene);
+			});
+			mb.getQ8().setOnAction(e ->{
+				primaryStage.setScene(q8scene);
+			});
+
 			
 			AddIC aic=new AddIC();
 			DeleteIC dic=new DeleteIC();
@@ -871,7 +1865,53 @@ public class Main extends Application {
 			DeleteInvoice div=new DeleteInvoice();
 			UpdateInvoice uiv=new UpdateInvoice();
 			InvoiceTableView it=new InvoiceTableView();
+			InvoiceBranchTableView ibt = new InvoiceBranchTableView();
+			SalesTransactionTableView stt = new SalesTransactionTableView();
+			InvoiceQ15TableView q15 = new InvoiceQ15TableView();
+			InvoiceQ17TableView q17 = new InvoiceQ17TableView();
+			InvoiceQ19TableView iq19 = new InvoiceQ19TableView();
+			Scene iq19scene = new Scene(iq19.getAll(), 900, 600);
+
+			InvoiceQ20TableView iq20 = new InvoiceQ20TableView();
+			Scene iq20scene = new Scene(iq20.getAll(), 900, 600);
+
+			InvoiceQ32TableView iq32 = new InvoiceQ32TableView();
+			Scene iq32scene = new Scene(iq32.getAll(), 900, 600);
+
+			InvoiceQ33TableView iq33 = new InvoiceQ33TableView();
+			Scene iq33scene = new Scene(iq33.getAll(), 900, 600);
+
+			Scene iq17scene = new Scene(q17.getAll(), 900, 600);
+
+			InvoiceQ18TableView q18 = new InvoiceQ18TableView();
+			Scene iq18scene = new Scene(q18.getAll(), 900, 600);
+
+			Scene iq15scene = new Scene(q15.getAll(), 400, 400);
+
+			mb.getQ15().setOnAction(e -> {
+				primaryStage.setScene(iq15scene);
+			});
+			mb.getQ17().setOnAction(e -> {
+				primaryStage.setScene(iq17scene);
+			});
+			mb.getQ18().setOnAction(e -> {
+				primaryStage.setScene(iq18scene);
+			});
+			mb.getQ19().setOnAction(e -> {
+				primaryStage.setScene(iq19scene);
+			});
+			mb.getQ20().setOnAction(e -> {
+				primaryStage.setScene(iq20scene);
+			});
+			mb.getQ32().setOnAction(e ->{
+				primaryStage.setScene(iq32scene);
+			});
+			mb.getQ33().setOnAction(e ->{
+				primaryStage.setScene(iq33scene);
+			});
 			
+			Scene sttscene = new Scene(stt.getAll(), 500, 500);
+			Scene ibtscene = new Scene(ibt.getAll(), 500, 500);
 			Scene aivscene = new Scene(aiv.getAll(),400,400);
 			Scene divscene = new Scene(div.getAll(),400,400);
 			Scene uivscene = new Scene(uiv.getAll(),400,400);
@@ -889,6 +1929,18 @@ public class Main extends Application {
 			mb.getIt().setOnAction(e->{
 				primaryStage.setScene(itscene);
 			});
+
+			mb.getQ15().setOnAction(e ->{
+				 primaryStage.setScene(ibtscene);
+			});
+			mb.getQ17().setOnAction(e -> {
+				primaryStage.setScene(sttscene);
+			});
+			mb.getQ18().setOnAction(e -> primaryStage.setScene(itscene));
+			mb.getQ19().setOnAction(e -> primaryStage.setScene(itscene));
+			mb.getQ20().setOnAction(e -> primaryStage.setScene(itscene));
+			mb.getQ32().setOnAction(e -> primaryStage.setScene(itscene));
+			mb.getQ33().setOnAction(e -> primaryStage.setScene(itscene));
 			
 			AddInvoiceItem aivi=new AddInvoiceItem();
 			DeleteInvoiceItem divi=new DeleteInvoiceItem();
@@ -940,23 +1992,11 @@ public class Main extends Application {
 			DeleteMedicine dmed=new DeleteMedicine();
 			UpdateMedicine umed=new UpdateMedicine();
 			MedicineTableView mt=new MedicineTableView();
-			MedQTable mebt=new MedQTable();
-			MedQTable mebt2=new MedQTable();
-			MedStockTable medStock=new MedStockTable();
-			SupMedInvTable supMedInv=new SupMedInvTable();
-			MedByCat medByCat=new MedByCat();
-			MostSoldMedTable most=new MostSoldMedTable();
 			
 			Scene amedscene = new Scene(amed.getAll(),400,400);
 			Scene dmedscene = new Scene(dmed.getAll(),400,400);
 			Scene umedscene = new Scene(umed.getAll(),400,400);
 			Scene mtscene = new Scene(mt.getAll(),400,400);
-			Scene mebtscene = new Scene(mebt.getAll(),400,400);
-			Scene mebt2scene = new Scene(mebt2.getAll(),400,400);
-			Scene medStockscene = new Scene(medStock.getAll(),400,400);
-			Scene supMedInvscene = new Scene(supMedInv.getAll(),400,400);
-			Scene medByCatscene = new Scene(medByCat.getAll(),400,400);
-			Scene mostscene = new Scene(most.getAll(),400,400);
 
 			mb.getAmed().setOnAction(e->{
 				primaryStage.setScene(amedscene);
@@ -970,24 +2010,17 @@ public class Main extends Application {
 			mb.getMt().setOnAction(e->{
 				primaryStage.setScene(mtscene);
 			});
-			mb.getMebt().setOnAction(e->{
-				primaryStage.setScene(mebtscene);
-			});
-			mb.getMebt2().setOnAction(e->{
-				primaryStage.setScene(mebt2scene);
-			});
-			mb.getMedStock().setOnAction(e->{
-				primaryStage.setScene(medStockscene);
-			});
-			mb.getSupMedInv().setOnAction(e->{
-				primaryStage.setScene(supMedInvscene);
-			});
-			mb.getMedByCat().setOnAction(e->{
-				primaryStage.setScene(medByCatscene);
-			});
-			mb.getMostSold().setOnAction(e->{
-				primaryStage.setScene(mostscene);
-			});
+
+			mb.getQ4().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ9().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ10().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ11().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ12().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ13().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ14().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ16().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ24().setOnAction(e -> primaryStage.setScene(mtscene));
+			mb.getQ25().setOnAction(e -> primaryStage.setScene(mtscene));
 			
 			AddPayment apay=new AddPayment();
 			DeletePayment dpay=new DeletePayment();
@@ -1099,17 +2132,19 @@ public class Main extends Application {
 				primaryStage.setScene(stscene);
 			});
 
+			mb.getQ21().setOnAction(e -> primaryStage.setScene(stscene));
+			mb.getQ22().setOnAction(e -> primaryStage.setScene(stscene));
+			mb.getQ23().setOnAction(e -> primaryStage.setScene(stscene));
+
 			AddInventoryItem ain=new AddInventoryItem();
 			DeleteInventoryItem din=new DeleteInventoryItem();
 			UpdateInventoryItem uin=new UpdateInventoryItem();
 			InventoryItemTableView intt=new InventoryItemTableView();
-			invQTable intqt=new invQTable();
 
 			Scene ainscene = new Scene(ain.getAll(),400,400);
 			Scene dinscene = new Scene(din.getAll(),400,400);
 			Scene uinscene = new Scene(uin.getAll(),400,400);
 			Scene inttscene = new Scene(intt.getAll(),400,400);
-			Scene intqtscene = new Scene(intqt.getAll(),400,400);
 
 			mb.getAin().setOnAction(e->{
 				primaryStage.setScene(ainscene);
@@ -1123,15 +2158,13 @@ public class Main extends Application {
 			mb.getInnt().setOnAction(e->{
 				primaryStage.setScene(inttscene);
 			});
-			mb.getInnqt().setOnAction(e->{
-				primaryStage.setScene(intqtscene);
-			});
+
 			mb.getExit().setOnAction(e->{
 				primaryStage.close();
 			});
 			
 			Scene scene = new Scene(login.getAll(),400,400);
-			Scene mainScene = new Scene(mb.getAll(), 900, 600);
+			Scene mainScene = new Scene(mb.getAll(), 400, 400);
 			login.getLogin().setOnAction(e -> {
 
 			    if (!login.isValidLogin()) {
@@ -1373,31 +2406,55 @@ public class Main extends Application {
 			intt.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
-			napt.getBack().setOnAction(e->{
-				primaryStage.setScene(mainScene);
-			});
 			ebt.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
-			intqt.getBack().setOnAction(e->{
+			tbt.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			tet.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			ibt.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			stt.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			q7page.getBack().setOnAction(e -> {
 				primaryStage.setScene(mainScene);
 			});
-			mebt.getBack().setOnAction(e->{
+			q6.getBack().setOnAction(e -> {
 				primaryStage.setScene(mainScene);
 			});
-			mebt2.getBack().setOnAction(e->{
+			q7.getBack().setOnAction(e ->{
 				primaryStage.setScene(mainScene);
 			});
-			medStock.getBack().setOnAction(e->{
+			q8.getBack().setOnAction(e -> {
 				primaryStage.setScene(mainScene);
 			});
-			supMedInv.getBack().setOnAction(e->{
+			q5.getBack().setOnAction(e ->{
 				primaryStage.setScene(mainScene);
 			});
-			medByCat.getBack().setOnAction(e->{
+			q15.getBack().setOnAction(e ->{
 				primaryStage.setScene(mainScene);
 			});
-			most.getBack().setOnAction(e->{
+			q17.getBack().setOnAction(e ->{
+				primaryStage.setScene(mainScene);
+			});
+			q18.getBack().setOnAction(e ->{
+				primaryStage.setScene(mainScene);
+			});
+			iq19.getBack().setOnAction(e ->{
+				primaryStage.setScene(mainScene);
+			});
+			iq20.getBack().setOnAction(e ->{
+				primaryStage.setScene(mainScene);
+			});
+			iq32.getBack().setOnAction(e ->{
+				primaryStage.setScene(mainScene);
+			});
+			iq33.getBack().setOnAction(e ->{
 				primaryStage.setScene(mainScene);
 			});
 			primaryStage.show();
@@ -1528,6 +2585,127 @@ public class Main extends Application {
 	    } catch (Exception ex) {
 	        ex.printStackTrace();
 	    }
+	    return list;
+	}
+	private ObservableList<Branch> loadAllBranches() {
+	    ObservableList<Branch> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	            SELECT BranchID, BranchName, Address, PhoneNumber, Email
+	            FROM Branch
+	            """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            list.add(new Branch(
+	                    rs.getInt("BranchID"),
+	                    rs.getString("BranchName"),
+	                    rs.getString("Address"),
+	                    rs.getString("PhoneNumber"),
+	                    rs.getString("Email")
+	            ));
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+	    return list;
+	}
+
+	private ObservableList<Branch> searchBranchById(int id) {
+	    ObservableList<Branch> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	            SELECT BranchID, BranchName, Address, PhoneNumber, Email
+	            FROM Branch
+	            WHERE BranchID = ?
+	            """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, id);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                list.add(new Branch(
+	                        rs.getInt("BranchID"),
+	                        rs.getString("BranchName"),
+	                        rs.getString("Address"),
+	                        rs.getString("PhoneNumber"),
+	                        rs.getString("Email")
+	                ));
+	            }
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+
+	private ObservableList<Branch> loadBranchNAP() {
+	    return loadAllBranches();
+	}
+	private ObservableList<Category> loadAllCategories() {
+	    ObservableList<Category> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	        SELECT CategoryID, CategoryName, Description
+	        FROM Category
+	    """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            list.add(new Category(
+	                    rs.getInt("CategoryID"),
+	                    rs.getString("CategoryName"),
+	                    rs.getString("Description")
+	            ));
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+
+	private ObservableList<Category> searchCategoryById(int id) {
+	    ObservableList<Category> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	        SELECT CategoryID, CategoryName, Description
+	        FROM Category
+	        WHERE CategoryID = ?
+	    """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, id);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                list.add(new Category(
+	                        rs.getInt("CategoryID"),
+	                        rs.getString("CategoryName"),
+	                        rs.getString("Description")
+	                ));
+	            }
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
 	    return list;
 	}
 

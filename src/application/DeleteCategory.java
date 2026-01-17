@@ -2,260 +2,338 @@ package application;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class DeleteCategory {
-	private Label addc=new Label("Delete Category");
-	private Image ph=new Image("bb.jpg");
-	private ImageView phVM=new ImageView(ph);
-	
-	private Label cIDL=new Label(" Category ID :");
-	private TextField cIDT=new TextField();
-	private HBox cIDH=new HBox();
-	
-	private Label fNL=new Label("Category Name :");
-	private TextField fNT=new TextField();
-	private HBox fNH=new HBox();
-	
-	private Label dbL=new Label("Ddescription :");
-	private TextField db=new TextField();
-	private HBox dbH=new HBox();
-	
-	private Image deleteM=new Image("icons8-delete-all-100.png");
-	private ImageView deleteVM=new ImageView(deleteM);
-	private Button delete=new Button("delete",deleteVM);
-	
-	private Image backM=new Image("icons8-back-100(2).png");
-	private ImageView backVM=new ImageView(backM);
-	private Button back=new Button("Back", backVM);
-	
-	private Image clearM=new Image("icons8-clear-100(1).png");
-	private ImageView clearVM=new ImageView(clearM);
-	private Button clear=new Button("clear",clearVM);
-	
-	private HBox buttons=new HBox();
-	private VBox all=new VBox();
-	
-	public DeleteCategory() {
-		cIDH.getChildren().addAll(cIDL,cIDT);
-		cIDT.setEditable(false);
-		cIDT.setVisible(true);
-		cIDL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		cIDH.setAlignment(Pos.CENTER);
-		cIDH.setSpacing(20);
-		fNH.getChildren().addAll(fNL,fNT);
-		fNT.setEditable(false);
-		fNT.setVisible(true);
-		fNL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		fNH.setAlignment(Pos.CENTER);
-		fNH.setSpacing(20);
-		dbH.getChildren().addAll(dbL,db);
-		db.setEditable(false);
-		db.setVisible(true);
-		dbL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		dbH.setAlignment(Pos.CENTER);
-		dbH.setSpacing(20);
-		buttons.getChildren().addAll(delete,back,clear);
-		buttons.setAlignment(Pos.CENTER);
-		buttons.setSpacing(20);
-		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		all.getChildren().addAll(addc,cIDH,fNH,dbH,buttons);
-		addc.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
-		all.setAlignment(Pos.CENTER);
-		all.setSpacing(20);
-		all.setStyle("-fx-background-color: #a2c4c9;");
+
+    private Label dCat = new Label("Delete Category");
+
+    private Image ph = new Image("bb.jpg");
+    private ImageView phVM = new ImageView(ph);
+
+    private Image searchM = new Image("icons8-search-100.png");
+    private ImageView searchVM = new ImageView(searchM);
+    private Button searchB = new Button("Search", searchVM);
+    private Label searchL = new Label("put id :");
+    private TextField searchT = new TextField();
+    private HBox searchH = new HBox();
+
+    private Label catIDL = new Label("Category ID :");
+    private TextField catIDT = new TextField();
+    private HBox catIDH = new HBox();
+
+    private Label catNL = new Label("Category Name :");
+    private TextField catNT = new TextField();
+    private HBox catNH = new HBox();
+
+    private Label dL = new Label("Description :");
+    private TextField dT = new TextField();
+    private HBox dH = new HBox();
+
+    private Image deleteM = new Image("icons8-remove-employee-100.png"); 
+    private ImageView deleteVM = new ImageView(deleteM);
+    private Button delete = new Button("Delete", deleteVM);
+
+    private Image backM = new Image("icons8-back-100(2).png");
+    private ImageView backVM = new ImageView(backM);
+    private Button back = new Button("Back", backVM);
+
+    private Image clearM = new Image("icons8-clear-100(1).png");
+    private ImageView clearVM = new ImageView(clearM);
+    private Button clear = new Button("clear", clearVM);
+
+    private HBox buttons = new HBox();
+    private VBox all = new VBox();
+
+    public DeleteCategory() {
+
+        searchL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        searchL.setFont(Font.font(null, FontWeight.BOLD, 20));
+
+        searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        searchVM.setFitWidth(42);
+        searchVM.setFitHeight(42);
+
+        searchH.getChildren().addAll(searchL, searchT, searchB);
+        searchH.setSpacing(10);
+        searchH.setAlignment(Pos.CENTER);
+
+        catIDH.getChildren().addAll(catIDL, catIDT);
+        catIDT.setEditable(false);
+        catIDT.setVisible(true);
+        catIDL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        catIDH.setAlignment(Pos.CENTER);
+        catIDH.setSpacing(20);
+
+        catNH.getChildren().addAll(catNL, catNT);
+        catNT.setEditable(false);
+        catNT.setVisible(true);
+        catNL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        catNH.setAlignment(Pos.CENTER);
+        catNH.setSpacing(20);
+
+        dH.getChildren().addAll(dL, dT);
+        dT.setEditable(false);
+        dT.setVisible(true);
+        dL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        dH.setAlignment(Pos.CENTER);
+        dH.setSpacing(20);
+
+        buttons.getChildren().addAll(delete, back, clear);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+
+        clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+
+        delete.setDisable(true);
+
+        all.getChildren().addAll(dCat, searchH, catIDH, catNH, dH, buttons);
+        dCat.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
+
+        all.setAlignment(Pos.CENTER);
+        all.setSpacing(15);
+        all.setStyle("-fx-background-color: #a2c4c9;");
+    }
+
+	public Label getdCat() {
+		return dCat;
 	}
 
-	protected Label getAddc() {
-		return addc;
+	public void setdCat(Label dCat) {
+		this.dCat = dCat;
 	}
 
-	protected void setAddc(Label addc) {
-		this.addc = addc;
-	}
-
-	protected Image getPh() {
+	public Image getPh() {
 		return ph;
 	}
 
-	protected void setPh(Image ph) {
+	public void setPh(Image ph) {
 		this.ph = ph;
 	}
 
-	protected ImageView getPhVM() {
+	public ImageView getPhVM() {
 		return phVM;
 	}
 
-	protected void setPhVM(ImageView phVM) {
+	public void setPhVM(ImageView phVM) {
 		this.phVM = phVM;
 	}
 
-	protected Label getcIDL() {
-		return cIDL;
+	public Image getSearchM() {
+		return searchM;
 	}
 
-	protected void setcIDL(Label cIDL) {
-		this.cIDL = cIDL;
+	public void setSearchM(Image searchM) {
+		this.searchM = searchM;
 	}
 
-	protected TextField getcIDT() {
-		return cIDT;
+	public ImageView getSearchVM() {
+		return searchVM;
 	}
 
-	protected void setcIDT(TextField cIDT) {
-		this.cIDT = cIDT;
+	public void setSearchVM(ImageView searchVM) {
+		this.searchVM = searchVM;
 	}
 
-	protected HBox getcIDH() {
-		return cIDH;
+	public Button getSearchB() {
+		return searchB;
 	}
 
-	protected void setcIDH(HBox cIDH) {
-		this.cIDH = cIDH;
+	public void setSearchB(Button searchB) {
+		this.searchB = searchB;
 	}
 
-	protected Label getfNL() {
-		return fNL;
+	public Label getSearchL() {
+		return searchL;
 	}
 
-	protected void setfNL(Label fNL) {
-		this.fNL = fNL;
+	public void setSearchL(Label searchL) {
+		this.searchL = searchL;
 	}
 
-	protected TextField getfNT() {
-		return fNT;
+	public TextField getSearchT() {
+		return searchT;
 	}
 
-	protected void setfNT(TextField fNT) {
-		this.fNT = fNT;
+	public void setSearchT(TextField searchT) {
+		this.searchT = searchT;
 	}
 
-	protected HBox getfNH() {
-		return fNH;
+	public HBox getSearchH() {
+		return searchH;
 	}
 
-	protected void setfNH(HBox fNH) {
-		this.fNH = fNH;
+	public void setSearchH(HBox searchH) {
+		this.searchH = searchH;
 	}
 
-	protected Label getDbL() {
-		return dbL;
+	public Label getCatIDL() {
+		return catIDL;
 	}
 
-	protected void setDbL(Label dbL) {
-		this.dbL = dbL;
+	public void setCatIDL(Label catIDL) {
+		this.catIDL = catIDL;
 	}
 
-	protected TextField getDb() {
-		return db;
+	public TextField getCatIDT() {
+		return catIDT;
 	}
 
-	protected void setDb(TextField db) {
-		this.db = db;
+	public void setCatIDT(TextField catIDT) {
+		this.catIDT = catIDT;
 	}
 
-	protected HBox getDbH() {
-		return dbH;
+	public HBox getCatIDH() {
+		return catIDH;
 	}
 
-	protected void setDbH(HBox dbH) {
-		this.dbH = dbH;
+	public void setCatIDH(HBox catIDH) {
+		this.catIDH = catIDH;
 	}
 
-	protected Image getDeleteM() {
+	public Label getCatNL() {
+		return catNL;
+	}
+
+	public void setCatNL(Label catNL) {
+		this.catNL = catNL;
+	}
+
+	public TextField getCatNT() {
+		return catNT;
+	}
+
+	public void setCatNT(TextField catNT) {
+		this.catNT = catNT;
+	}
+
+	public HBox getCatNH() {
+		return catNH;
+	}
+
+	public void setCatNH(HBox catNH) {
+		this.catNH = catNH;
+	}
+
+	public Label getdL() {
+		return dL;
+	}
+
+	public void setdL(Label dL) {
+		this.dL = dL;
+	}
+
+	public TextField getdT() {
+		return dT;
+	}
+
+	public void setdT(TextField dT) {
+		this.dT = dT;
+	}
+
+	public HBox getdH() {
+		return dH;
+	}
+
+	public void setdH(HBox dH) {
+		this.dH = dH;
+	}
+
+	public Image getDeleteM() {
 		return deleteM;
 	}
 
-	protected void setDeleteM(Image deleteM) {
+	public void setDeleteM(Image deleteM) {
 		this.deleteM = deleteM;
 	}
 
-	protected ImageView getDeleteVM() {
+	public ImageView getDeleteVM() {
 		return deleteVM;
 	}
 
-	protected void setDeleteVM(ImageView deleteVM) {
+	public void setDeleteVM(ImageView deleteVM) {
 		this.deleteVM = deleteVM;
 	}
 
-	protected Button getDelete() {
+	public Button getDelete() {
 		return delete;
 	}
 
-	protected void setDelete(Button delete) {
+	public void setDelete(Button delete) {
 		this.delete = delete;
 	}
 
-	protected Image getBackM() {
+	public Image getBackM() {
 		return backM;
 	}
 
-	protected void setBackM(Image backM) {
+	public void setBackM(Image backM) {
 		this.backM = backM;
 	}
 
-	protected ImageView getBackVM() {
+	public ImageView getBackVM() {
 		return backVM;
 	}
 
-	protected void setBackVM(ImageView backVM) {
+	public void setBackVM(ImageView backVM) {
 		this.backVM = backVM;
 	}
 
-	protected Button getBack() {
+	public Button getBack() {
 		return back;
 	}
 
-	protected void setBack(Button back) {
+	public void setBack(Button back) {
 		this.back = back;
 	}
 
-	protected Image getClearM() {
+	public Image getClearM() {
 		return clearM;
 	}
 
-	protected void setClearM(Image clearM) {
+	public void setClearM(Image clearM) {
 		this.clearM = clearM;
 	}
 
-	protected ImageView getClearVM() {
+	public ImageView getClearVM() {
 		return clearVM;
 	}
 
-	protected void setClearVM(ImageView clearVM) {
+	public void setClearVM(ImageView clearVM) {
 		this.clearVM = clearVM;
 	}
 
-	protected Button getClear() {
+	public Button getClear() {
 		return clear;
 	}
 
-	protected void setClear(Button clear) {
+	public void setClear(Button clear) {
 		this.clear = clear;
 	}
 
-	protected HBox getButtons() {
+	public HBox getButtons() {
 		return buttons;
 	}
 
-	protected void setButtons(HBox buttons) {
+	public void setButtons(HBox buttons) {
 		this.buttons = buttons;
 	}
 
-	protected VBox getAll() {
+	public VBox getAll() {
 		return all;
 	}
 
-	protected void setAll(VBox all) {
+	public void setAll(VBox all) {
 		this.all = all;
 	}
-	
+
 }

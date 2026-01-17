@@ -2,8 +2,6 @@ package application;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -12,376 +10,301 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class AddCustomer {
-	private Label addc=new Label("Add Customer");
-	private Image ph=new Image("bb.jpg");
-	private ImageView phVM=new ImageView(ph);
-	
-	private Label cIDL=new Label(" Customer ID :");
-	private TextField cIDT=new TextField();
-	private HBox cIDH=new HBox();
-	
-	private Label fNL=new Label("Full Name :");
-	private TextField fNT=new TextField();
-	private HBox fNH=new HBox();
-	
-	private Label dbL=new Label("Date of Birth :");
-	private DatePicker db=new DatePicker();
-	private HBox dbH=new HBox();
 
-	private Label pNL=new Label("Phone Number :");
-	private TextField pNT=new TextField();
-	private HBox pNH=new HBox();
-	
-	private Label emL=new Label("Email Address :");
-	private TextField emT=new TextField();
-	private HBox emH=new HBox();
-	
-	private Label addL=new Label("Address :");
-	private TextField addT=new TextField();
-	private HBox addH=new HBox();
-	
-	private Label genL=new Label("Gender :");
-	private ComboBox<String> genT=new ComboBox<String>();
-	private HBox genH=new HBox();
-	
-	
-	private Image addM=new Image("icons8-add-100(1).png");
-	private ImageView addVM=new ImageView(addM);
-	private Button add=new Button("Add",addVM);
-	
-	private Image backM=new Image("icons8-back-100(2).png");
-	private ImageView backVM=new ImageView(backM);
-	private Button back=new Button("Back", backVM);
-	
-	private Image clearM=new Image("icons8-clear-100(1).png");
-	private ImageView clearVM=new ImageView(clearM);
-	private Button clear=new Button("clear",clearVM);
-	
-	private HBox buttons=new HBox();
-	private VBox all=new VBox();
-	
-	public AddCustomer () {
-		cIDH.getChildren().addAll(cIDL,cIDT);
-		cIDL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		cIDH.setAlignment(Pos.CENTER);
-		cIDH.setSpacing(20);
-		fNH.getChildren().addAll(fNL,fNT);
-		fNL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		fNH.setAlignment(Pos.CENTER);
-		fNH.setSpacing(20);
-		addH.getChildren().addAll(addL,addT);
-		addL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		addH.setAlignment(Pos.CENTER);
-		addH.setSpacing(20);
-		dbH.getChildren().addAll(dbL,db);
-		dbL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		dbH.setAlignment(Pos.CENTER);
-		dbH.setSpacing(20);
-		genT.getItems().addAll("male","Female");
-		genT.getSelectionModel().select("male");
-		genH.getChildren().addAll(genL,genT);
-		genL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		genH.setAlignment(Pos.CENTER);
-		genH.setSpacing(20);
-		pNH.getChildren().addAll(pNL,pNT);
-		pNL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		pNH.setAlignment(Pos.CENTER);
-		pNH.setSpacing(20);
-		emH.getChildren().addAll(emL,emT);
-		emL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		emH.setAlignment(Pos.CENTER);
-		emH.setSpacing(20);
-		buttons.getChildren().addAll(add,back,clear);
-		buttons.setAlignment(Pos.CENTER);
-		buttons.setSpacing(20);
-		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		add.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		all.getChildren().addAll(addc,cIDH,fNH,addH,dbH,pNH,emH,genH,buttons);
-		addc.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
-		all.setAlignment(Pos.CENTER);
-		all.setSpacing(20);
-		all.setStyle("-fx-background-color: #a2c4c9;");
+    private Label addCust = new Label("Add Customer");
+
+    private Label cidL = new Label("Customer ID :");
+    private TextField cidT = new TextField();
+    private HBox cidH = new HBox();
+
+    private Label nameL = new Label("Full Name :");
+    private TextField nameT = new TextField();
+    private HBox nameH = new HBox();
+
+    private Label pnL = new Label("Phone Number :");
+    private TextField pnT = new TextField();
+    private HBox pnH = new HBox();
+
+    private Label eL = new Label("Email Address :");
+    private TextField eT = new TextField();
+    private HBox eH = new HBox();
+
+    private Label addL = new Label("Address :");
+    private TextField addT = new TextField();
+    private HBox addH = new HBox();
+
+    private Image addM = new Image("icons8-add-administrator-100.png");
+    private ImageView addVM = new ImageView(addM);
+    private Button add = new Button("Add", addVM);
+
+    private Image backM = new Image("icons8-back-100(2).png");
+    private ImageView backVM = new ImageView(backM);
+    private Button back = new Button("Back", backVM);
+
+    private Image clearM = new Image("icons8-clear-100(1).png");
+    private ImageView clearVM = new ImageView(clearM);
+    private Button clear = new Button("clear", clearVM);
+
+    private HBox buttons = new HBox();
+    private VBox all = new VBox();
+
+    public AddCustomer() {
+
+        cidH.getChildren().addAll(cidL, cidT);
+        cidL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        cidH.setAlignment(Pos.CENTER);
+        cidH.setSpacing(20);
+
+        nameH.getChildren().addAll(nameL, nameT);
+        nameL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        nameH.setAlignment(Pos.CENTER);
+        nameH.setSpacing(20);
+
+        pnH.getChildren().addAll(pnL, pnT);
+        pnL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        pnH.setAlignment(Pos.CENTER);
+        pnH.setSpacing(20);
+
+        eH.getChildren().addAll(eL, eT);
+        eL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        eH.setAlignment(Pos.CENTER);
+        eH.setSpacing(20);
+
+        addH.getChildren().addAll(addL, addT);
+        addL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        addH.setAlignment(Pos.CENTER);
+        addH.setSpacing(20);
+
+        buttons.getChildren().addAll(add, back, clear);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+
+        clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        add.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+
+        all.getChildren().addAll(addCust, cidH, nameH, pnH, eH, addH, buttons);
+        addCust.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
+
+        all.setAlignment(Pos.CENTER);
+        all.setSpacing(20);
+        all.setStyle("-fx-background-color: #a2c4c9;");
+    }
+
+	public Label getAddCust() {
+		return addCust;
 	}
 
-	protected Label getAddc() {
-		return addc;
+	public void setAddCust(Label addCust) {
+		this.addCust = addCust;
 	}
 
-	protected void setAddc(Label addc) {
-		this.addc = addc;
+	public Label getCidL() {
+		return cidL;
 	}
 
-	protected Image getPh() {
-		return ph;
+	public void setCidL(Label cidL) {
+		this.cidL = cidL;
 	}
 
-	protected void setPh(Image ph) {
-		this.ph = ph;
+	public TextField getCidT() {
+		return cidT;
 	}
 
-	protected ImageView getPhVM() {
-		return phVM;
+	public void setCidT(TextField cidT) {
+		this.cidT = cidT;
 	}
 
-	protected void setPhVM(ImageView phVM) {
-		this.phVM = phVM;
+	public HBox getCidH() {
+		return cidH;
 	}
 
-	protected Label getcIDL() {
-		return cIDL;
+	public void setCidH(HBox cidH) {
+		this.cidH = cidH;
 	}
 
-	protected void setcIDL(Label cIDL) {
-		this.cIDL = cIDL;
+	public Label getNameL() {
+		return nameL;
 	}
 
-	protected TextField getcIDT() {
-		return cIDT;
+	public void setNameL(Label nameL) {
+		this.nameL = nameL;
 	}
 
-	protected void setcIDT(TextField cIDT) {
-		this.cIDT = cIDT;
+	public TextField getNameT() {
+		return nameT;
 	}
 
-	protected HBox getcIDH() {
-		return cIDH;
+	public void setNameT(TextField nameT) {
+		this.nameT = nameT;
 	}
 
-	protected void setcIDH(HBox cIDH) {
-		this.cIDH = cIDH;
+	public HBox getNameH() {
+		return nameH;
 	}
 
-	protected Label getfNL() {
-		return fNL;
+	public void setNameH(HBox nameH) {
+		this.nameH = nameH;
 	}
 
-	protected void setfNL(Label fNL) {
-		this.fNL = fNL;
+	public Label getPnL() {
+		return pnL;
 	}
 
-	protected TextField getfNT() {
-		return fNT;
+	public void setPnL(Label pnL) {
+		this.pnL = pnL;
 	}
 
-	protected void setfNT(TextField fNT) {
-		this.fNT = fNT;
+	public TextField getPnT() {
+		return pnT;
 	}
 
-	protected HBox getfNH() {
-		return fNH;
+	public void setPnT(TextField pnT) {
+		this.pnT = pnT;
 	}
 
-	protected void setfNH(HBox fNH) {
-		this.fNH = fNH;
+	public HBox getPnH() {
+		return pnH;
 	}
 
-	protected Label getDbL() {
-		return dbL;
+	public void setPnH(HBox pnH) {
+		this.pnH = pnH;
 	}
 
-	protected void setDbL(Label dbL) {
-		this.dbL = dbL;
+	public Label geteL() {
+		return eL;
 	}
 
-	protected DatePicker getDb() {
-		return db;
+	public void seteL(Label eL) {
+		this.eL = eL;
 	}
 
-	protected void setDb(DatePicker db) {
-		this.db = db;
+	public TextField geteT() {
+		return eT;
 	}
 
-	protected HBox getDbH() {
-		return dbH;
+	public void seteT(TextField eT) {
+		this.eT = eT;
 	}
 
-	protected void setDbH(HBox dbH) {
-		this.dbH = dbH;
+	public HBox geteH() {
+		return eH;
 	}
 
-	protected Label getpNL() {
-		return pNL;
+	public void seteH(HBox eH) {
+		this.eH = eH;
 	}
 
-	protected void setpNL(Label pNL) {
-		this.pNL = pNL;
-	}
-
-	protected TextField getpNT() {
-		return pNT;
-	}
-
-	protected void setpNT(TextField pNT) {
-		this.pNT = pNT;
-	}
-
-	protected HBox getpNH() {
-		return pNH;
-	}
-
-	protected void setpNH(HBox pNH) {
-		this.pNH = pNH;
-	}
-
-	protected Label getEmL() {
-		return emL;
-	}
-
-	protected void setEmL(Label emL) {
-		this.emL = emL;
-	}
-
-	protected TextField getEmT() {
-		return emT;
-	}
-
-	protected void setEmT(TextField emT) {
-		this.emT = emT;
-	}
-
-	protected HBox getEmH() {
-		return emH;
-	}
-
-	protected void setEmH(HBox emH) {
-		this.emH = emH;
-	}
-
-	protected Label getAddL() {
+	public Label getAddL() {
 		return addL;
 	}
 
-	protected void setAddL(Label addL) {
+	public void setAddL(Label addL) {
 		this.addL = addL;
 	}
 
-	protected TextField getAddT() {
+	public TextField getAddT() {
 		return addT;
 	}
 
-	protected void setAddT(TextField addT) {
+	public void setAddT(TextField addT) {
 		this.addT = addT;
 	}
 
-	protected HBox getAddH() {
+	public HBox getAddH() {
 		return addH;
 	}
 
-	protected void setAddH(HBox addH) {
+	public void setAddH(HBox addH) {
 		this.addH = addH;
 	}
 
-	protected Label getGenL() {
-		return genL;
-	}
-
-	protected void setGenL(Label genL) {
-		this.genL = genL;
-	}
-
-	protected ComboBox<String> getGenT() {
-		return genT;
-	}
-
-	protected void setGenT(ComboBox<String> genT) {
-		this.genT = genT;
-	}
-
-	protected HBox getGenH() {
-		return genH;
-	}
-
-	protected void setGenH(HBox genH) {
-		this.genH = genH;
-	}
-
-	protected Image getAddM() {
+	public Image getAddM() {
 		return addM;
 	}
 
-	protected void setAddM(Image addM) {
+	public void setAddM(Image addM) {
 		this.addM = addM;
 	}
 
-	protected ImageView getAddVM() {
+	public ImageView getAddVM() {
 		return addVM;
 	}
 
-	protected void setAddVM(ImageView addVM) {
+	public void setAddVM(ImageView addVM) {
 		this.addVM = addVM;
 	}
 
-	protected Button getAdd() {
+	public Button getAdd() {
 		return add;
 	}
 
-	protected void setAdd(Button add) {
+	public void setAdd(Button add) {
 		this.add = add;
 	}
 
-	protected Image getBackM() {
+	public Image getBackM() {
 		return backM;
 	}
 
-	protected void setBackM(Image backM) {
+	public void setBackM(Image backM) {
 		this.backM = backM;
 	}
 
-	protected ImageView getBackVM() {
+	public ImageView getBackVM() {
 		return backVM;
 	}
 
-	protected void setBackVM(ImageView backVM) {
+	public void setBackVM(ImageView backVM) {
 		this.backVM = backVM;
 	}
 
-	protected Button getBack() {
+	public Button getBack() {
 		return back;
 	}
 
-	protected void setBack(Button back) {
+	public void setBack(Button back) {
 		this.back = back;
 	}
 
-	protected Image getClearM() {
+	public Image getClearM() {
 		return clearM;
 	}
 
-	protected void setClearM(Image clearM) {
+	public void setClearM(Image clearM) {
 		this.clearM = clearM;
 	}
 
-	protected ImageView getClearVM() {
+	public ImageView getClearVM() {
 		return clearVM;
 	}
 
-	protected void setClearVM(ImageView clearVM) {
+	public void setClearVM(ImageView clearVM) {
 		this.clearVM = clearVM;
 	}
 
-	protected Button getClear() {
+	public Button getClear() {
 		return clear;
 	}
 
-	protected void setClear(Button clear) {
+	public void setClear(Button clear) {
 		this.clear = clear;
 	}
 
-	protected HBox getButtons() {
+	public HBox getButtons() {
 		return buttons;
 	}
 
-	protected void setButtons(HBox buttons) {
+	public void setButtons(HBox buttons) {
 		this.buttons = buttons;
 	}
 
-	protected VBox getAll() {
+	public VBox getAll() {
 		return all;
 	}
 
-	protected void setAll(VBox all) {
+	public void setAll(VBox all) {
 		this.all = all;
 	}
-	
+
 }

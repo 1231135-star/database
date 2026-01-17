@@ -1,5 +1,12 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,41 +15,185 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class CustomerTableView {
-	private Label ct=new Label("Customers");
-    private  TableView<Customer> table = new TableView<>();
-    private TableColumn<Customer, Integer> colID = new TableColumn<>("CustomerID");
-    private TableColumn<Customer, String> colName = new TableColumn<>("FullName");
-    private TableColumn<Customer, String> colPhone = new TableColumn<>("Phone");
-    private TableColumn<Customer, String> colEmail = new TableColumn<>("Email");
-    private TableColumn<Customer, String> colAddress = new TableColumn<>("Address");
-    private Image backM=new Image("icons8-back-100(2).png");
-  	private ImageView backVM=new ImageView(backM);
-  	private Button back=new Button("Back", backVM);
-  	private VBox all=new VBox();
+
+    private Label mt = new Label("Customers Table");
+
+    private TableView<Customer> table = new TableView<>();
+    private ObservableList<Customer> data = FXCollections.observableArrayList();
+
+    private TableColumn<Customer, Integer> cidC = new TableColumn<>("Customer ID");
+    private TableColumn<Customer, String> nameC = new TableColumn<>("Full Name");
+    private TableColumn<Customer, String> phoneC = new TableColumn<>("Phone Number");
+    private TableColumn<Customer, String> emailC = new TableColumn<>("Email");
+    private TableColumn<Customer, String> addressC = new TableColumn<>("Address");
+
+    private Image refreshM = new Image("icons8-refresh-100.png");
+    private ImageView refreshVM = new ImageView(refreshM);
+    private Button refresh = new Button("Refresh", refreshVM);
+
+    private Image backM = new Image("icons8-back-100(2).png");
+    private ImageView backVM = new ImageView(backM);
+    private Button back = new Button("Back", backVM);
+
+    private HBox buttons = new HBox();
+    private VBox all = new VBox();
+
     public CustomerTableView() {
-        colID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-        colPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-        table.getColumns().addAll(colID, colName, colPhone, colEmail, colAddress);
+
+        mt.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
+
+        cidC.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        nameC.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        phoneC.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        emailC.setCellValueFactory(new PropertyValueFactory<>("email"));
+        addressC.setCellValueFactory(new PropertyValueFactory<>("address"));
+
+        cidC.setPrefWidth(120);
+        nameC.setPrefWidth(180);
+        phoneC.setPrefWidth(150);
+        emailC.setPrefWidth(180);
+        addressC.setPrefWidth(220);
+
+        table.getColumns().addAll(cidC, nameC, phoneC, emailC, addressC);
+        table.setItems(data);
+        table.setStyle("-fx-font-size:16px;");
+
+        refreshVM.setFitWidth(35);
+        refreshVM.setFitHeight(35);
+
+        backVM.setFitWidth(35);
+        backVM.setFitHeight(35);
+
+        refresh.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+
         back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		ct.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:40px;");
-        all.getChildren().addAll(ct,table,back);
+
+        buttons.getChildren().addAll(refresh, back);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+
+        all.getChildren().addAll(mt, table, buttons);
         all.setAlignment(Pos.CENTER);
-		all.setSpacing(20);
-		all.setStyle("-fx-background-color: #a2c4c9;");
+        all.setSpacing(20);
+        all.setStyle("-fx-background-color: #a2c4c9;");
     }
 
-	public Label getCt() {
-		return ct;
+    public void loadData(Connection con) {
+        data.clear();
+
+        try {
+            String sql = "SELECT * FROM Customer";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("CustomerID");
+                String name = rs.getString("FullName");
+                String phone = rs.getString("PhoneNumber");
+                String email = rs.getString("Email");
+                String address = rs.getString("Address");
+
+                data.add(new Customer(id, name, phone, email, address));
+            }
+
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+	public Label getMt() {
+		return mt;
 	}
 
-	public void setCt(Label ct) {
-		this.ct = ct;
+	public void setMt(Label mt) {
+		this.mt = mt;
+	}
+
+	public TableView<Customer> getTable() {
+		return table;
+	}
+
+	public void setTable(TableView<Customer> table) {
+		this.table = table;
+	}
+
+	public ObservableList<Customer> getData() {
+		return data;
+	}
+
+	public void setData(ObservableList<Customer> data) {
+		this.data = data;
+	}
+
+	public TableColumn<Customer, Integer> getCidC() {
+		return cidC;
+	}
+
+	public void setCidC(TableColumn<Customer, Integer> cidC) {
+		this.cidC = cidC;
+	}
+
+	public TableColumn<Customer, String> getNameC() {
+		return nameC;
+	}
+
+	public void setNameC(TableColumn<Customer, String> nameC) {
+		this.nameC = nameC;
+	}
+
+	public TableColumn<Customer, String> getPhoneC() {
+		return phoneC;
+	}
+
+	public void setPhoneC(TableColumn<Customer, String> phoneC) {
+		this.phoneC = phoneC;
+	}
+
+	public TableColumn<Customer, String> getEmailC() {
+		return emailC;
+	}
+
+	public void setEmailC(TableColumn<Customer, String> emailC) {
+		this.emailC = emailC;
+	}
+
+	public TableColumn<Customer, String> getAddressC() {
+		return addressC;
+	}
+
+	public void setAddressC(TableColumn<Customer, String> addressC) {
+		this.addressC = addressC;
+	}
+
+	public Image getRefreshM() {
+		return refreshM;
+	}
+
+	public void setRefreshM(Image refreshM) {
+		this.refreshM = refreshM;
+	}
+
+	public ImageView getRefreshVM() {
+		return refreshVM;
+	}
+
+	public void setRefreshVM(ImageView refreshVM) {
+		this.refreshVM = refreshVM;
+	}
+
+	public Button getRefresh() {
+		return refresh;
+	}
+
+	public void setRefresh(Button refresh) {
+		this.refresh = refresh;
 	}
 
 	public Image getBackM() {
@@ -69,6 +220,14 @@ public class CustomerTableView {
 		this.back = back;
 	}
 
+	public HBox getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(HBox buttons) {
+		this.buttons = buttons;
+	}
+
 	public VBox getAll() {
 		return all;
 	}
@@ -77,52 +236,6 @@ public class CustomerTableView {
 		this.all = all;
 	}
 
-	public void setTable(TableView<Customer> table) {
-		this.table = table;
-	}
-
-	public TableColumn<Customer, Integer> getColID() {
-		return colID;
-	}
-
-	public void setColID(TableColumn<Customer, Integer> colID) {
-		this.colID = colID;
-	}
-
-	public TableColumn<Customer, String> getColName() {
-		return colName;
-	}
-
-	public void setColName(TableColumn<Customer, String> colName) {
-		this.colName = colName;
-	}
-
-	public TableColumn<Customer, String> getColPhone() {
-		return colPhone;
-	}
-
-	public void setColPhone(TableColumn<Customer, String> colPhone) {
-		this.colPhone = colPhone;
-	}
-
-	public TableColumn<Customer, String> getColEmail() {
-		return colEmail;
-	}
-
-	public void setColEmail(TableColumn<Customer, String> colEmail) {
-		this.colEmail = colEmail;
-	}
-
-	public TableColumn<Customer, String> getColAddress() {
-		return colAddress;
-	}
-
-	public void setColAddress(TableColumn<Customer, String> colAddress) {
-		this.colAddress = colAddress;
-	}
-
-	public TableView<Customer> getTable() {
-		return table;
-	}
+   
 
 }

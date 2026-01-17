@@ -8,457 +8,400 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class DeleteBranch {
-	private Label deleteBra=new Label("Delete Branch");
-	private Image ph=new Image("bb.jpg");
-	private ImageView phVM=new ImageView(ph);
-	
-	private Label bIDL=new Label("Branch ID :");
-	private TextField bIDT=new TextField();
-	private HBox bIDH=new HBox();
-	
-	private Label bNL=new Label("Branch Name :");
-	private TextField bNT=new TextField();
-	private HBox bNH=new HBox();
-	
-	private Label addL=new Label("Address :");
-	private TextField addT=new TextField();
-	private HBox addH=new HBox();
 
-	private Label pnL=new Label("Phone Number :");
-	private TextField pnT=new TextField();
-	private HBox pnH=new HBox();
-	
-	private Label eL=new Label("Email Address :");
-	private TextField eT=new TextField();
-	private HBox eH=new HBox();
-	
-	private Label midL=new Label("Maneger ID :");
-	private TextField midT=new TextField();
-	private HBox midH=new HBox();
-	
-	private Label wsL=new Label("Working hours starts at :");
-	private TextField wsT=new TextField();
-	private HBox wsH=new HBox();
-	
-	private Label weL=new Label("Working hours ends at :");
-	private TextField weT=new TextField();
-	private HBox weH=new HBox();
-	
-	private Label hL=new Label("weekly holiday(sepretade by comma) :");
-	private TextField hT=new TextField();
-	private HBox hH=new HBox();
-	
-	private Image deleteM=new Image("icons8-delete-all-100.png");
-	private ImageView deleteVM=new ImageView(deleteM);
-	private Button delete=new Button("Add",deleteVM);
-	
-	private Image backM=new Image("icons8-back-100(2).png");
-	private ImageView backVM=new ImageView(backM);
-	private Button back=new Button("Back", backVM);
-	
-	private Image clearM=new Image("icons8-clear-100(1).png");
-	private ImageView clearVM=new ImageView(clearM);
-	private Button clear=new Button("clear",clearVM);
-	
-	private HBox buttons=new HBox();
-	private VBox all=new VBox();
-	
+	private Label dB = new Label("Delete Branch");
+
+	private Image ph = new Image("bb.jpg");
+	private ImageView phVM = new ImageView(ph);
+
+	private Image searchM = new Image("icons8-search-100.png");
+	private ImageView searchVM = new ImageView(searchM);
+	private Button searchB = new Button("Search", searchVM);
+	private Label searchL = new Label("put id :");
+	private TextField searchT = new TextField();
+	private HBox searchH = new HBox();
+
+	private Label bidL = new Label("Branch ID :");
+	private TextField bidT = new TextField();
+	private HBox bidH = new HBox();
+
+	private Label bnL = new Label("Branch Name :");
+	private TextField bnT = new TextField();
+	private HBox bnH = new HBox();
+
+	private Label addL = new Label("Address :");
+	private TextField addT = new TextField();
+	private HBox addH = new HBox();
+
+	private Label pnL = new Label("Phone Number :");
+	private TextField pnT = new TextField();
+	private HBox pnH = new HBox();
+
+	private Label eL = new Label("Email Address :");
+	private TextField eT = new TextField();
+	private HBox eH = new HBox();
+
+	private Image deleteM = new Image("icons8-remove-employee-100.png"); // نفس الأيقونة
+	private ImageView deleteVM = new ImageView(deleteM);
+	private Button delete = new Button("Delete", deleteVM);
+
+	private Image backM = new Image("icons8-back-100(2).png");
+	private ImageView backVM = new ImageView(backM);
+	private Button back = new Button("Back", backVM);
+
+	private Image clearM = new Image("icons8-clear-100(1).png");
+	private ImageView clearVM = new ImageView(clearM);
+	private Button clear = new Button("clear", clearVM);
+
+	private HBox buttons = new HBox();
+	private VBox all = new VBox();
+
 	public DeleteBranch() {
-		bIDH.getChildren().addAll(bIDL,bIDT);
-		bIDT.setEditable(false);
-		bIDT.setVisible(true);
-		bIDL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		bIDH.setAlignment(Pos.CENTER);
-		bIDH.setSpacing(20);
-		bNH.getChildren().addAll(bNL,bNT);
-		bNT.setEditable(false);
-		bNT.setVisible(true);
-		bNL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		bNH.setAlignment(Pos.CENTER);
-		bNH.setSpacing(20);
-		midH.getChildren().addAll(midL,midT);
-		midT.setEditable(false);
-		midT.setVisible(true);
-		midL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		midH.setAlignment(Pos.CENTER);
-		midH.setSpacing(20);
-		addH.getChildren().addAll(addL,addT);
+
+		searchL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+		searchL.setFont(Font.font(null, FontWeight.BOLD, 20));
+		searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		searchVM.setFitWidth(42);
+		searchVM.setFitHeight(42);
+
+		searchH.getChildren().addAll(searchL, searchT, searchB);
+		searchH.setSpacing(10);
+		searchH.setAlignment(Pos.CENTER);
+
+		bidH.getChildren().addAll(bidL, bidT);
+		bidT.setEditable(false);
+		bidT.setVisible(true);
+		bidL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+		bidH.setAlignment(Pos.CENTER);
+		bidH.setSpacing(20);
+
+		bnH.getChildren().addAll(bnL, bnT);
+		bnT.setEditable(false);
+		bnT.setVisible(true);
+		bnL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+		bnH.setAlignment(Pos.CENTER);
+		bnH.setSpacing(20);
+
+		addH.getChildren().addAll(addL, addT);
 		addT.setEditable(false);
 		addT.setVisible(true);
 		addL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
 		addH.setAlignment(Pos.CENTER);
 		addH.setSpacing(20);
-		wsH.getChildren().addAll(wsL,wsT);
-		wsT.setEditable(false);
-		wsT.setVisible(true);
-		wsL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		wsH.setAlignment(Pos.CENTER);
-		wsH.setSpacing(20);
-		pnH.getChildren().addAll(pnL,pnT);
+
+		pnH.getChildren().addAll(pnL, pnT);
 		pnT.setEditable(false);
 		pnT.setVisible(true);
 		pnL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
 		pnH.setAlignment(Pos.CENTER);
 		pnH.setSpacing(20);
-		eH.getChildren().addAll(eL,eT);
+
+		eH.getChildren().addAll(eL, eT);
 		eT.setEditable(false);
 		eT.setVisible(true);
 		eL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
 		eH.setAlignment(Pos.CENTER);
 		eH.setSpacing(20);
-		weH.getChildren().addAll(weL,weT);
-		weT.setEditable(false);
-		weT.setVisible(true);
-		weL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		weH.setAlignment(Pos.CENTER);
-		weH.setSpacing(20);
-		hH.getChildren().addAll(hL,hT);
-		hT.setEditable(false);
-		hT.setVisible(true);
-		hL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		hH.setAlignment(Pos.CENTER);
-		hH.setSpacing(20);
-		buttons.getChildren().addAll(delete,back,clear);
+
+		buttons.getChildren().addAll(delete, back, clear);
 		buttons.setAlignment(Pos.CENTER);
 		buttons.setSpacing(20);
+
 		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		all.getChildren().addAll(deleteBra,bIDH,bNH,midH,addH,pnH,eH,wsH,weH,hH,buttons);
-		deleteBra.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
+
+		delete.setDisable(true);
+
+		all.getChildren().addAll(dB, searchH, bidH, bnH, addH, pnH, eH, buttons);
+		dB.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
 		all.setAlignment(Pos.CENTER);
-		all.setSpacing(20);
+		all.setSpacing(15);
 		all.setStyle("-fx-background-color: #a2c4c9;");
 	}
 
-	protected Label getDeleteBra() {
-		return deleteBra;
+	public Label getdB() {
+		return dB;
 	}
 
-	protected void setDeleteBra(Label deleteBra) {
-		this.deleteBra = deleteBra;
+	public void setdB(Label dB) {
+		this.dB = dB;
 	}
 
-	protected Image getPh() {
+	public Image getPh() {
 		return ph;
 	}
 
-	protected void setPh(Image ph) {
+	public void setPh(Image ph) {
 		this.ph = ph;
 	}
 
-	protected ImageView getPhVM() {
+	public ImageView getPhVM() {
 		return phVM;
 	}
 
-	protected void setPhVM(ImageView phVM) {
+	public void setPhVM(ImageView phVM) {
 		this.phVM = phVM;
 	}
 
-	protected Label getbIDL() {
-		return bIDL;
+	public Image getSearchM() {
+		return searchM;
 	}
 
-	protected void setbIDL(Label bIDL) {
-		this.bIDL = bIDL;
+	public void setSearchM(Image searchM) {
+		this.searchM = searchM;
 	}
 
-	protected TextField getbIDT() {
-		return bIDT;
+	public ImageView getSearchVM() {
+		return searchVM;
 	}
 
-	protected void setbIDT(TextField bIDT) {
-		this.bIDT = bIDT;
+	public void setSearchVM(ImageView searchVM) {
+		this.searchVM = searchVM;
 	}
 
-	protected HBox getbIDH() {
-		return bIDH;
+	public Button getSearchB() {
+		return searchB;
 	}
 
-	protected void setbIDH(HBox bIDH) {
-		this.bIDH = bIDH;
+	public void setSearchB(Button searchB) {
+		this.searchB = searchB;
 	}
 
-	protected Label getbNL() {
-		return bNL;
+	public Label getSearchL() {
+		return searchL;
 	}
 
-	protected void setbNL(Label bNL) {
-		this.bNL = bNL;
+	public void setSearchL(Label searchL) {
+		this.searchL = searchL;
 	}
 
-	protected TextField getbNT() {
-		return bNT;
+	public TextField getSearchT() {
+		return searchT;
 	}
 
-	protected void setbNT(TextField bNT) {
-		this.bNT = bNT;
+	public void setSearchT(TextField searchT) {
+		this.searchT = searchT;
 	}
 
-	protected HBox getbNH() {
-		return bNH;
+	public HBox getSearchH() {
+		return searchH;
 	}
 
-	protected void setbNH(HBox bNH) {
-		this.bNH = bNH;
+	public void setSearchH(HBox searchH) {
+		this.searchH = searchH;
 	}
 
-	protected Label getAddL() {
+	public Label getBidL() {
+		return bidL;
+	}
+
+	public void setBidL(Label bidL) {
+		this.bidL = bidL;
+	}
+
+	public TextField getBidT() {
+		return bidT;
+	}
+
+	public void setBidT(TextField bidT) {
+		this.bidT = bidT;
+	}
+
+	public HBox getBidH() {
+		return bidH;
+	}
+
+	public void setBidH(HBox bidH) {
+		this.bidH = bidH;
+	}
+
+	public Label getBnL() {
+		return bnL;
+	}
+
+	public void setBnL(Label bnL) {
+		this.bnL = bnL;
+	}
+
+	public TextField getBnT() {
+		return bnT;
+	}
+
+	public void setBnT(TextField bnT) {
+		this.bnT = bnT;
+	}
+
+	public HBox getBnH() {
+		return bnH;
+	}
+
+	public void setBnH(HBox bnH) {
+		this.bnH = bnH;
+	}
+
+	public Label getAddL() {
 		return addL;
 	}
 
-	protected void setAddL(Label addL) {
+	public void setAddL(Label addL) {
 		this.addL = addL;
 	}
 
-	protected TextField getAddT() {
+	public TextField getAddT() {
 		return addT;
 	}
 
-	protected void setAddT(TextField addT) {
+	public void setAddT(TextField addT) {
 		this.addT = addT;
 	}
 
-	protected HBox getAddH() {
+	public HBox getAddH() {
 		return addH;
 	}
 
-	protected void setAddH(HBox addH) {
+	public void setAddH(HBox addH) {
 		this.addH = addH;
 	}
 
-	protected Label getPnL() {
+	public Label getPnL() {
 		return pnL;
 	}
 
-	protected void setPnL(Label pnL) {
+	public void setPnL(Label pnL) {
 		this.pnL = pnL;
 	}
 
-	protected TextField getPnT() {
+	public TextField getPnT() {
 		return pnT;
 	}
 
-	protected void setPnT(TextField pnT) {
+	public void setPnT(TextField pnT) {
 		this.pnT = pnT;
 	}
 
-	protected HBox getPnH() {
+	public HBox getPnH() {
 		return pnH;
 	}
 
-	protected void setPnH(HBox pnH) {
+	public void setPnH(HBox pnH) {
 		this.pnH = pnH;
 	}
 
-	protected Label geteL() {
+	public Label geteL() {
 		return eL;
 	}
 
-	protected void seteL(Label eL) {
+	public void seteL(Label eL) {
 		this.eL = eL;
 	}
 
-	protected TextField geteT() {
+	public TextField geteT() {
 		return eT;
 	}
 
-	protected void seteT(TextField eT) {
+	public void seteT(TextField eT) {
 		this.eT = eT;
 	}
 
-	protected HBox geteH() {
+	public HBox geteH() {
 		return eH;
 	}
 
-	protected void seteH(HBox eH) {
+	public void seteH(HBox eH) {
 		this.eH = eH;
 	}
 
-	protected Label getMidL() {
-		return midL;
-	}
-
-	protected void setMidL(Label midL) {
-		this.midL = midL;
-	}
-
-	protected TextField getMidT() {
-		return midT;
-	}
-
-	protected void setMidT(TextField midT) {
-		this.midT = midT;
-	}
-
-	protected HBox getMidH() {
-		return midH;
-	}
-
-	protected void setMidH(HBox midH) {
-		this.midH = midH;
-	}
-
-	protected Label getWsL() {
-		return wsL;
-	}
-
-	protected void setWsL(Label wsL) {
-		this.wsL = wsL;
-	}
-
-	protected TextField getWsT() {
-		return wsT;
-	}
-
-	protected void setWsT(TextField wsT) {
-		this.wsT = wsT;
-	}
-
-	protected HBox getWsH() {
-		return wsH;
-	}
-
-	protected void setWsH(HBox wsH) {
-		this.wsH = wsH;
-	}
-
-	protected Label getWeL() {
-		return weL;
-	}
-
-	protected void setWeL(Label weL) {
-		this.weL = weL;
-	}
-
-	protected TextField getWeT() {
-		return weT;
-	}
-
-	protected void setWeT(TextField weT) {
-		this.weT = weT;
-	}
-
-	protected HBox getWeH() {
-		return weH;
-	}
-
-	protected void setWeH(HBox weH) {
-		this.weH = weH;
-	}
-
-	protected Label gethL() {
-		return hL;
-	}
-
-	protected void sethL(Label hL) {
-		this.hL = hL;
-	}
-
-	protected TextField gethT() {
-		return hT;
-	}
-
-	protected void sethT(TextField hT) {
-		this.hT = hT;
-	}
-
-	protected HBox gethH() {
-		return hH;
-	}
-
-	protected void sethH(HBox hH) {
-		this.hH = hH;
-	}
-
-	protected Image getDeleteM() {
+	public Image getDeleteM() {
 		return deleteM;
 	}
 
-	protected void setDeleteM(Image deleteM) {
+	public void setDeleteM(Image deleteM) {
 		this.deleteM = deleteM;
 	}
 
-	protected ImageView getDeleteVM() {
+	public ImageView getDeleteVM() {
 		return deleteVM;
 	}
 
-	protected void setDeleteVM(ImageView deleteVM) {
+	public void setDeleteVM(ImageView deleteVM) {
 		this.deleteVM = deleteVM;
 	}
 
-	protected Button getDelete() {
+	public Button getDelete() {
 		return delete;
 	}
 
-	protected void setDelete(Button delete) {
+	public void setDelete(Button delete) {
 		this.delete = delete;
 	}
 
-	protected Image getBackM() {
+	public Image getBackM() {
 		return backM;
 	}
 
-	protected void setBackM(Image backM) {
+	public void setBackM(Image backM) {
 		this.backM = backM;
 	}
 
-	protected ImageView getBackVM() {
+	public ImageView getBackVM() {
 		return backVM;
 	}
 
-	protected void setBackVM(ImageView backVM) {
+	public void setBackVM(ImageView backVM) {
 		this.backVM = backVM;
 	}
 
-	protected Button getBack() {
+	public Button getBack() {
 		return back;
 	}
 
-	protected void setBack(Button back) {
+	public void setBack(Button back) {
 		this.back = back;
 	}
 
-	protected Image getClearM() {
+	public Image getClearM() {
 		return clearM;
 	}
 
-	protected void setClearM(Image clearM) {
+	public void setClearM(Image clearM) {
 		this.clearM = clearM;
 	}
 
-	protected ImageView getClearVM() {
+	public ImageView getClearVM() {
 		return clearVM;
 	}
 
-	protected void setClearVM(ImageView clearVM) {
+	public void setClearVM(ImageView clearVM) {
 		this.clearVM = clearVM;
 	}
 
-	protected Button getClear() {
+	public Button getClear() {
 		return clear;
 	}
 
-	protected void setClear(Button clear) {
+	public void setClear(Button clear) {
 		this.clear = clear;
 	}
 
-	protected HBox getButtons() {
+	public HBox getButtons() {
 		return buttons;
 	}
 
-	protected void setButtons(HBox buttons) {
+	public void setButtons(HBox buttons) {
 		this.buttons = buttons;
 	}
 
-	protected VBox getAll() {
+	public VBox getAll() {
 		return all;
 	}
 
-	protected void setAll(VBox all) {
+	public void setAll(VBox all) {
 		this.all = all;
 	}
-	
+
 }

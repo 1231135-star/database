@@ -2,8 +2,6 @@ package application;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -12,246 +10,235 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class AddCategory {
-	private Label addc=new Label("Add Category");
-	private Image ph=new Image("bb.jpg");
-	private ImageView phVM=new ImageView(ph);
-	
-	private Label cIDL=new Label(" Category ID :");
-	private TextField cIDT=new TextField();
-	private HBox cIDH=new HBox();
-	
-	private Label fNL=new Label("Category Name :");
-	private TextField fNT=new TextField();
-	private HBox fNH=new HBox();
-	
-	private Label dbL=new Label("Ddescription :");
-	private TextField db=new TextField();
-	private HBox dbH=new HBox();
-	
-	private Image addM=new Image("icons8-add-100(1).png");
-	private ImageView addVM=new ImageView(addM);
-	private Button add=new Button("Add",addVM);
-	
-	private Image backM=new Image("icons8-back-100(2).png");
-	private ImageView backVM=new ImageView(backM);
-	private Button back=new Button("Back", backVM);
-	
-	private Image clearM=new Image("icons8-clear-100(1).png");
-	private ImageView clearVM=new ImageView(clearM);
-	private Button clear=new Button("clear",clearVM);
-	
-	private HBox buttons=new HBox();
-	private VBox all=new VBox();
-	
-	public AddCategory() {
-		cIDH.getChildren().addAll(cIDL,cIDT);
-		cIDL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		cIDH.setAlignment(Pos.CENTER);
-		cIDH.setSpacing(20);
-		fNH.getChildren().addAll(fNL,fNT);
-		fNL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		fNH.setAlignment(Pos.CENTER);
-		fNH.setSpacing(20);
-		dbH.getChildren().addAll(dbL,db);
-		dbL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-		dbH.setAlignment(Pos.CENTER);
-		dbH.setSpacing(20);
-		buttons.getChildren().addAll(add,back,clear);
-		buttons.setAlignment(Pos.CENTER);
-		buttons.setSpacing(20);
-		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		add.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		all.getChildren().addAll(addc,cIDH,fNH,dbH,buttons);
-		addc.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
-		all.setAlignment(Pos.CENTER);
-		all.setSpacing(20);
-		all.setStyle("-fx-background-color: #a2c4c9;");
+
+    private Label addCat = new Label("Add Category");
+
+    private Label catIDL = new Label("Category ID :");
+    private TextField catIDT = new TextField();
+    private HBox catIDH = new HBox();
+
+    private Label catNL = new Label("Category Name :");
+    private TextField catNT = new TextField();
+    private HBox catNH = new HBox();
+
+    private Label dL = new Label("Description :");
+    private TextField dT = new TextField();
+    private HBox dH = new HBox();
+
+    private Image addM = new Image("icons8-add-administrator-100.png");
+    private ImageView addVM = new ImageView(addM);
+    private Button add = new Button("Add", addVM);
+
+    private Image backM = new Image("icons8-back-100(2).png");
+    private ImageView backVM = new ImageView(backM);
+    private Button back = new Button("Back", backVM);
+
+    private Image clearM = new Image("icons8-clear-100(1).png");
+    private ImageView clearVM = new ImageView(clearM);
+    private Button clear = new Button("clear", clearVM);
+
+    private HBox buttons = new HBox();
+    private VBox all = new VBox();
+
+    public AddCategory() {
+
+        catIDH.getChildren().addAll(catIDL, catIDT);
+        catIDL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        catIDH.setAlignment(Pos.CENTER);
+        catIDH.setSpacing(20);
+
+        catNH.getChildren().addAll(catNL, catNT);
+        catNL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        catNH.setAlignment(Pos.CENTER);
+        catNH.setSpacing(20);
+
+        dH.getChildren().addAll(dL, dT);
+        dL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        dH.setAlignment(Pos.CENTER);
+        dH.setSpacing(20);
+
+        buttons.getChildren().addAll(add, back, clear);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setSpacing(20);
+
+        clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        add.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+
+        all.getChildren().addAll(addCat, catIDH, catNH, dH, buttons);
+        addCat.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
+        all.setAlignment(Pos.CENTER);
+        all.setSpacing(20);
+        all.setStyle("-fx-background-color: #a2c4c9;");
+    }
+
+	public Label getAddCat() {
+		return addCat;
 	}
 
-	protected Label getAddc() {
-		return addc;
+	public void setAddCat(Label addCat) {
+		this.addCat = addCat;
 	}
 
-	protected void setAddc(Label addc) {
-		this.addc = addc;
+	public Label getCatIDL() {
+		return catIDL;
 	}
 
-	protected Image getPh() {
-		return ph;
+	public void setCatIDL(Label catIDL) {
+		this.catIDL = catIDL;
 	}
 
-	protected void setPh(Image ph) {
-		this.ph = ph;
+	public TextField getCatIDT() {
+		return catIDT;
 	}
 
-	protected ImageView getPhVM() {
-		return phVM;
+	public void setCatIDT(TextField catIDT) {
+		this.catIDT = catIDT;
 	}
 
-	protected void setPhVM(ImageView phVM) {
-		this.phVM = phVM;
+	public HBox getCatIDH() {
+		return catIDH;
 	}
 
-	protected Label getcIDL() {
-		return cIDL;
+	public void setCatIDH(HBox catIDH) {
+		this.catIDH = catIDH;
 	}
 
-	protected void setcIDL(Label cIDL) {
-		this.cIDL = cIDL;
+	public Label getCatNL() {
+		return catNL;
 	}
 
-	protected TextField getcIDT() {
-		return cIDT;
+	public void setCatNL(Label catNL) {
+		this.catNL = catNL;
 	}
 
-	protected void setcIDT(TextField cIDT) {
-		this.cIDT = cIDT;
+	public TextField getCatNT() {
+		return catNT;
 	}
 
-	protected HBox getcIDH() {
-		return cIDH;
+	public void setCatNT(TextField catNT) {
+		this.catNT = catNT;
 	}
 
-	protected void setcIDH(HBox cIDH) {
-		this.cIDH = cIDH;
+	public HBox getCatNH() {
+		return catNH;
 	}
 
-	protected Label getfNL() {
-		return fNL;
+	public void setCatNH(HBox catNH) {
+		this.catNH = catNH;
 	}
 
-	protected void setfNL(Label fNL) {
-		this.fNL = fNL;
+	public Label getdL() {
+		return dL;
 	}
 
-	protected TextField getfNT() {
-		return fNT;
+	public void setdL(Label dL) {
+		this.dL = dL;
 	}
 
-	protected void setfNT(TextField fNT) {
-		this.fNT = fNT;
+	public TextField getdT() {
+		return dT;
 	}
 
-	protected HBox getfNH() {
-		return fNH;
+	public void setdT(TextField dT) {
+		this.dT = dT;
 	}
 
-	protected void setfNH(HBox fNH) {
-		this.fNH = fNH;
+	public HBox getdH() {
+		return dH;
 	}
 
-	protected Label getDbL() {
-		return dbL;
+	public void setdH(HBox dH) {
+		this.dH = dH;
 	}
 
-	protected void setDbL(Label dbL) {
-		this.dbL = dbL;
-	}
-
-	protected TextField getDb() {
-		return db;
-	}
-
-	protected void setDb(TextField db) {
-		this.db = db;
-	}
-
-	protected HBox getDbH() {
-		return dbH;
-	}
-
-	protected void setDbH(HBox dbH) {
-		this.dbH = dbH;
-	}
-
-	protected Image getAddM() {
+	public Image getAddM() {
 		return addM;
 	}
 
-	protected void setAddM(Image addM) {
+	public void setAddM(Image addM) {
 		this.addM = addM;
 	}
 
-	protected ImageView getAddVM() {
+	public ImageView getAddVM() {
 		return addVM;
 	}
 
-	protected void setAddVM(ImageView addVM) {
+	public void setAddVM(ImageView addVM) {
 		this.addVM = addVM;
 	}
 
-	protected Button getAdd() {
+	public Button getAdd() {
 		return add;
 	}
 
-	protected void setAdd(Button add) {
+	public void setAdd(Button add) {
 		this.add = add;
 	}
 
-	protected Image getBackM() {
+	public Image getBackM() {
 		return backM;
 	}
 
-	protected void setBackM(Image backM) {
+	public void setBackM(Image backM) {
 		this.backM = backM;
 	}
 
-	protected ImageView getBackVM() {
+	public ImageView getBackVM() {
 		return backVM;
 	}
 
-	protected void setBackVM(ImageView backVM) {
+	public void setBackVM(ImageView backVM) {
 		this.backVM = backVM;
 	}
 
-	protected Button getBack() {
+	public Button getBack() {
 		return back;
 	}
 
-	protected void setBack(Button back) {
+	public void setBack(Button back) {
 		this.back = back;
 	}
 
-	protected Image getClearM() {
+	public Image getClearM() {
 		return clearM;
 	}
 
-	protected void setClearM(Image clearM) {
+	public void setClearM(Image clearM) {
 		this.clearM = clearM;
 	}
 
-	protected ImageView getClearVM() {
+	public ImageView getClearVM() {
 		return clearVM;
 	}
 
-	protected void setClearVM(ImageView clearVM) {
+	public void setClearVM(ImageView clearVM) {
 		this.clearVM = clearVM;
 	}
 
-	protected Button getClear() {
+	public Button getClear() {
 		return clear;
 	}
 
-	protected void setClear(Button clear) {
+	public void setClear(Button clear) {
 		this.clear = clear;
 	}
 
-	protected HBox getButtons() {
+	public HBox getButtons() {
 		return buttons;
 	}
 
-	protected void setButtons(HBox buttons) {
+	public void setButtons(HBox buttons) {
 		this.buttons = buttons;
 	}
 
-	protected VBox getAll() {
+	public VBox getAll() {
 		return all;
 	}
 
-	protected void setAll(VBox all) {
+	public void setAll(VBox all) {
 		this.all = all;
 	}
-	
-	
+
+    
 }
