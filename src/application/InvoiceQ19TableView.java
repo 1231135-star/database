@@ -79,27 +79,37 @@ public class InvoiceQ19TableView {
         ObservableList<InvoiceQ19Row> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT 
-                    b.BranchID,
-                    b.BranchName,
+                select 
+                    b.branchid as branchid,
+                    b.branchname as branchname,
 
-                    IFNULL(SUM(i.TotalAmount),0) AS TotalSales,
+                    ifnull(sum(i.totalamount), 0) as totalsales,
 
-                    (IFNULL(SUM(i.TotalAmount),0) - 
-                     IFNULL((SELECT SUM(p.TotalCost) 
-                             FROM Purchase p 
-                             WHERE p.BranchID=b.BranchID),0)
-                    ) AS TotalProfit,
+                    (
+                        ifnull(sum(i.totalamount), 0) -
+                        ifnull(
+                            (
+                                select sum(p.totalcost)
+                                from purchase p
+                                where p.branchid = b.branchid
+                            ), 0
+                        )
+                    ) as totalprofit,
 
-                    IFNULL((SELECT SUM(dw.LossAmount)
-                            FROM DamagedWithdrawn dw
-                            WHERE dw.BranchID=b.BranchID),0) AS TotalLoss
+                    ifnull(
+                        (
+                            select sum(dw.lossamount)
+                            from damagedwithdrawn dw
+                            where dw.branchid = b.branchid
+                        ), 0
+                    ) as totalloss
 
-                FROM Branch b
-                LEFT JOIN Invoice i ON i.BranchID = b.BranchID
-                GROUP BY b.BranchID, b.BranchName
-                ORDER BY TotalSales DESC
+                from branch b
+                left join invoice i on i.branchid = b.branchid
+                group by b.branchid, b.branchname
+                order by totalsales desc
                 """;
+
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);

@@ -30,7 +30,7 @@ public class InvoiceQ32TableView {
     private ImageView searchVM = new ImageView(searchM);
     private Button searchB = new Button("Search", searchVM);
 
-    private Image clearM = new Image("icons8-erase-100.png");
+    private Image clearM = new Image("icons8-refresh-100.png");
     private ImageView clearVM = new ImageView(clearM);
     private Button clearB = new Button("Clear", clearVM);
 
