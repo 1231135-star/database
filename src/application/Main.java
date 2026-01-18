@@ -3136,15 +3136,237 @@ public class Main extends Application {
 
 			
 			
-			AddInvoiceItem aivi=new AddInvoiceItem();
-			DeleteInvoiceItem divi=new DeleteInvoiceItem();
-			UpdateInvoiceItem uivi=new UpdateInvoiceItem();
-			InvoiceItemTableView iit=new InvoiceItemTableView();
+			
+			
+		 //AddInvoiceItem aivi=new AddInvoiceItem();
+			AddInvoiceItem aii = new AddInvoiceItem();
 
-			Scene aiviscene = new Scene(aivi.getAll(),400,400);
+			aii.getAdd().setOnAction(e -> {
+
+			    // 1️⃣ فحص الحقول الفارغة
+			    if (
+			        aii.getInvT().getText().trim().isEmpty() ||
+			        aii.getInvTT().getText().trim().isEmpty() ||
+			        aii.getQuanT().getText().trim().isEmpty() ||
+			        aii.getUpriT().getText().trim().isEmpty()
+			    ) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        // 2️⃣ قراءة القيم
+			        int invoiceId   = Integer.parseInt(aii.getInvT().getText().trim());
+			        int inventoryId = Integer.parseInt(aii.getInvTT().getText().trim());
+			        int quantity    = Integer.parseInt(aii.getQuanT().getText().trim());
+			        double unitPrice = Double.parseDouble(aii.getUpriT().getText().trim());
+
+			        // 3️⃣ حساب Line Total
+			        double lineTotal = quantity * unitPrice;
+
+			        // 4️⃣ SQL
+			        String sql = """
+			            INSERT INTO invoice_item
+			            (invoiceid, inventoryid, quantity, unitprice, linetotal)
+			            VALUES (?, ?, ?, ?, ?)
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, invoiceId);
+			            ps.setInt(2, inventoryId);
+			            ps.setInt(3, quantity);
+			            ps.setDouble(4, unitPrice);
+			            ps.setDouble(5, lineTotal);
+
+			            ps.executeUpdate();
+
+			            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			            ok.setTitle("Done");
+			            ok.setContentText("Invoice Item added successfully");
+			            ok.showAndWait();
+
+			            // 5️⃣ تفريغ الحقول
+			            aii.clearFields();
+			        }
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("Quantity and prices must be numeric values");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			DeleteInvoiceItem divi=new DeleteInvoiceItem();
+			divi.getDelete().setOnAction(e -> {
+
+			    // 1️⃣ فحص القيم الأساسية (Invoice ID + Inventory ID)
+			    if (
+			        divi.getInvT().getText().trim().isEmpty() ||
+			        divi.getInvTT().getText().trim().isEmpty()
+			    ) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Invoice ID and Inventory ID are required");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        int invoiceId   = Integer.parseInt(divi.getInvT().getText().trim());
+			        int inventoryId = Integer.parseInt(divi.getInvTT().getText().trim());
+
+			        // 2️⃣ تأكيد الحذف
+			        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			        confirm.setTitle("Confirm Delete");
+			        confirm.setContentText(
+			            "Delete this invoice item?\n" +
+			            "Invoice ID: " + invoiceId + "\n" +
+			            "Inventory ID: " + inventoryId
+			        );
+
+			        if (confirm.showAndWait().get() != ButtonType.OK)
+			            return;
+
+			        
+			        String sql = """
+			            DELETE FROM invoice_item
+			            WHERE invoiceid = ? AND inventoryitemid = ?
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, invoiceId);
+			            ps.setInt(2, inventoryId);
+
+			            int rows = ps.executeUpdate();
+
+			            if (rows > 0) {
+			                Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			                ok.setTitle("Done");
+			                ok.setContentText("Invoice item deleted successfully");
+			                ok.showAndWait();
+
+			                // 4️⃣ تفريغ الحقول
+			                divi.getInvT().clear();
+			                divi.getInvTT().clear();
+			                divi.getQuanT().clear();
+			                divi.getUpriT().clear();
+			                divi.getLineTotT().clear();
+
+			            } else {
+			                Alert a = new Alert(Alert.AlertType.ERROR);
+			                a.setTitle("Not Found");
+			                a.setContentText("No invoice item found with these IDs");
+			                a.showAndWait();
+			            }
+			        }
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("IDs must be numeric values");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			UpdateInvoiceItem uivi=new UpdateInvoiceItem();
+			uivi.getEdit().setOnAction(e -> {
+
+			    if (
+			        uivi.getInvT().getText().trim().isEmpty() ||
+			        uivi.getInvTT().getText().trim().isEmpty() ||
+			        uivi.getQuanT().getText().trim().isEmpty() ||
+			        uivi.getUpriT().getText().trim().isEmpty()
+			    ) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        int invoiceId   = Integer.parseInt(uivi.getInvT().getText().trim());
+			        int inventoryId = Integer.parseInt(uivi.getInvTT().getText().trim());
+			        int quantity    = Integer.parseInt(uivi.getQuanT().getText().trim());
+			        double unitPrice = Double.parseDouble(uivi.getUpriT().getText().trim());
+
+			        double lineTotal = quantity * unitPrice;
+
+			        String sql = """
+			            UPDATE invoice_item
+			            SET quantity = ?, unitprice = ?, linetotal = ?
+			            WHERE invoiceid = ? AND inventoryitemid = ?
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, quantity);
+			            ps.setDouble(2, unitPrice);
+			            ps.setDouble(3, lineTotal);
+			            ps.setInt(4, invoiceId);
+			            ps.setInt(5, inventoryId);
+
+			            int rows = ps.executeUpdate();
+
+			            if (rows > 0) {
+			                Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			                ok.setTitle("Done");
+			                ok.setContentText("Invoice item updated successfully");
+			                ok.showAndWait();
+
+			                uivi.clearFields();
+			            } else {
+			                Alert a = new Alert(Alert.AlertType.ERROR);
+			                a.setTitle("Not Found");
+			                a.setContentText("Invoice item not found");
+			                a.showAndWait();
+			            }
+			        }
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("Quantity and Unit Price must be numbers");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+
+		InvoiceItemTableView iit=new InvoiceItemTableView();
+
+			Scene aiviscene = new Scene(aii.getAll(),400,400);
 			Scene diviscene = new Scene(divi.getAll(),400,400);
 			Scene uiviscene = new Scene(uivi.getAll(),400,400);
 			Scene iitscene = new Scene(iit.getAll(),400,400);
+
+			
 
 			mb.getAivi().setOnAction(e->{
 				primaryStage.setScene(aiviscene);
@@ -3155,14 +3377,269 @@ public class Main extends Application {
 			mb.getUivi().setOnAction(e->{
 				primaryStage.setScene(uiviscene);
 			});
-			mb.getIit().setOnAction(e->{
-				primaryStage.setScene(iitscene);
+		mb.getIit().setOnAction(e->{
+			primaryStage.setScene(iitscene);
 			});
 			
 			AddIP aip=new AddIP();
+			aip.getAdd().setOnAction(e -> {
+
+			    // 1️⃣ فحص الحقول
+			    if (
+			        aip.getpIDT().getText().trim().isEmpty() ||
+			        aip.getpNT().getText().trim().isEmpty() ||
+			        aip.getIssueDT().getValue() == null ||
+			        aip.getExpiryDT().getValue() == null ||
+			        aip.getCpT().getText().trim().isEmpty() ||
+			        aip.getCustIDT().getText().trim().isEmpty() ||
+			        aip.getIcT().getText().trim().isEmpty()
+			    ) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        // 2️⃣ قراءة القيم
+			        int policyId = Integer.parseInt(aip.getpIDT().getText().trim());
+			        String policyNumber = aip.getpNT().getText().trim();
+
+			        int coverage = Integer.parseInt(aip.getCpT().getText().trim());
+			        int customerId = Integer.parseInt(aip.getCustIDT().getText().trim());
+			        int companyId  = Integer.parseInt(aip.getIcT().getText().trim());
+
+			        // 3️⃣ SQL
+			        String sql = """
+			            INSERT INTO insurance_policy
+			            (policyid, policynumber, issuedate, expirydate,
+			             coveragepercentage, customerid, insurancecompanyid)
+			            VALUES (?, ?, ?, ?, ?, ?, ?)
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, policyId);
+			            ps.setString(2, policyNumber);
+			            ps.setDate(3, java.sql.Date.valueOf(aip.getIssueDT().getValue()));
+			            ps.setDate(4, java.sql.Date.valueOf(aip.getExpiryDT().getValue()));
+			            ps.setInt(5, coverage);
+			            ps.setInt(6, customerId);
+			            ps.setInt(7, companyId);
+
+			            ps.executeUpdate();
+
+			            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			            ok.setTitle("Done");
+			            ok.setContentText("Insurance policy added successfully");
+			            ok.showAndWait();
+
+			            // 4️⃣ تفريغ الحقول
+			            aip.getpIDT().clear();
+			            aip.getpNT().clear();
+			            aip.getCpT().clear();
+			            aip.getCustIDT().clear();
+			            aip.getIcT().clear();
+			            aip.getIssueDT().setValue(null);
+			            aip.getExpiryDT().setValue(null);
+			        }
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("IDs and Coverage must be numeric values");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			aip.getClear().setOnAction(e -> {
+			    aip.getpIDT().clear();
+			    aip.getpNT().clear();
+			    aip.getCpT().clear();
+			    aip.getCustIDT().clear();
+			    aip.getIcT().clear();
+			    aip.getIssueDT().setValue(null);
+			    aip.getExpiryDT().setValue(null);
+			});
+
 			DeleteIP dip=new DeleteIP();
+			
+		dip.getDelete().setOnAction(e -> {
+
+			    // 1️⃣ فحص Policy ID
+			    if (dip.getpIDT().getText().trim().isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please enter Policy ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        int policyId = Integer.parseInt(dip.getpIDT().getText().trim());
+
+			        // 2️⃣ تأكيد الحذف
+			        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			        confirm.setTitle("Confirm Delete");
+			        confirm.setContentText("Delete this insurance policy?");
+			        if (confirm.showAndWait().get() != ButtonType.OK)
+			            return;
+
+			        // 3️⃣ SQL الحذف
+			        String sql = "DELETE FROM insurance_policy WHERE policyid = ?";
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, policyId);
+
+			            int rows = ps.executeUpdate();
+
+			            if (rows > 0) {
+			                Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			                ok.setTitle("Done");
+			                ok.setContentText("Insurance policy deleted successfully");
+			                ok.showAndWait();
+
+			                dip.getpIDT().clear();
+
+			            } else {
+			                Alert a = new Alert(Alert.AlertType.ERROR);
+			                a.setTitle("Not Found");
+			                a.setContentText("No policy found with this ID");
+			                a.showAndWait();
+			            }
+			        }
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("Policy ID must be a number");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+		dip.getClear().setOnAction(e -> {
+		    dip.getpIDT().clear();
+		});
+
 			UpdateIP uip=new UpdateIP();
+			
+
+			uip.getEdit().setOnAction(e -> {
+
+			    // 1️⃣ فحص الحقول المطلوبة
+			    if (
+			        uip.getpIDT().getText().trim().isEmpty() ||
+			        uip.getpNT().getText().trim().isEmpty() ||
+			        uip.getCpT().getText().trim().isEmpty() ||
+			        uip.getCustIDT().getText().trim().isEmpty() ||
+			        uip.getIcT().getText().trim().isEmpty() ||
+			        uip.getIssueDT().getValue() == null ||
+			        uip.getExpiryDT().getValue() == null
+			    ) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        int policyId = Integer.parseInt(uip.getpIDT().getText().trim());
+			        int coverage = Integer.parseInt(uip.getCpT().getText().trim());
+			        int customerId = Integer.parseInt(uip.getCustIDT().getText().trim());
+			        int insuranceCompanyId = Integer.parseInt(uip.getIcT().getText().trim());
+
+			        // 2️⃣ SQL UPDATE
+			        String sql = """
+			            UPDATE insurance_policy
+			            SET policynumber = ?,
+			                issuedate = ?,
+			                expirydate = ?,
+			                coveragepercentage = ?,
+			                customerid = ?,
+			                insurancecompanyid = ?
+			            WHERE policyid = ?
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setString(1, uip.getpNT().getText().trim());
+			            ps.setDate(2, java.sql.Date.valueOf(uip.getIssueDT().getValue()));
+			            ps.setDate(3, java.sql.Date.valueOf(uip.getExpiryDT().getValue()));
+			            ps.setInt(4, coverage);
+			            ps.setInt(5, customerId);
+			            ps.setInt(6, insuranceCompanyId);
+			            ps.setInt(7, policyId);
+
+			            int rows = ps.executeUpdate();
+
+			            if (rows > 0) {
+			                Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			                ok.setTitle("Updated");
+			                ok.setContentText("Insurance policy updated successfully");
+			                ok.showAndWait();
+			            } else {
+			                Alert a = new Alert(Alert.AlertType.ERROR);
+			                a.setTitle("Not Found");
+			                a.setContentText("No policy found with this ID");
+			                a.showAndWait();
+			            }
+			        }
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("Numeric fields must contain numbers only");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			uip.getClear().setOnAction(e -> {
+			    uip.getpNT().clear();
+			    uip.getCpT().clear();
+			    uip.getCustIDT().clear();
+			    uip.getIcT().clear();
+			    uip.getIssueDT().setValue(null);
+			    uip.getExpiryDT().setValue(null);
+			});
+
 			InsurancePolicyTableView ipt=new InsurancePolicyTableView();
+
+			ipt.getTable().setOnMouseClicked(e -> {
+
+			    InsurancePolicy selected =
+			    		ipt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) return;
+
+			    uip.getpIDT().setText(String.valueOf(selected.getPolicyID()));
+			    uip.getpNT().setText(selected.getPolicyNumber());
+			    uip.getIssueDT().setValue(selected.getIssueDate());
+			    uip.getExpiryDT().setValue(selected.getExpiryDate());
+			    uip.getCpT().setText(String.valueOf(selected.getCoveragePercentage()));
+			    uip.getCustIDT().setText(String.valueOf(selected.getCustomerID()));
+			    uip.getIcT().setText(String.valueOf(selected.getInsuranceCompanyID()));
+			});
 
 			Scene aipscene = new Scene(aip.getAll(),400,400);
 			Scene dipscene = new Scene(dip.getAll(),400,400);
@@ -3183,15 +3660,268 @@ public class Main extends Application {
 			});
 			
 			AddMedicine amed=new AddMedicine();
+		
+			amed.getAdd().setOnAction(e -> {
+
+			    if (
+			        amed.getmIDT().getText().trim().isEmpty() ||
+			        amed.getmNT().getText().trim().isEmpty() ||
+			        amed.getStrT().getText().trim().isEmpty() ||
+			        amed.getCatIDT().getText().trim().isEmpty()
+			    ) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing data");
+			        a.setContentText("Fill all required fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        int id = Integer.parseInt(amed.getmIDT().getText().trim());
+			        int catId = Integer.parseInt(amed.getCatIDT().getText().trim());
+
+			        // تحويل النص إلى boolean
+			        boolean requiresPre =
+			                amed.getReqT().getText().trim().equalsIgnoreCase("yes") ||
+			                amed.getReqT().getText().trim().equalsIgnoreCase("true");
+
+			        String sql = """
+			            INSERT INTO medicine
+			            (medicineid, medicinename, strength, requirespre, description, categoryid)
+			            VALUES (?, ?, ?, ?, ?, ?)
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, id);
+			            ps.setString(2, amed.getmNT().getText().trim());
+			            ps.setString(3, amed.getStrT().getText().trim());
+			            ps.setBoolean(4, requiresPre);
+			            ps.setString(5, amed.getDescT().getText().trim());
+			            ps.setInt(6, catId);
+
+			            ps.executeUpdate();
+
+			            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			            ok.setTitle("Done");
+			            ok.setContentText("Medicine added successfully");
+			            ok.showAndWait();
+
+			            amed.getmIDT().clear();
+			            amed.getmNT().clear();
+			            amed.getStrT().clear();
+			            amed.getReqT().clear();
+			            amed.getDescT().clear();
+			            amed.getCatIDT().clear();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			DeleteMedicine dmed=new DeleteMedicine();
-			UpdateMedicine umed=new UpdateMedicine();
-			MedicineTableView mt=new MedicineTableView();
 			
+
+			
+			UpdateMedicine umed=new UpdateMedicine();
+			
+			MedicineTableView mt=new MedicineTableView();
+			StoredMedicinesTable smt = new StoredMedicinesTable();
+			MedicinesList meds = new MedicinesList();
+			Scene medsScene = new Scene(meds.getAll(), 400, 400);
+			
+			meds.addMedicine("M001", "Paracetamol");
+			meds.addMedicine("M002", "Amoxicillin");
+			Scene smtscene = new Scene(smt.getAll(), 400, 400);
+
+			// بيانات تجريبية
+			smt.addMedicine("M01", "Paracetamol", "Painkiller", 2.5);
+			smt.addMedicine("M02", "Amoxicillin", "Antibiotic", 4.0);
+
+			
+			
+			MedicinesDetailsList medsDetails = new MedicinesDetailsList();
+			Scene medsDetailsScene = new Scene(medsDetails.getAll(), 700, 450);
+			medsDetails.addMedicine(
+			        "M001",
+			        "Paracetamol",
+			        "Painkillers",
+			        "ABC Supplier",
+			        "2026-03-15"
+			);
+
+			medsDetails.addMedicine(
+			        "M002",
+			        "Amoxicillin",
+			        "Antibiotics",
+			        "Health Pharma",
+			        "2025-11-01"
+			);
+
+			MedicinesExpiryList medsExpiry =
+			        new MedicinesExpiryList();
+
+			Scene medsExpiryScene =
+			        new Scene(medsExpiry.getAll(), 700, 450);
+
+			mb.getQ10().setOnAction(e -> {
+			    primaryStage.setScene(medsExpiryScene);
+			});
+
+			
+
+			MedicinesLowStockTableView medsLowStock =
+			        new MedicinesLowStockTableView();
+
+			Scene medsLowStockScene =
+			        new Scene(medsLowStock.getAll(), 700, 450);
+
+			mb.getQ11().setOnAction(e -> {
+			    primaryStage.setScene(medsLowStockScene);
+			});
+
+			MedicinesSuppliedBySupplierTableView medsBySupplier =
+			        new MedicinesSuppliedBySupplierTableView();
+
+			Scene medsBySupplierScene =
+			        new Scene(medsBySupplier.getAll(), 750, 450);
+
+			mb.getQ22().setOnAction(e -> {
+			    primaryStage.setScene(medsBySupplierScene);
+			});
+
+			
+			SupplierSummaryList supplierSummary =
+			        new SupplierSummaryList();
+
+			Scene supplierSummaryScene =
+			        new Scene(supplierSummary.getAll(), 700, 450);
+
+			// بيانات تجريبية
+			supplierSummary.addSupplierSummary(
+			        "ABC Supplier",
+			        "12",
+			        "15400"
+			);
+
+			supplierSummary.addSupplierSummary(
+			        "Health Pharma",
+			        "8",
+			        "9200"
+			);
+			MedicinesByCategoryList medsByCategory =
+			        new MedicinesByCategoryList();
+
+			Scene medsByCategoryScene =
+			        new Scene(medsByCategory.getAll(), 700, 450);
+
+			// بيانات تجريبية
+			medsByCategory.addMedicine(
+			        "Antibiotics",
+			        "M050",
+			        "Amoxicillin"
+			);
+
+			medsByCategory.addMedicine(
+			        "Painkillers",
+			        "M051",
+			        "Paracetamol"
+			);
+			MedicinesSalesList medsSales =
+			        new MedicinesSalesList();
+
+			Scene medsSalesScene =
+			        new Scene(medsSales.getAll(), 700, 450);
+
+			// بيانات تجريبية
+			medsSales.addMedicine(
+			        "M100",
+			        "Paracetamol",
+			        "5",
+			        "320"
+			);
+
+			medsSales.addMedicine(
+			        "M101",
+			        "Amoxicillin",
+			        "3",
+			        "210"
+			);
+			MedicinesDamagedWithdrawnList medsDamaged =
+			        new MedicinesDamagedWithdrawnList();
+
+			Scene medsDamagedScene =
+			        new Scene(medsDamaged.getAll(), 750, 450);
+
+			// بيانات تجريبية
+			medsDamaged.addMedicine(
+			        "Main Branch",
+			        "M200",
+			        "Insulin",
+			        "DAMAGED",
+			        "4"
+			);
+
+			medsDamaged.addMedicine(
+			        "East Branch",
+			        "M201",
+			        "Expired Syrup",
+			        "WITHDRAWN",
+			        "10"
+			);
+			MedicinesLossesList medsLosses =
+			        new MedicinesLossesList();
+
+			Scene medsLossesScene =
+			        new Scene(medsLosses.getAll(), 850, 450);
+
+			// بيانات تجريبية
+			medsLosses.addLoss(
+			        "Main Branch",
+			        "M300",
+			        "Expired Insulin",
+			        "EXPIRED",
+			        "5",
+			        "12.5",
+			        "62.5"
+			);
+
+			medsLosses.addLoss(
+			        "East Branch",
+			        "M301",
+			        "Damaged Syrup",
+			        "DAMAGED",
+			        "3",
+			        "8",
+			        "24"
+			);
 			Scene amedscene = new Scene(amed.getAll(),400,400);
 			Scene dmedscene = new Scene(dmed.getAll(),400,400);
 			Scene umedscene = new Scene(umed.getAll(),400,400);
 			Scene mtscene = new Scene(mt.getAll(),400,400);
 
+			
+
+			mb.getMt().setOnAction(e -> {
+			    primaryStage.setScene(smtscene);
+			});
+
+			
+			mb.getQ4().setOnAction(e -> {
+			    MedicineQ4TableView view = new MedicineQ4TableView();
+			    root.setCenter(view.getAll());
+
+			    view.getBack().setOnAction(ev -> root.setCenter(null));
+			});
+
+		mb.getMt().setOnAction(e -> {   // أو MenuItem جديد: mb.getAllStoredMedicines()
+			    primaryStage.setScene(medsScene);
+			});
 			mb.getAmed().setOnAction(e->{
 				primaryStage.setScene(amedscene);
 			});
@@ -3205,6 +3935,19 @@ public class Main extends Application {
 				primaryStage.setScene(mtscene);
 			});
 
+<<<<<<< HEAD
+=======
+			mb.getQ4().setOnAction(e -> primaryStage.setScene(medsScene));
+			mb.getQ9().setOnAction(e -> primaryStage.setScene(medsDetailsScene));
+			mb.getQ10().setOnAction(e -> primaryStage.setScene(medsExpiryScene));
+			mb.getQ11().setOnAction(e -> primaryStage.setScene(medsLowStockScene));
+			mb.getQ12().setOnAction(e -> primaryStage.setScene(medsBySupplierScene));
+			mb.getQ13().setOnAction(e -> primaryStage.setScene(supplierSummaryScene));
+			mb.getQ14().setOnAction(e -> primaryStage.setScene(medsByCategoryScene));
+			mb.getQ16().setOnAction(e -> primaryStage.setScene(medsSalesScene ));
+			mb.getQ24().setOnAction(e -> primaryStage.setScene(medsDamagedScene));
+			mb.getQ25().setOnAction(e -> primaryStage.setScene(medsLossesScene));
+>>>>>>> 9cf8d1f78b1783cbad79699a9fcae2157130e413
 			
 			AddPayment apay = new AddPayment();
 
@@ -4685,10 +5428,250 @@ public class Main extends Application {
 			});
 			
 			AddSupplier asup=new AddSupplier();
+			asup.getAdd().setOnAction(e -> {
+
+			    // 1️⃣ فحص الحقول
+			    if (
+			        asup.getsIDT().getText().trim().isEmpty() ||
+			        asup.getsNT().getText().trim().isEmpty() ||
+			        asup.getlNT().getText().trim().isEmpty() ||
+			        asup.getPhNT().getText().trim().isEmpty()
+			    ) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all required fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    try {
+			        int supplierId = Integer.parseInt(asup.getsIDT().getText().trim());
+
+			        String sql = """
+			            INSERT INTO supplier
+			            (supplierid, suppliername, licenseno, phonenumber, email, address)
+			            VALUES (?, ?, ?, ?, ?, ?)
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, supplierId);
+			            ps.setString(2, asup.getsNT().getText().trim());
+			            ps.setString(3, asup.getlNT().getText().trim());
+			            ps.setString(4, asup.getPhNT().getText().trim());
+			            ps.setString(5, asup.getEmT().getText().trim());
+			            ps.setString(6, asup.getAddT().getText().trim());
+
+			            ps.executeUpdate();
+
+			            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			            ok.setTitle("Done");
+			            ok.setContentText("Supplier added successfully");
+			            ok.showAndWait();
+
+			            // تفريغ الحقول
+			            asup.getsIDT().clear();
+			            asup.getsNT().clear();
+			            asup.getlNT().clear();
+			            asup.getPhNT().clear();
+			            asup.getEmT().clear();
+			            asup.getAddT().clear();
+			        }
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("Supplier ID must be a number");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			asup.getClear().setOnAction(e -> {
+			    asup.getsIDT().clear();
+			    asup.getsNT().clear();
+			    asup.getlNT().clear();
+			    asup.getPhNT().clear();
+			    asup.getEmT().clear();
+			    asup.getAddT().clear();
+			});
+
 			DeleteSupplier dsup=new DeleteSupplier();
-			UpdateSupplier usup=new UpdateSupplier();
-			SupplierTableView st=new SupplierTableView();
 			
+
+			dsup.getDelete().setOnAction(e -> {
+			    try {
+			        String sql = "DELETE FROM supplier WHERE supplierID = ?";
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setInt(1, Integer.parseInt(dsup.getsIDT().getText()));
+			            ps.executeUpdate();
+
+			            new Alert(Alert.AlertType.INFORMATION, "Supplier Deleted").showAndWait();
+			            dsup.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+			    }
+			});
+
+			UpdateSupplier usup=new UpdateSupplier();
+			usup.getEdit().setOnAction(e -> {
+			    try {
+			        String sql = """
+			            UPDATE supplier
+			            SET supplierName=?, licenseNo=?, phoneNumber=?, email=?, address=?
+			            WHERE supplierID=?
+			        """;
+
+			        try (Connection con = DatabaseConnection.getConnection();
+			             PreparedStatement ps = con.prepareStatement(sql)) {
+
+			            ps.setString(1, usup.getsNT().getText());
+			            ps.setString(2, usup.getlNT().getText());
+			            ps.setString(3, usup.getPhNT().getText());
+			            ps.setString(4, usup.getEmT().getText());
+			            ps.setString(5, usup.getAddT().getText());
+			            ps.setInt(6, Integer.parseInt(usup.getsIDT().getText()));
+
+			            ps.executeUpdate();
+			            new Alert(Alert.AlertType.INFORMATION, "Supplier Updated").showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+			    }
+			});
+
+			SupplierTableView st=new SupplierTableView();
+					mb.getSt().setOnAction(e -> {
+
+			    st.getTable().getItems().clear();
+
+			    String sql = "SELECT * FROM supplier";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql);
+			         ResultSet rs = ps.executeQuery()) {
+
+			        while (rs.next()) {
+			            st.getTable().getItems().add(
+			                new Supplier(
+			                    rs.getInt("supplierID"),
+			                    rs.getString("supplierName"),
+			                    rs.getString("phoneNumber"),
+			                    rs.getString("email"),
+			                    rs.getString("address")
+			                )
+			            );
+			        }
+
+			        primaryStage.setScene(new Scene(st.getAll(), 700, 450));
+
+			    } catch (Exception ex) {
+			        new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+			    }
+			});
+					SuppliersSupplyList suppliersSupply =
+					        new SuppliersSupplyList();
+
+					Scene suppliersSupplyScene =
+					        new Scene(suppliersSupply.getAll(), 700, 450);
+
+					mb.getQ21().setOnAction(e -> {
+
+					    // ✅ اسم الميثود الصحيح
+					    suppliersSupply.clearSupplies();
+
+					    String sql = """
+					        SELECT s.supplierName,
+					               COUNT(i.inventoryItemID) AS itemsCount,
+					               p.purchaseDate
+					        FROM supplier s
+					        JOIN purchase p ON s.supplierID = p.supplierID
+					        JOIN inventory_item i ON p.purchaseID = i.purchaseID
+					        GROUP BY s.supplierName, p.purchaseDate
+					    """;
+
+					    try (Connection con = DatabaseConnection.getConnection();
+					         PreparedStatement ps = con.prepareStatement(sql);
+					         ResultSet rs = ps.executeQuery()) {
+
+					        while (rs.next()) {
+					            suppliersSupply.addSupplierSupply(
+					                    rs.getString("supplierName"),
+					                    rs.getString("itemsCount"),
+					                    rs.getDate("purchaseDate").toString()
+					            );
+					        }
+
+					        primaryStage.setScene(suppliersSupplyScene);
+
+					    } catch (Exception ex) {
+					        new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+					    }
+					});
+
+					SuppliersByMedicinePeriodList suppliersByPeriod =
+					        new SuppliersByMedicinePeriodList();
+
+					Scene suppliersByPeriodScene =
+					        new Scene(suppliersByPeriod.getAll(), 700, 450);
+
+					mb.getQ22().setOnAction(e -> {
+
+					    // ✅ اسم الميثود الصحيح
+					    suppliersByPeriod.clearSuppliers();
+
+					    String sql = """
+					        SELECT s.supplierName,
+					               m.medicineName,
+					               p.purchaseDate
+					        FROM supplier s
+					        JOIN purchase p ON s.supplierID = p.supplierID
+					        JOIN inventory_item i ON p.purchaseID = i.purchaseID
+					        JOIN medicine m ON i.medicineID = m.medicineID
+					    """;
+
+					    try (Connection con = DatabaseConnection.getConnection();
+					         PreparedStatement ps = con.prepareStatement(sql);
+					         ResultSet rs = ps.executeQuery()) {
+
+					        while (rs.next()) {
+					            suppliersByPeriod.addSupplier(
+					                    rs.getString("supplierName"),
+					                    rs.getString("medicineName"),
+					                    rs.getDate("purchaseDate").toString()
+					            );
+					        }
+
+					        primaryStage.setScene(suppliersByPeriodScene);
+
+					    } catch (Exception ex) {
+					        new Alert(Alert.AlertType.ERROR, ex.getMessage()).showAndWait();
+					    }
+					});
+
+			
+			SuppliersLargestOrdersList largestOrders =
+			        new SuppliersLargestOrdersList();
+
+			Scene largestOrdersScene =
+			        new Scene(largestOrders.getAll(), 700, 450);
+
+			mb.getQ23().setOnAction(e -> {
+			    primaryStage.setScene(largestOrdersScene);
+			});
+
+
 			Scene asupscene = new Scene(asup.getAll(),400,400);
 			Scene dsupscene = new Scene(dsup.getAll(),400,400);
 			Scene usupscene = new Scene(usup.getAll(),400,400);
@@ -4707,6 +5690,13 @@ public class Main extends Application {
 				primaryStage.setScene(stscene);
 			});
 
+<<<<<<< HEAD
+=======
+			mb.getQ21().setOnAction(e -> primaryStage.setScene(suppliersSupplyScene));
+			mb.getQ22().setOnAction(e -> primaryStage.setScene(suppliersByPeriodScene));
+			mb.getQ23().setOnAction(e -> primaryStage.setScene(largestOrdersScene));
+
+>>>>>>> 9cf8d1f78b1783cbad79699a9fcae2157130e413
 			AddInventoryItem ain=new AddInventoryItem();
 			DeleteInventoryItem din=new DeleteInventoryItem();
 			UpdateInventoryItem uin=new UpdateInventoryItem();
@@ -5105,7 +6095,7 @@ public class Main extends Application {
 				primaryStage.setScene(mainScene);
 			});
 			
-			aivi.getBack().setOnAction(e->{
+			aii.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
 			divi.getBack().setOnAction(e->{
@@ -5196,11 +6186,15 @@ public class Main extends Application {
 			st.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
-			iit.getBack().setOnAction(e->{
-				primaryStage.setScene(mainScene);
-			});
+			//iit.getBack().setOnAction(e->{
+			//	primaryStage.setScene(mainScene);
+		//	});
 			et.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
+			});
+			
+			meds.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
 			});
 			ct.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
@@ -5280,15 +6274,61 @@ public class Main extends Application {
 			iq33.getBack().setOnAction(e ->{
 				primaryStage.setScene(mainScene);
 			});
+			smt.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsLosses.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsDamaged.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsSales.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsByCategory.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			supplierSummary.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsBySupplier.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsLowStock.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsExpiry.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			medsDetails.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			meds.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			largestOrders.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			suppliersByPeriod.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			suppliersSupply.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			suppliersSupply.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
+			iit.getBack().setOnAction(e -> {
+			    primaryStage.setScene(mainScene);
+			});
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void main(String[] args) {
-		launch(args);
-	}
+	
 	private ObservableList<Employee> loadAllEmployes() {
 	    ObservableList<Employee> list = FXCollections.observableArrayList();
 
