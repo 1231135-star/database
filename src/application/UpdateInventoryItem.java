@@ -78,7 +78,8 @@ public class UpdateInventoryItem {
 		searchL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
 		searchL.setFont(Font.font(null, FontWeight.BOLD, 20));
 
-		searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 
 		searchVM.setFitWidth(42);
 		searchVM.setFitHeight(42);
@@ -138,412 +139,381 @@ public class UpdateInventoryItem {
 		buttons.setAlignment(Pos.CENTER);
 		buttons.setSpacing(20);
 
-		edit.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-
-		edit.setDisable(true);
+		edit.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 
 		title.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
+
+		edit.setDisable(true);
 
 		all.getChildren().addAll(title, searchH, idH, batchH, qtyH, expH, recH, priceH, midH, sidH, bidH, buttons);
 		all.setAlignment(Pos.CENTER);
 		all.setSpacing(15);
 		all.setStyle("-fx-background-color: #a2c4c9;");
 	}
-	
 
 	public Label getTitle() {
 		return title;
 	}
 
-
 	public void setTitle(Label title) {
 		this.title = title;
 	}
-
 
 	public Image getSearchM() {
 		return searchM;
 	}
 
-
 	public void setSearchM(Image searchM) {
 		this.searchM = searchM;
 	}
-
 
 	public ImageView getSearchVM() {
 		return searchVM;
 	}
 
-
 	public void setSearchVM(ImageView searchVM) {
 		this.searchVM = searchVM;
 	}
 
-
-	public Label getSearchL() {
-		return searchL;
+	public Button getSearchB() {
+		return searchB;
 	}
-
-
-	public void setSearchL(Label searchL) {
-		this.searchL = searchL;
-	}
-
-
-	public HBox getSearchH() {
-		return searchH;
-	}
-
-
-	public void setSearchH(HBox searchH) {
-		this.searchH = searchH;
-	}
-
-
-	public Label getIdL() {
-		return idL;
-	}
-
-
-	public void setIdL(Label idL) {
-		this.idL = idL;
-	}
-
-
-	public HBox getIdH() {
-		return idH;
-	}
-
-
-	public void setIdH(HBox idH) {
-		this.idH = idH;
-	}
-
-
-	public Label getBatchL() {
-		return batchL;
-	}
-
-
-	public void setBatchL(Label batchL) {
-		this.batchL = batchL;
-	}
-
-
-	public HBox getBatchH() {
-		return batchH;
-	}
-
-
-	public void setBatchH(HBox batchH) {
-		this.batchH = batchH;
-	}
-
-
-	public Label getQtyL() {
-		return qtyL;
-	}
-
-
-	public void setQtyL(Label qtyL) {
-		this.qtyL = qtyL;
-	}
-
-
-	public HBox getQtyH() {
-		return qtyH;
-	}
-
-
-	public void setQtyH(HBox qtyH) {
-		this.qtyH = qtyH;
-	}
-
-
-	public Label getExpL() {
-		return expL;
-	}
-
-
-	public void setExpL(Label expL) {
-		this.expL = expL;
-	}
-
-
-	public HBox getExpH() {
-		return expH;
-	}
-
-
-	public void setExpH(HBox expH) {
-		this.expH = expH;
-	}
-
-
-	public Label getRecL() {
-		return recL;
-	}
-
-
-	public void setRecL(Label recL) {
-		this.recL = recL;
-	}
-
-
-	public HBox getRecH() {
-		return recH;
-	}
-
-
-	public void setRecH(HBox recH) {
-		this.recH = recH;
-	}
-
-
-	public Label getPriceL() {
-		return priceL;
-	}
-
-
-	public void setPriceL(Label priceL) {
-		this.priceL = priceL;
-	}
-
-
-	public HBox getPriceH() {
-		return priceH;
-	}
-
-
-	public void setPriceH(HBox priceH) {
-		this.priceH = priceH;
-	}
-
-
-	public Label getMidL() {
-		return midL;
-	}
-
-
-	public void setMidL(Label midL) {
-		this.midL = midL;
-	}
-
-
-	public HBox getMidH() {
-		return midH;
-	}
-
-
-	public void setMidH(HBox midH) {
-		this.midH = midH;
-	}
-
-
-	public Label getSidL() {
-		return sidL;
-	}
-
-
-	public void setSidL(Label sidL) {
-		this.sidL = sidL;
-	}
-
-
-	public HBox getSidH() {
-		return sidH;
-	}
-
-
-	public void setSidH(HBox sidH) {
-		this.sidH = sidH;
-	}
-
-
-	public Label getBidL() {
-		return bidL;
-	}
-
-
-	public void setBidL(Label bidL) {
-		this.bidL = bidL;
-	}
-
-
-	public HBox getBidH() {
-		return bidH;
-	}
-
-
-	public void setBidH(HBox bidH) {
-		this.bidH = bidH;
-	}
-
-
-	public Image getEditM() {
-		return editM;
-	}
-
-
-	public void setEditM(Image editM) {
-		this.editM = editM;
-	}
-
-
-	public ImageView getEditVM() {
-		return editVM;
-	}
-
-
-	public void setEditVM(ImageView editVM) {
-		this.editVM = editVM;
-	}
-
-
-	public Image getBackM() {
-		return backM;
-	}
-
-
-	public void setBackM(Image backM) {
-		this.backM = backM;
-	}
-
-
-	public ImageView getBackVM() {
-		return backVM;
-	}
-
-
-	public void setBackVM(ImageView backVM) {
-		this.backVM = backVM;
-	}
-
-
-	public Image getClearM() {
-		return clearM;
-	}
-
-
-	public void setClearM(Image clearM) {
-		this.clearM = clearM;
-	}
-
-
-	public ImageView getClearVM() {
-		return clearVM;
-	}
-
-
-	public void setClearVM(ImageView clearVM) {
-		this.clearVM = clearVM;
-	}
-
-
-	public HBox getButtons() {
-		return buttons;
-	}
-
-
-	public void setButtons(HBox buttons) {
-		this.buttons = buttons;
-	}
-
 
 	public void setSearchB(Button searchB) {
 		this.searchB = searchB;
 	}
 
+	public Label getSearchL() {
+		return searchL;
+	}
+
+	public void setSearchL(Label searchL) {
+		this.searchL = searchL;
+	}
+
+	public TextField getSearchT() {
+		return searchT;
+	}
 
 	public void setSearchT(TextField searchT) {
 		this.searchT = searchT;
 	}
 
+	public HBox getSearchH() {
+		return searchH;
+	}
+
+	public void setSearchH(HBox searchH) {
+		this.searchH = searchH;
+	}
+
+	public Label getIdL() {
+		return idL;
+	}
+
+	public void setIdL(Label idL) {
+		this.idL = idL;
+	}
+
+	public TextField getIdT() {
+		return idT;
+	}
 
 	public void setIdT(TextField idT) {
 		this.idT = idT;
 	}
 
+	public HBox getIdH() {
+		return idH;
+	}
+
+	public void setIdH(HBox idH) {
+		this.idH = idH;
+	}
+
+	public Label getBatchL() {
+		return batchL;
+	}
+
+	public void setBatchL(Label batchL) {
+		this.batchL = batchL;
+	}
+
+	public TextField getBatchT() {
+		return batchT;
+	}
 
 	public void setBatchT(TextField batchT) {
 		this.batchT = batchT;
 	}
 
+	public HBox getBatchH() {
+		return batchH;
+	}
+
+	public void setBatchH(HBox batchH) {
+		this.batchH = batchH;
+	}
+
+	public Label getQtyL() {
+		return qtyL;
+	}
+
+	public void setQtyL(Label qtyL) {
+		this.qtyL = qtyL;
+	}
+
+	public TextField getQtyT() {
+		return qtyT;
+	}
 
 	public void setQtyT(TextField qtyT) {
 		this.qtyT = qtyT;
 	}
 
+	public HBox getQtyH() {
+		return qtyH;
+	}
+
+	public void setQtyH(HBox qtyH) {
+		this.qtyH = qtyH;
+	}
+
+	public Label getExpL() {
+		return expL;
+	}
+
+	public void setExpL(Label expL) {
+		this.expL = expL;
+	}
+
+	public TextField getExpT() {
+		return expT;
+	}
 
 	public void setExpT(TextField expT) {
 		this.expT = expT;
 	}
 
+	public HBox getExpH() {
+		return expH;
+	}
+
+	public void setExpH(HBox expH) {
+		this.expH = expH;
+	}
+
+	public Label getRecL() {
+		return recL;
+	}
+
+	public void setRecL(Label recL) {
+		this.recL = recL;
+	}
+
+	public TextField getRecT() {
+		return recT;
+	}
 
 	public void setRecT(TextField recT) {
 		this.recT = recT;
 	}
 
+	public HBox getRecH() {
+		return recH;
+	}
+
+	public void setRecH(HBox recH) {
+		this.recH = recH;
+	}
+
+	public Label getPriceL() {
+		return priceL;
+	}
+
+	public void setPriceL(Label priceL) {
+		this.priceL = priceL;
+	}
+
+	public TextField getPriceT() {
+		return priceT;
+	}
 
 	public void setPriceT(TextField priceT) {
 		this.priceT = priceT;
 	}
 
+	public HBox getPriceH() {
+		return priceH;
+	}
+
+	public void setPriceH(HBox priceH) {
+		this.priceH = priceH;
+	}
+
+	public Label getMidL() {
+		return midL;
+	}
+
+	public void setMidL(Label midL) {
+		this.midL = midL;
+	}
+
+	public TextField getMidT() {
+		return midT;
+	}
 
 	public void setMidT(TextField midT) {
 		this.midT = midT;
 	}
 
+	public HBox getMidH() {
+		return midH;
+	}
+
+	public void setMidH(HBox midH) {
+		this.midH = midH;
+	}
+
+	public Label getSidL() {
+		return sidL;
+	}
+
+	public void setSidL(Label sidL) {
+		this.sidL = sidL;
+	}
+
+	public TextField getSidT() {
+		return sidT;
+	}
 
 	public void setSidT(TextField sidT) {
 		this.sidT = sidT;
 	}
 
+	public HBox getSidH() {
+		return sidH;
+	}
+
+	public void setSidH(HBox sidH) {
+		this.sidH = sidH;
+	}
+
+	public Label getBidL() {
+		return bidL;
+	}
+
+	public void setBidL(Label bidL) {
+		this.bidL = bidL;
+	}
+
+	public TextField getBidT() {
+		return bidT;
+	}
 
 	public void setBidT(TextField bidT) {
 		this.bidT = bidT;
 	}
 
+	public HBox getBidH() {
+		return bidH;
+	}
+
+	public void setBidH(HBox bidH) {
+		this.bidH = bidH;
+	}
+
+	public Image getEditM() {
+		return editM;
+	}
+
+	public void setEditM(Image editM) {
+		this.editM = editM;
+	}
+
+	public ImageView getEditVM() {
+		return editVM;
+	}
+
+	public void setEditVM(ImageView editVM) {
+		this.editVM = editVM;
+	}
+
+	public Button getEdit() {
+		return edit;
+	}
 
 	public void setEdit(Button edit) {
 		this.edit = edit;
 	}
 
+	public Image getBackM() {
+		return backM;
+	}
+
+	public void setBackM(Image backM) {
+		this.backM = backM;
+	}
+
+	public ImageView getBackVM() {
+		return backVM;
+	}
+
+	public void setBackVM(ImageView backVM) {
+		this.backVM = backVM;
+	}
+
+	public Button getBack() {
+		return back;
+	}
 
 	public void setBack(Button back) {
 		this.back = back;
 	}
 
+	public Image getClearM() {
+		return clearM;
+	}
+
+	public void setClearM(Image clearM) {
+		this.clearM = clearM;
+	}
+
+	public ImageView getClearVM() {
+		return clearVM;
+	}
+
+	public void setClearVM(ImageView clearVM) {
+		this.clearVM = clearVM;
+	}
+
+	public Button getClear() {
+		return clear;
+	}
 
 	public void setClear(Button clear) {
 		this.clear = clear;
 	}
 
+	public HBox getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(HBox buttons) {
+		this.buttons = buttons;
+	}
+
+	public VBox getAll() {
+		return all;
+	}
 
 	public void setAll(VBox all) {
 		this.all = all;
 	}
-
-
-	// Getters
-	public VBox getAll() { return all; }
-	public Button getSearchB() { return searchB; }
-	public Button getEdit() { return edit; }
-	public Button getBack() { return back; }
-	public Button getClear() { return clear; }
-
-	public TextField getSearchT() { return searchT; }
-	public TextField getIdT() { return idT; }
-	public TextField getBatchT() { return batchT; }
-	public TextField getQtyT() { return qtyT; }
-	public TextField getExpT() { return expT; }
-	public TextField getRecT() { return recT; }
-	public TextField getPriceT() { return priceT; }
-	public TextField getMidT() { return midT; }
-	public TextField getSidT() { return sidT; }
-	public TextField getBidT() { return bidT; }
 
 }

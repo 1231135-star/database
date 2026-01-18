@@ -102,7 +102,9 @@ public class DataFileReader {
   
     public int readBranch(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into branch
@@ -139,7 +141,9 @@ public class DataFileReader {
 
                 setVarchar(ps, 9, get(parts, 8));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
 
         } catch (Exception e) {
@@ -156,7 +160,9 @@ public class DataFileReader {
   
     public int readCategory(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into category (categoryid, categoryname, description)
@@ -182,7 +188,9 @@ public class DataFileReader {
                 ps.setString(2, get(parts, 1));
                 setVarchar(ps, 3, get(parts, 2));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
         } catch (Exception e) {
         	  Alert a = new Alert(Alert.AlertType.ERROR);
@@ -198,7 +206,9 @@ public class DataFileReader {
 
     public int readSupplier(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into supplier (supplierid, suppliername, licenseno, phonenumber, email, address)
@@ -236,7 +246,8 @@ public class DataFileReader {
         	  Alert a = new Alert(Alert.AlertType.ERROR);
               a.setTitle(e.getMessage());
               a.setContentText(e.getMessage());
-              a.showAndWait();            return 0;
+              a.showAndWait();       
+              return 0;
         }
 
         return loaded;
@@ -245,7 +256,9 @@ public class DataFileReader {
     
     public int readCustomer(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into customer (customerid, fullname, phonenumber, email, address, dateofbirth, gender)
@@ -282,14 +295,17 @@ public class DataFileReader {
         	  Alert a = new Alert(Alert.AlertType.ERROR);
               a.setTitle(e.getMessage());
               a.setContentText(e.getMessage());
-              a.showAndWait();            return 0;
+              a.showAndWait();         
+              return 0;
         }
 
         return loaded;
     }
     public int readInsuranceCompany(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into insurance_company
@@ -335,7 +351,9 @@ public class DataFileReader {
    
     public int readDoctor(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into doctor (doctorid, fullname, licensenumber, phonenumber, email, clinicaddress)
@@ -381,7 +399,9 @@ public class DataFileReader {
     
     public int readMedicine(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into medicine (medicineid, medicinename, strength, requirespre, description, categoryid)
@@ -421,7 +441,7 @@ public class DataFileReader {
               a.setTitle(e.getMessage());
               a.setContentText(e.getMessage());
               a.showAndWait();
-            return 0;
+              return 0;
         }
 
         return loaded;
@@ -430,7 +450,9 @@ public class DataFileReader {
 
     public int readEmployee(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into employee
@@ -456,16 +478,18 @@ public class DataFileReader {
                 ps.setInt(1, Integer.parseInt(get(parts, 0)));
                 ps.setString(2, get(parts, 1));
 
-                setVarchar(ps, 3, get(parts, 2)); // qualification
-                setVarchar(ps, 4, get(parts, 3)); // licenseno
-                setVarchar(ps, 5, get(parts, 4)); // address
-                setVarchar(ps, 6, get(parts, 5)); // nationalid
-                setVarchar(ps, 7, get(parts, 6)); // phone
-                setVarchar(ps, 8, get(parts, 7)); // email
-                setDec(ps, 9, parseDecOrNull(get(parts, 8))); // salary
-                setInt(ps, 10, parseIntOrNull(get(parts, 9))); // branchid
+                setVarchar(ps, 3, get(parts, 2)); 
+                setVarchar(ps, 4, get(parts, 3)); 
+                setVarchar(ps, 5, get(parts, 4)); 
+                setVarchar(ps, 6, get(parts, 5));
+                setVarchar(ps, 7, get(parts, 6)); 
+                setVarchar(ps, 8, get(parts, 7));
+                setDec(ps, 9, parseDecOrNull(get(parts, 8)));
+                setInt(ps, 10, parseIntOrNull(get(parts, 9)));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
 
         } catch (Exception e) {
@@ -473,7 +497,7 @@ public class DataFileReader {
               a.setTitle(e.getMessage());
               a.setContentText(e.getMessage());
               a.showAndWait();
-            return 0;
+              return 0;
         }
         return loaded;
     }
@@ -481,7 +505,9 @@ public class DataFileReader {
  
     public int readInsurancePolicy(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into insurance_policy
@@ -512,7 +538,9 @@ public class DataFileReader {
                 setInt(ps, 6, parseIntOrNull(get(parts, 5)));
                 setInt(ps, 7, parseIntOrNull(get(parts, 6)));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
 
         } catch (Exception e) {
@@ -520,7 +548,7 @@ public class DataFileReader {
               a.setTitle(e.getMessage());
               a.setContentText(e.getMessage());
               a.showAndWait();
-            return 0;
+              return 0;
         }
         return loaded;
     }
@@ -528,7 +556,9 @@ public class DataFileReader {
    
     public int readInventoryItem(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into inventory_item
@@ -562,7 +592,9 @@ public class DataFileReader {
                 setInt(ps, 8, parseIntOrNull(get(parts, 7)));
                 setInt(ps, 9, parseIntOrNull(get(parts, 8)));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
 
         } catch (Exception e) {
@@ -579,7 +611,9 @@ public class DataFileReader {
     
     public int readInvoice(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into invoice
@@ -596,7 +630,9 @@ public class DataFileReader {
             while (sc.hasNextLine()) {
                 lineNo++;
                 String line = sc.nextLine().trim();
-                if (line.isEmpty()) throw new Exception("empty line in line number: " + lineNo);
+                if (line.isEmpty()) {
+                	throw new Exception("empty line in line number: " + lineNo);
+                }
 
                 String[] parts = line.split(";", -1);
 
@@ -614,14 +650,16 @@ public class DataFileReader {
                 setInt(ps, 10, parseIntOrNull(get(parts, 9)));
                 setInt(ps, 11, parseIntOrNull(get(parts, 10)));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
         } catch (Exception e) {
         	  Alert a = new Alert(Alert.AlertType.ERROR);
               a.setTitle(e.getMessage());
               a.setContentText(e.getMessage());
               a.showAndWait();
-            return 0;
+              return 0;
         }
 
         return loaded;
@@ -630,7 +668,9 @@ public class DataFileReader {
   
     public int readInvoiceItem(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into invoice_item
@@ -647,7 +687,9 @@ public class DataFileReader {
             while (sc.hasNextLine()) {
                 lineNo++;
                 String line = sc.nextLine().trim();
-                if (line.isEmpty()) throw new Exception("empty line in line number: " + lineNo);
+                if (line.isEmpty()) {
+                	throw new Exception("empty line in line number: " + lineNo);
+                }
 
                 String[] parts = line.split(";", -1);
 
@@ -660,7 +702,9 @@ public class DataFileReader {
                 setDec(ps, 4, parseDecOrNull(get(parts, 3)));
                 setDec(ps, 5, parseDecOrNull(get(parts, 4)));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
 
         } catch (Exception e) {
@@ -677,7 +721,9 @@ public class DataFileReader {
     
     public int readPayment(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into payment
@@ -694,7 +740,9 @@ public class DataFileReader {
             while (sc.hasNextLine()) {
                 lineNo++;
                 String line = sc.nextLine().trim();
-                if (line.isEmpty()) throw new Exception("empty line in line number: " + lineNo);
+                if (line.isEmpty()) {
+                	throw new Exception("empty line in line number: " + lineNo);
+                }
 
                 String[] parts = line.split(";", -1);
 
@@ -708,14 +756,17 @@ public class DataFileReader {
                 setInt(ps, 6, parseIntOrNull(get(parts, 5)));
                 setInt(ps, 7, parseIntOrNull(get(parts, 6)));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
 
         } catch (Exception e) {
         	  Alert a = new Alert(Alert.AlertType.ERROR);
               a.setTitle(e.getMessage());
               a.setContentText(e.getMessage());
-              a.showAndWait();            return 0;
+              a.showAndWait(); 
+              return 0;
         }
         return loaded;
     }
@@ -723,7 +774,9 @@ public class DataFileReader {
    
     public int readPrescription(File file) {
         int loaded = 0;
-        if (file == null || !file.exists()) return 0;
+        if (file == null || !file.exists()) {
+        	return 0;
+        }
 
         String sql = """
                 insert into prescription (prescriptionid, issuedate, notes, doctorid, invoiceid)
@@ -739,7 +792,9 @@ public class DataFileReader {
             while (sc.hasNextLine()) {
                 lineNo++;
                 String line = sc.nextLine().trim();
-                if (line.isEmpty()) throw new Exception("empty line in line number: " + lineNo);
+                if (line.isEmpty()) {
+                	throw new Exception("empty line in line number: " + lineNo);
+                }
 
                 String[] parts = line.split(";", -1);
 
@@ -751,7 +806,9 @@ public class DataFileReader {
                 setInt(ps, 4, parseIntOrNull(get(parts, 3)));
                 setInt(ps, 5, parseIntOrNull(get(parts, 4)));
 
-                if (ps.executeUpdate() > 0) loaded++;
+                if (ps.executeUpdate() > 0) {
+                	loaded++;
+                }
             }
 
         } catch (Exception e) {

@@ -6,27 +6,27 @@ public class InsurancePolicy {
 	    private int policyID;
 	    private String policyNumber;
 	    private LocalDate startDate;
+	    private LocalDate issueDate;
 	    private LocalDate expiryDate;
 	    private double coveragePercentage;
 	    private int customerID;
 	    private int insuranceCompanyID;
 
-	    public InsurancePolicy() {}
+	    
 
-	    public InsurancePolicy(int policyID, String policyNumber,
-	                           LocalDate startDate, LocalDate expiryDate,
-	                           double coveragePercentage, int customerID,
-	                           int insuranceCompanyID) {
-	        this.policyID = policyID;
-	        this.policyNumber = policyNumber;
-	        this.startDate = startDate;
-	        this.expiryDate = expiryDate;
-	        this.coveragePercentage = coveragePercentage;
-	        this.customerID = customerID;
-	        this.insuranceCompanyID = insuranceCompanyID;
-	    }
+	    public InsurancePolicy(int policyID, String policyNumber, LocalDate startDate, LocalDate issueDate,
+				LocalDate expiryDate, double coveragePercentage, int customerID, int insuranceCompanyID) {
+			this.policyID = policyID;
+			this.policyNumber = policyNumber;
+			this.startDate = startDate;
+			this.issueDate = issueDate;
+			this.expiryDate = expiryDate;
+			this.coveragePercentage = coveragePercentage;
+			this.customerID = customerID;
+			this.insuranceCompanyID = insuranceCompanyID;
+		}
 
-	    public int getPolicyID() {
+		public int getPolicyID() {
 	        return policyID;
 	    }
 

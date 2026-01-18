@@ -17,13 +17,21 @@ public class MedicineRow {
         this.price = new SimpleDoubleProperty(price);
     }
 
-    public String getId() { return id.get(); }
-    public String getName() { return name.get(); }
-    public String getCategory() { return category.get(); }
-    public double getPrice() { return price.get(); }
+	public SimpleStringProperty getId() {
+		return id;
+	}
 
-    public SimpleStringProperty idProperty() { return id; }
-    public SimpleStringProperty nameProperty() { return name; }
-    public SimpleStringProperty categoryProperty() { return category; }
-    public SimpleDoubleProperty priceProperty() { return price; }
+	public SimpleStringProperty getName() {
+		return name;
+	}
+
+	public SimpleStringProperty getCategory() {
+		return category;
+	}
+
+	public SimpleDoubleProperty getPrice() {
+		return price;
+	}
+
+    
 }

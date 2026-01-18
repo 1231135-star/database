@@ -22,7 +22,7 @@ public class AddInvoiceItem {
     private HBox invTH = new HBox();
 
     private Label quanL = new Label("Quantity :");
-    private TextField quanT = new TextField();          // ✅ TextField
+    private TextField quanT = new TextField(); 
     private HBox quanH = new HBox();
 
     private Label upriL = new Label("Unit Price :");
@@ -72,27 +72,205 @@ public class AddInvoiceItem {
 
         addEmp.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
 
-        // ✅ Clear button يعمل
-        clear.setOnAction(e -> clearFields());
+        clear.setOnAction(e ->{
+        	 invT.clear();
+             invTT.clear();
+             quanT.clear();
+             upriT.clear();
+        });
     }
 
-    // ================= Getters =================
+	public Label getAddEmp() {
+		return addEmp;
+	}
 
-    public TextField getInvT() { return invT; }
-    public TextField getInvTT() { return invTT; }
-    public TextField getQuanT() { return quanT; }
-    public TextField getUpriT() { return upriT; }
-    public Button getAdd() { return add; }
-    public Button getBack() { return back; }
-    public Button getClear() { return clear; }
-    public VBox getAll() { return all; }
+	public void setAddEmp(Label addEmp) {
+		this.addEmp = addEmp;
+	}
 
-    // ================= Helpers =================
+	public Label getInvL() {
+		return invL;
+	}
 
-    public void clearFields() {
-        invT.clear();
-        invTT.clear();
-        quanT.clear();
-        upriT.clear();
-    }
+	public void setInvL(Label invL) {
+		this.invL = invL;
+	}
+
+	public TextField getInvT() {
+		return invT;
+	}
+
+	public void setInvT(TextField invT) {
+		this.invT = invT;
+	}
+
+	public HBox getInvH() {
+		return invH;
+	}
+
+	public void setInvH(HBox invH) {
+		this.invH = invH;
+	}
+
+	public Label getInvTL() {
+		return invTL;
+	}
+
+	public void setInvTL(Label invTL) {
+		this.invTL = invTL;
+	}
+
+	public TextField getInvTT() {
+		return invTT;
+	}
+
+	public void setInvTT(TextField invTT) {
+		this.invTT = invTT;
+	}
+
+	public HBox getInvTH() {
+		return invTH;
+	}
+
+	public void setInvTH(HBox invTH) {
+		this.invTH = invTH;
+	}
+
+	public Label getQuanL() {
+		return quanL;
+	}
+
+	public void setQuanL(Label quanL) {
+		this.quanL = quanL;
+	}
+
+	public TextField getQuanT() {
+		return quanT;
+	}
+
+	public void setQuanT(TextField quanT) {
+		this.quanT = quanT;
+	}
+
+	public HBox getQuanH() {
+		return quanH;
+	}
+
+	public void setQuanH(HBox quanH) {
+		this.quanH = quanH;
+	}
+
+	public Label getUpriL() {
+		return upriL;
+	}
+
+	public void setUpriL(Label upriL) {
+		this.upriL = upriL;
+	}
+
+	public TextField getUpriT() {
+		return upriT;
+	}
+
+	public void setUpriT(TextField upriT) {
+		this.upriT = upriT;
+	}
+
+	public HBox getUpriH() {
+		return upriH;
+	}
+
+	public void setUpriH(HBox upriH) {
+		this.upriH = upriH;
+	}
+
+	public Image getAddM() {
+		return addM;
+	}
+
+	public void setAddM(Image addM) {
+		this.addM = addM;
+	}
+
+	public ImageView getAddVM() {
+		return addVM;
+	}
+
+	public void setAddVM(ImageView addVM) {
+		this.addVM = addVM;
+	}
+
+	public Button getAdd() {
+		return add;
+	}
+
+	public void setAdd(Button add) {
+		this.add = add;
+	}
+
+	public Image getBackM() {
+		return backM;
+	}
+
+	public void setBackM(Image backM) {
+		this.backM = backM;
+	}
+
+	public ImageView getBackVM() {
+		return backVM;
+	}
+
+	public void setBackVM(ImageView backVM) {
+		this.backVM = backVM;
+	}
+
+	public Button getBack() {
+		return back;
+	}
+
+	public void setBack(Button back) {
+		this.back = back;
+	}
+
+	public Image getClearM() {
+		return clearM;
+	}
+
+	public void setClearM(Image clearM) {
+		this.clearM = clearM;
+	}
+
+	public ImageView getClearVM() {
+		return clearVM;
+	}
+
+	public void setClearVM(ImageView clearVM) {
+		this.clearVM = clearVM;
+	}
+
+	public Button getClear() {
+		return clear;
+	}
+
+	public void setClear(Button clear) {
+		this.clear = clear;
+	}
+
+	public HBox getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(HBox buttons) {
+		this.buttons = buttons;
+	}
+
+	public VBox getAll() {
+		return all;
+	}
+
+	public void setAll(VBox all) {
+		this.all = all;
+	}
+
+
 }

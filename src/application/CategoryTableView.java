@@ -73,7 +73,7 @@ public class CategoryTableView {
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
 
-                all.getChildren().addAll(title, searchH, table, buttons);
+        all.getChildren().addAll(title, searchH, table, buttons);
         all.setAlignment(Pos.CENTER);
         all.setSpacing(20);
         all.setStyle("-fx-background-color: #a2c4c9;");

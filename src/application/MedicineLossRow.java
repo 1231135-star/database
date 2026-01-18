@@ -12,15 +12,7 @@ public class MedicineLossRow {
     private SimpleStringProperty unitPrice;
     private SimpleStringProperty lossAmount;
 
-    public MedicineLossRow(
-            String branch,
-            String medicineId,
-            String medicineName,
-            String status,
-            String quantity,
-            String unitPrice,
-            String lossAmount
-    ) {
+    public MedicineLossRow(String branch,String medicineId,String medicineName,String status,String quantity,String unitPrice,String lossAmount) {
         this.branch = new SimpleStringProperty(branch);
         this.medicineId = new SimpleStringProperty(medicineId);
         this.medicineName = new SimpleStringProperty(medicineName);
@@ -30,11 +22,61 @@ public class MedicineLossRow {
         this.lossAmount = new SimpleStringProperty(lossAmount);
     }
 
-    public SimpleStringProperty branchProperty() { return branch; }
-    public SimpleStringProperty medicineIdProperty() { return medicineId; }
-    public SimpleStringProperty medicineNameProperty() { return medicineName; }
-    public SimpleStringProperty statusProperty() { return status; }
-    public SimpleStringProperty quantityProperty() { return quantity; }
-    public SimpleStringProperty unitPriceProperty() { return unitPrice; }
-    public SimpleStringProperty lossAmountProperty() { return lossAmount; }
+	public SimpleStringProperty getBranch() {
+		return branch;
+	}
+
+	public void setBranch(SimpleStringProperty branch) {
+		this.branch = branch;
+	}
+
+	public SimpleStringProperty getMedicineId() {
+		return medicineId;
+	}
+
+	public void setMedicineId(SimpleStringProperty medicineId) {
+		this.medicineId = medicineId;
+	}
+
+	public SimpleStringProperty getMedicineName() {
+		return medicineName;
+	}
+
+	public void setMedicineName(SimpleStringProperty medicineName) {
+		this.medicineName = medicineName;
+	}
+
+	public SimpleStringProperty getStatus() {
+		return status;
+	}
+
+	public void setStatus(SimpleStringProperty status) {
+		this.status = status;
+	}
+
+	public SimpleStringProperty getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(SimpleStringProperty quantity) {
+		this.quantity = quantity;
+	}
+
+	public SimpleStringProperty getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(SimpleStringProperty unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public SimpleStringProperty getLossAmount() {
+		return lossAmount;
+	}
+
+	public void setLossAmount(SimpleStringProperty lossAmount) {
+		this.lossAmount = lossAmount;
+	}
+
+ 
 }

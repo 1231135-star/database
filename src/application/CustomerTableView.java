@@ -92,7 +92,7 @@ public class CustomerTableView {
         data.clear();
 
         try {
-            String sql = "SELECT * FROM Customer";
+        	String sql = "SELECT * FROM customer";
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 

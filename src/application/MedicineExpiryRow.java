@@ -10,13 +10,7 @@ public class MedicineExpiryRow {
     private SimpleStringProperty supplier;
     private SimpleStringProperty expiry;
 
-    public MedicineExpiryRow(
-            String id,
-            String name,
-            String category,
-            String supplier,
-            String expiry
-    ) {
+    public MedicineExpiryRow(String id,String name,String category,String supplier,String expiry) {
         this.id = new SimpleStringProperty(id);
         this.name = new SimpleStringProperty(name);
         this.category = new SimpleStringProperty(category);
@@ -24,9 +18,45 @@ public class MedicineExpiryRow {
         this.expiry = new SimpleStringProperty(expiry);
     }
 
-    public SimpleStringProperty idProperty() { return id; }
-    public SimpleStringProperty nameProperty() { return name; }
-    public SimpleStringProperty categoryProperty() { return category; }
-    public SimpleStringProperty supplierProperty() { return supplier; }
-    public SimpleStringProperty expiryProperty() { return expiry; }
+	public SimpleStringProperty getId() {
+		return id;
+	}
+
+	public void setId(SimpleStringProperty id) {
+		this.id = id;
+	}
+
+	public SimpleStringProperty getName() {
+		return name;
+	}
+
+	public void setName(SimpleStringProperty name) {
+		this.name = name;
+	}
+
+	public SimpleStringProperty getCategory() {
+		return category;
+	}
+
+	public void setCategory(SimpleStringProperty category) {
+		this.category = category;
+	}
+
+	public SimpleStringProperty getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(SimpleStringProperty supplier) {
+		this.supplier = supplier;
+	}
+
+	public SimpleStringProperty getExpiry() {
+		return expiry;
+	}
+
+	public void setExpiry(SimpleStringProperty expiry) {
+		this.expiry = expiry;
+	}
+
+   
 }

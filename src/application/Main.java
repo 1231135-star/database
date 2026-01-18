@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 
 
@@ -5694,6 +5695,90 @@ public class Main extends Application {
 
 
 			AddInventoryItem ain=new AddInventoryItem();
+			ain.getClear().setOnAction(e -> {
+			    ain.getIdT().clear();
+			    ain.getBatchT().clear();
+			    ain.getQtyT().clear();
+			    ain.getExpT().clear();
+			    ain.getRecT().clear();
+			    ain.getPriceT().clear();
+			    ain.getMidT().clear();
+			    ain.getSidT().clear();
+			    ain.getBidT().clear();
+			});
+			ain.getAdd().setOnAction(e -> {
+				 String sql = """
+			        	    INSERT INTO inventory_item
+			        	    (inventoryitemid, batchnumber, quantityavailable, expirydate, receiveddate, purchaseprice,
+			        	     medicineid, supplierid, branchid)
+			        	    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+			        	    """;
+				 try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql);
+				         ResultSet rs = ps.executeQuery()) {
+			        if (ain.getIdT().getText().trim().isEmpty() ||
+			            ain.getBatchT().getText().trim().isEmpty() ||
+			            ain.getQtyT().getText().trim().isEmpty() ||
+			            ain.getExpT().getText().trim().isEmpty() ||
+			            ain.getRecT().getText().trim().isEmpty() ||
+			            ain.getPriceT().getText().trim().isEmpty() ||
+			            ain.getMidT().getText().trim().isEmpty() ||
+			            ain.getSidT().getText().trim().isEmpty() ||
+			            ain.getBidT().getText().trim().isEmpty()) {
+
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing Data");
+			            a.setContentText("Please fill all fields!");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(ain.getIdT().getText().trim());
+			        String batch = ain.getBatchT().getText().trim();
+			        int qty = Integer.parseInt(ain.getQtyT().getText().trim());
+			        String exp = ain.getExpT().getText().trim();
+			        String rec = ain.getRecT().getText().trim();
+			        double price = Double.parseDouble(ain.getPriceT().getText().trim());
+			        int mid = Integer.parseInt(ain.getMidT().getText().trim());
+			        int sid = Integer.parseInt(ain.getSidT().getText().trim());
+			        int bid = Integer.parseInt(ain.getBidT().getText().trim());
+
+			        ps.setInt(1, id);
+			        ps.setString(2, batch);
+			        ps.setInt(3, qty);
+			        ps.setDate(4, java.sql.Date.valueOf(exp));
+			        ps.setDate(5, java.sql.Date.valueOf(rec));
+			        ps.setDouble(6, price);
+			        ps.setInt(7, mid);
+			        ps.setInt(8, sid);
+			        ps.setInt(9, bid);
+
+			        ps.executeUpdate();
+
+			        Alert done = new Alert(Alert.AlertType.INFORMATION);
+			        done.setTitle("Success");
+			        done.setContentText("Inventory Item Added Successfully!");
+			        done.showAndWait();
+
+			        ain.getIdT().clear();
+				    ain.getBatchT().clear();
+				    ain.getQtyT().clear();
+				    ain.getExpT().clear();
+				    ain.getRecT().clear();
+				    ain.getPriceT().clear();
+				    ain.getMidT().clear();
+				    ain.getSidT().clear();
+				    ain.getBidT().clear();
+
+
+			    } catch (Exception ex) {
+			        Alert err = new Alert(Alert.AlertType.ERROR);
+			        err.setTitle("Error");
+			        err.setContentText("Error: " + ex.getMessage());
+			        err.showAndWait();
+			    }
+			});
+
 			DeleteInventoryItem din=new DeleteInventoryItem();
 			UpdateInventoryItem uin=new UpdateInventoryItem();
 			InventoryItemTableView intt=new InventoryItemTableView();
@@ -5702,6 +5787,283 @@ public class Main extends Application {
 			Scene dinscene = new Scene(din.getAll(),400,400);
 			Scene uinscene = new Scene(uin.getAll(),400,400);
 			Scene inttscene = new Scene(intt.getAll(),400,400);
+			uin.getClear().setOnAction(e -> {
+			    uin.getSearchT().clear();
+			    uin.getIdT().clear();
+			    uin.getBatchT().clear();
+			    uin.getQtyT().clear();
+			    uin.getExpT().clear();
+			    uin.getRecT().clear();
+			    uin.getPriceT().clear();
+			    uin.getMidT().clear();
+			    uin.getSidT().clear();
+			    uin.getBidT().clear();
+			    uin.getEdit().setDisable(true);
+			});
+			uin.getSearchB().setOnAction(e -> {
+		        String sql = "SELECT * FROM inventory_item WHERE inventoryitemid = ?";
+
+				 try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql);
+				         ResultSet rs = ps.executeQuery()) {
+			        String idStr = uin.getSearchT().getText().trim();
+			        if (idStr.isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing");
+			            a.setContentText("Enter InventoryItemID!");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(idStr);
+
+			       
+			        ps.setInt(1, id);
+
+
+			        if (rs.next()) {
+			            uin.getIdT().setText(rs.getInt("InventoryItemID") + "");
+			            uin.getBatchT().setText(rs.getString("BatchNumber"));
+			            uin.getQtyT().setText(rs.getInt("QuantityAvailable") + "");
+			            uin.getExpT().setText(rs.getDate("ExpiryDate").toString());
+			            uin.getRecT().setText(rs.getDate("ReceivedDate").toString());
+			            uin.getPriceT().setText(rs.getDouble("PurchasePrice") + "");
+			            uin.getMidT().setText(rs.getInt("MedicineID") + "");
+			            uin.getSidT().setText(rs.getInt("SupplierID") + "");
+			            uin.getBidT().setText(rs.getInt("BranchID") + "");
+
+			            uin.getEdit().setDisable(false);
+
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("Inventory Item Not Found!");
+			            a.showAndWait();
+			            uin.getEdit().setDisable(true);
+			        }
+
+			 		    } catch (Exception ex) {
+			        Alert err = new Alert(Alert.AlertType.ERROR);
+			        err.setTitle("Error");
+			        err.setContentText("Error: " + ex.getMessage());
+			        err.showAndWait();
+			    }
+			});
+			uin.getEdit().setOnAction(e -> {
+				   String sql = """
+			        	    UPDATE inventory_item
+			        	    SET batchnumber=?, quantityavailable=?, expirydate=?, receiveddate=?, purchaseprice=?,
+			        	        medicineid=?, supplierid=?, branchid=?
+			        	    WHERE inventoryitemid=?
+			        	    """;
+				   try (Connection con = DatabaseConnection.getConnection();
+					         PreparedStatement ps = con.prepareStatement(sql);
+					         ResultSet rs = ps.executeQuery()) {
+			        int id = Integer.parseInt(uin.getIdT().getText().trim());
+			        String batch = uin.getBatchT().getText().trim();
+			        int qty = Integer.parseInt(uin.getQtyT().getText().trim());
+			        String exp = uin.getExpT().getText().trim();
+			        String rec = uin.getRecT().getText().trim();
+			        double price = Double.parseDouble(uin.getPriceT().getText().trim());
+			        int mid = Integer.parseInt(uin.getMidT().getText().trim());
+			        int sid = Integer.parseInt(uin.getSidT().getText().trim());
+			        int bid = Integer.parseInt(uin.getBidT().getText().trim());
+
+			        ps.setString(1, batch);
+			        ps.setInt(2, qty);
+			        ps.setDate(3, java.sql.Date.valueOf(exp));
+			        ps.setDate(4, java.sql.Date.valueOf(rec));
+			        ps.setDouble(5, price);
+			        ps.setInt(6, mid);
+			        ps.setInt(7, sid);
+			        ps.setInt(8, bid);
+			        ps.setInt(9, id);
+
+			        ps.executeUpdate();
+
+			        Alert done = new Alert(Alert.AlertType.INFORMATION);
+			        done.setTitle("Success");
+			        done.setContentText("Inventory Item Updated Successfully!");
+			        done.showAndWait();
+
+				    } catch (Exception ex) {
+			        Alert err = new Alert(Alert.AlertType.ERROR);
+			        err.setTitle("Error");
+			        err.setContentText("Error: " + ex.getMessage());
+			        err.showAndWait();
+			    }
+			});
+
+			din.getClear().setOnAction(e -> {
+			    din.getSearchT().clear();
+			    din.getIdT().clear();
+			    din.getBatchT().clear();
+			    din.getQtyT().clear();
+			    din.getExpT().clear();
+			    din.getRecT().clear();
+			    din.getPriceT().clear();
+			    din.getMidT().clear();
+			    din.getSidT().clear();
+			    din.getBidT().clear();
+			    din.getDelete().setDisable(true);
+			});
+			din.getSearchB().setOnAction(e -> {
+				String sql = "SELECT * FROM inventory_item WHERE inventoryitemid = ?";
+
+				 try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql);
+				         ResultSet rs = ps.executeQuery()) {
+			        String idStr = din.getSearchT().getText().trim();
+			        if (idStr.isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Missing");
+			            a.setContentText("Enter InventoryItemID!");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        int id = Integer.parseInt(idStr);
+
+			         ps.setInt(1, id);
+
+			        if (rs.next()) {
+			            din.getIdT().setText(rs.getInt("InventoryItemID") + "");
+			            din.getBatchT().setText(rs.getString("BatchNumber"));
+			            din.getQtyT().setText(rs.getInt("QuantityAvailable") + "");
+			            din.getExpT().setText(rs.getDate("ExpiryDate").toString());
+			            din.getRecT().setText(rs.getDate("ReceivedDate").toString());
+			            din.getPriceT().setText(rs.getDouble("PurchasePrice") + "");
+			            din.getMidT().setText(rs.getInt("MedicineID") + "");
+			            din.getSidT().setText(rs.getInt("SupplierID") + "");
+			            din.getBidT().setText(rs.getInt("BranchID") + "");
+
+			            din.getDelete().setDisable(false);
+
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("Inventory Item Not Found!");
+			            a.showAndWait();
+			            din.getDelete().setDisable(true);
+			        }
+
+
+			    } catch (Exception ex) {
+			        Alert err = new Alert(Alert.AlertType.ERROR);
+			        err.setTitle("Error");
+			        err.setContentText("Error: " + ex.getMessage());
+			        err.showAndWait();
+			    }
+			});
+			din.getDelete().setOnAction(e -> {
+				String sql = "DELETE FROM inventory_item WHERE inventoryitemid = ?";
+
+				 try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql);
+				         ResultSet rs = ps.executeQuery()) {
+			        int id = Integer.parseInt(din.getIdT().getText().trim());
+
+			        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			        confirm.setTitle("Confirm Delete");
+			        confirm.setHeaderText("Are you sure you want to delete this Inventory Item?");
+			        confirm.setContentText("InventoryItemID: " + id);
+
+			        if (confirm.showAndWait().get() != ButtonType.OK)
+			            return;
+
+			        ps.setInt(1, id);
+
+			        int r = ps.executeUpdate();
+
+			        if (r > 0) {
+			            Alert done = new Alert(Alert.AlertType.INFORMATION);
+			            done.setTitle("Deleted");
+			            done.setContentText("Inventory Item Deleted Successfully!");
+			            done.showAndWait();
+			            din.getClear().fire();
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Failed");
+			            a.setContentText("Delete Failed!");
+			            a.showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert err = new Alert(Alert.AlertType.ERROR);
+			        err.setTitle("Error");
+			        err.setContentText("Error: " + ex.getMessage());
+			        err.showAndWait();
+			    }
+			});
+			intt.getTable().setOnMouseClicked(e -> {
+			    InventoryItem selected = intt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected != null) {
+			        intt.getDeleteB().setDisable(false);
+			        intt.getUpdateB().setDisable(false);
+			    }
+			});
+			intt.getDeleteB().setOnAction(e -> {
+
+			    InventoryItem selected = intt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No Selection");
+			        a.setHeaderText(null);
+			        a.setContentText("Please select an item from the table first.");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm Delete");
+			    confirm.setHeaderText("Are you sure you want to delete this Inventory Item?");
+			    confirm.setContentText("InventoryItemID = " + selected.getInventoryitemid());
+
+			    if (confirm.showAndWait().get() != ButtonType.OK) {
+			        return;}
+
+		        String sql = "delete from inventory_item where inventoryitemid = ?";
+			    try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql);
+				         ResultSet rs = ps.executeQuery()) {
+			        ps.setInt(1, selected.getInventoryitemid());
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert ok = new Alert(Alert.AlertType.INFORMATION);
+			            ok.setTitle("Deleted");
+			            ok.setHeaderText(null);
+			            ok.setContentText("Inventory Item deleted successfully.");
+			            ok.showAndWait();
+			            intt.getTable().getItems().remove(selected);
+
+			            intt.getDeleteB().setDisable(true);
+			            intt.getUpdateB().setDisable(true);
+
+			        } else {
+			            Alert fail = new Alert(Alert.AlertType.ERROR);
+			            fail.setTitle("Not Found");
+			            fail.setHeaderText(null);
+			            fail.setContentText("This item does not exist in database.");
+			            fail.showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert err = new Alert(Alert.AlertType.ERROR);
+			        err.setTitle("Database Error");
+			        err.setHeaderText(null);
+			        err.setContentText("Error while deleting item:\n" + ex.getMessage());
+			        err.showAndWait();
+			    }
+			});
+			intt.getRef().setOnAction(e -> {
+			    loadAllInventoryItems(intt.getTable());
+			    intt.getDeleteB().setDisable(true);
+			    intt.getUpdateB().setDisable(true);
+			});
 
 			mb.getAin().setOnAction(e->{
 				primaryStage.setScene(ainscene);
@@ -6000,11 +6362,14 @@ public class Main extends Application {
 			Scene apermedscene = new Scene(apermed.getAll(),400,400);
 			Scene dpermedscene = new Scene(dpermed.getAll(),400,400);
 			Scene upermedscene = new Scene(upermed.getAll(),400,400);
+			Scene permedtscene = new Scene(premedt.getAll(),400,400);
 
 			mb.getAperMed().setOnAction(e-> primaryStage.setScene(apermedscene));
 			mb.getDperMed().setOnAction(e-> primaryStage.setScene(dpermedscene));
 			mb.getUperMed().setOnAction(e-> primaryStage.setScene(upermedscene));
-
+			mb.getPerMedt().setOnAction(e->{
+				primaryStage.setScene(permedtscene);
+			});
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			
@@ -6947,4 +7312,42 @@ public class Main extends Application {
 
 	        return list;
 	    }
+	 private void loadAllInventoryItems(TableView<InventoryItem> table) {
+
+		    table.getItems().clear();
+	        String sql = "select * from inventory_item";
+
+		    try (Connection con = DatabaseConnection.getConnection();
+		             PreparedStatement ps = con.prepareStatement(sql);
+		             ResultSet rs = ps.executeQuery()) {
+		    
+		        while (rs.next()) {
+		            InventoryItem item = new InventoryItem(
+		                rs.getInt("inventoryitemid"),
+		                rs.getString("batchnumber"),
+		                rs.getInt("quantityavailable"),
+		                rs.getDate("expirydate").toLocalDate(),
+		                rs.getDate("receiveddate").toLocalDate(),
+		                rs.getDouble("purchaseprice"),
+		                rs.getInt("medicineid"),
+		                rs.getInt("supplierid"),
+		                rs.getInt("branchid")
+		            );
+
+		            table.getItems().add(item);
+		        }
+
+		        rs.close();
+		        ps.close();
+		        con.close();
+
+		    } catch (Exception ex) {
+		        Alert err = new Alert(Alert.AlertType.ERROR);
+		        err.setTitle("Database Error");
+		        err.setHeaderText(null);
+		        err.setContentText("Error loading inventory items:\n" + ex.getMessage());
+		        err.showAndWait();
+		    }
+		}
+
 }

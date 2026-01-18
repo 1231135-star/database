@@ -64,12 +64,7 @@ public class MedicineQ4TableView {
         refVM.setFitWidth(42);
         refVM.setFitHeight(42);
 
-        String style =
-                "-fx-background-color: #76a5af;" +
-                "-fx-text-fill: #0c343d;" +
-                "-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;" +
-                "-fx-background-radius: 25;";
+        String style ="-fx-background-color: #76a5af;-fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size: 20px;-fx-background-radius: 25;";
 
         back.setStyle(style);
         ref.setStyle(style);

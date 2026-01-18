@@ -156,17 +156,20 @@ public class MedicinesSuppliedBySupplierTableView {
         data.clear();
 
         String sql = """
-            SELECT s.SupplierName,
-                   m.MedicineID,
-                   m.MedicineName,
-                   p.SupplyDate
-            FROM Purchase p
-            JOIN Supplier s ON p.SupplierID = s.SupplierID
-            JOIN Medicine m ON p.MedicineID = m.MedicineID
-            WHERE p.SupplierID = ?
-              AND (? IS NULL OR p.SupplyDate >= ?)
-              AND (? IS NULL OR p.SupplyDate <= ?)
-        """;
+        	    SELECT 
+        	        s.suppliername,
+        	        m.medicineid,
+        	        m.medicinename,
+        	        i.receiveddate
+        	    FROM inventory_item i
+        	    JOIN supplier s ON i.supplierid = s.supplierid
+        	    JOIN medicine m ON i.medicineid = m.medicineid
+        	    WHERE i.supplierid = ?
+        	      AND (? IS NULL OR i.receiveddate >= ?)
+        	      AND (? IS NULL OR i.receiveddate <= ?)
+        	    ORDER BY i.receiveddate DESC
+        	""";
+
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -196,7 +199,6 @@ public class MedicinesSuppliedBySupplierTableView {
         }
     }
 
-    // ================= CLEAR =================
     private void clear() {
         supplierC.setValue(null);
         fromD.setValue(null);
@@ -204,14 +206,12 @@ public class MedicinesSuppliedBySupplierTableView {
         data.clear();
     }
 
-    // ================= LOAD SUPPLIERS =================
     private ObservableList<SupplierItem> loadSuppliers() {
 
         ObservableList<SupplierItem> list =
                 FXCollections.observableArrayList();
 
-        String sql =
-                "SELECT SupplierID, SupplierName FROM Supplier";
+        String sql ="SELECT SupplierID, SupplierName FROM Supplier";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -230,7 +230,6 @@ public class MedicinesSuppliedBySupplierTableView {
         return list;
     }
 
-    // ================= HELPERS =================
     private void styleButton(Button b) {
         b.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
                 + "-fx-font-weight: bold;-fx-font-size:20px;"

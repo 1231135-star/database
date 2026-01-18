@@ -56,9 +56,7 @@ public class BranchQ5TableView {
 		refVM.setFitWidth(42);
 		refVM.setFitHeight(42);
 
-		String style = "-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
-				+ "-fx-font-weight: bold;-fx-font-size:20px;"
-				+ "-fx-background-radius: 25;-fx-border-radius: 25;";
+		String style = "-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;";
 
 		back.setStyle(style);
 		ref.setStyle(style);
@@ -72,7 +70,6 @@ public class BranchQ5TableView {
 		all.setSpacing(20);
 		all.setStyle("-fx-background-color: #a2c4c9;");
 
-		// load data first time
 		table.setItems(loadData());
 
 		ref.setOnAction(e -> table.setItems(loadData()));

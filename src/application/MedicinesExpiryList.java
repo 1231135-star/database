@@ -71,11 +71,9 @@ public class MedicinesExpiryList  {
 
     public MedicinesExpiryList() {
 
-        // ===== Title =====
         mt.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:35px;");
         mt.setFont(Font.font(null, FontWeight.BOLD, 35));
 
-        // ===== Filter =====
         daysL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
         daysT.setPrefWidth(100);
 
@@ -94,7 +92,6 @@ public class MedicinesExpiryList  {
         filtersH.setSpacing(15);
         filtersH.setAlignment(Pos.CENTER);
 
-        // ===== Table =====
         colId.setCellValueFactory(d -> d.getValue().idProperty());
         colName.setCellValueFactory(d -> d.getValue().nameProperty());
         colCategory.setCellValueFactory(d -> d.getValue().categoryProperty());
@@ -108,23 +105,19 @@ public class MedicinesExpiryList  {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefHeight(420);
 
-        // ===== Buttons =====
         buttons.getChildren().addAll(back, searchB, clearB);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
 
-        // ===== Layout =====
         all.getChildren().addAll(mt, filtersH, table, buttons);
         all.setAlignment(Pos.CENTER);
         all.setSpacing(20);
         all.setStyle("-fx-background-color: #a2c4c9;");
 
-        // ===== Actions =====
         searchB.setOnAction(e -> doSearch());
         clearB.setOnAction(e -> clear());
     }
 
-    // ================= SEARCH =================
     private void doSearch() {
 
         int days;
@@ -138,17 +131,20 @@ public class MedicinesExpiryList  {
         data.clear();
 
         String sql = """
-            SELECT m.MedicineID,
-                   m.MedicineName,
-                   c.CategoryName,
-                   s.SupplierName,
-                   i.ExpiryDate
-            FROM Inventory i
-            JOIN Medicine m ON i.MedicineID = m.MedicineID
-            JOIN Category c ON m.CategoryID = c.CategoryID
-            JOIN Supplier s ON i.SupplierID = s.SupplierID
-            WHERE i.ExpiryDate <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
-        """;
+        	    SELECT 
+        	        m.medicineid,
+        	        m.medicinename,
+        	        c.categoryname,
+        	        s.suppliername,
+        	        i.expirydate
+        	    FROM inventory_item i
+        	    JOIN medicine m ON i.medicineid = m.medicineid
+        	    JOIN category c ON m.categoryid = c.categoryid
+        	    JOIN supplier s ON i.supplierid = s.supplierid
+        	    WHERE i.expirydate <= DATE_ADD(CURDATE(), INTERVAL ? DAY)
+        	    ORDER BY i.expirydate
+        	""";
+
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -172,13 +168,11 @@ public class MedicinesExpiryList  {
         }
     }
 
-    // ================= CLEAR =================
     private void clear() {
         daysT.setText("30");
         data.clear();
     }
 
-    // ================= HELPERS =================
     private void styleButton(Button b) {
         b.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
                 + "-fx-font-weight: bold;-fx-font-size:20px;"
@@ -192,7 +186,181 @@ public class MedicinesExpiryList  {
         a.showAndWait();
     }
 
-    public VBox getAll() { return all; }
-    public Button getBack() { return back; }
-    public TableView<MedicineExpiryRow> getTable() { return table; }
+	public Label getMt() {
+		return mt;
+	}
+
+	public void setMt(Label mt) {
+		this.mt = mt;
+	}
+
+	public Label getDaysL() {
+		return daysL;
+	}
+
+	public void setDaysL(Label daysL) {
+		this.daysL = daysL;
+	}
+
+	public TextField getDaysT() {
+		return daysT;
+	}
+
+	public void setDaysT(TextField daysT) {
+		this.daysT = daysT;
+	}
+
+	public Image getSearchM() {
+		return searchM;
+	}
+
+	public void setSearchM(Image searchM) {
+		this.searchM = searchM;
+	}
+
+	public ImageView getSearchVM() {
+		return searchVM;
+	}
+
+	public void setSearchVM(ImageView searchVM) {
+		this.searchVM = searchVM;
+	}
+
+	public Button getSearchB() {
+		return searchB;
+	}
+
+	public void setSearchB(Button searchB) {
+		this.searchB = searchB;
+	}
+
+	public Image getClearM() {
+		return clearM;
+	}
+
+	public void setClearM(Image clearM) {
+		this.clearM = clearM;
+	}
+
+	public ImageView getClearVM() {
+		return clearVM;
+	}
+
+	public void setClearVM(ImageView clearVM) {
+		this.clearVM = clearVM;
+	}
+
+	public Button getClearB() {
+		return clearB;
+	}
+
+	public void setClearB(Button clearB) {
+		this.clearB = clearB;
+	}
+
+	public Image getBackM() {
+		return backM;
+	}
+
+	public void setBackM(Image backM) {
+		this.backM = backM;
+	}
+
+	public ImageView getBackVM() {
+		return backVM;
+	}
+
+	public void setBackVM(ImageView backVM) {
+		this.backVM = backVM;
+	}
+
+	public Button getBack() {
+		return back;
+	}
+
+	public void setBack(Button back) {
+		this.back = back;
+	}
+
+	public TableView<MedicineExpiryRow> getTable() {
+		return table;
+	}
+
+	public void setTable(TableView<MedicineExpiryRow> table) {
+		this.table = table;
+	}
+
+	public ObservableList<MedicineExpiryRow> getData() {
+		return data;
+	}
+
+	public void setData(ObservableList<MedicineExpiryRow> data) {
+		this.data = data;
+	}
+
+	public TableColumn<MedicineExpiryRow, String> getColId() {
+		return colId;
+	}
+
+	public void setColId(TableColumn<MedicineExpiryRow, String> colId) {
+		this.colId = colId;
+	}
+
+	public TableColumn<MedicineExpiryRow, String> getColName() {
+		return colName;
+	}
+
+	public void setColName(TableColumn<MedicineExpiryRow, String> colName) {
+		this.colName = colName;
+	}
+
+	public TableColumn<MedicineExpiryRow, String> getColCategory() {
+		return colCategory;
+	}
+
+	public void setColCategory(TableColumn<MedicineExpiryRow, String> colCategory) {
+		this.colCategory = colCategory;
+	}
+
+	public TableColumn<MedicineExpiryRow, String> getColSupplier() {
+		return colSupplier;
+	}
+
+	public void setColSupplier(TableColumn<MedicineExpiryRow, String> colSupplier) {
+		this.colSupplier = colSupplier;
+	}
+
+	public TableColumn<MedicineExpiryRow, String> getColExpiry() {
+		return colExpiry;
+	}
+
+	public void setColExpiry(TableColumn<MedicineExpiryRow, String> colExpiry) {
+		this.colExpiry = colExpiry;
+	}
+
+	public HBox getFiltersH() {
+		return filtersH;
+	}
+
+	public void setFiltersH(HBox filtersH) {
+		this.filtersH = filtersH;
+	}
+
+	public HBox getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(HBox buttons) {
+		this.buttons = buttons;
+	}
+
+	public VBox getAll() {
+		return all;
+	}
+
+	public void setAll(VBox all) {
+		this.all = all;
+	}
+
+    
 }

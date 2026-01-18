@@ -18,7 +18,6 @@ public class MedicineTableView {
 
     private Label mt = new Label("Medicines");
 
-    // ===== Search =====
     private Image searchM = new Image("icons8-search-100.png");
     private ImageView searchVM = new ImageView(searchM);
     private Button searchB = new Button("Search", searchVM);
@@ -26,7 +25,6 @@ public class MedicineTableView {
     private TextField searchT = new TextField();
     private HBox searchH = new HBox();
 
-    // ===== Table =====
     private TableView<Medicine> table = new TableView<>();
 
     private TableColumn<Medicine, Integer> colID =
@@ -40,7 +38,6 @@ public class MedicineTableView {
     private TableColumn<Medicine, Integer> colCategoryID =
             new TableColumn<>("CategoryID");
 
-    // ===== Buttons =====
     private Image backM = new Image("icons8-back-100(2).png");
     private ImageView backVM = new ImageView(backM);
     private Button back = new Button("Back", backVM);
@@ -62,7 +59,6 @@ public class MedicineTableView {
 
     public MedicineTableView() {
 
-        // ===== Search style =====
         searchL.setStyle(
                 "-fx-text-fill: #0c343d;" +
                 "-fx-font-weight: bold;" +
@@ -78,7 +74,6 @@ public class MedicineTableView {
         searchH.setSpacing(10);
         searchH.setAlignment(Pos.CENTER);
 
-        // ===== Table columns =====
         colID.setCellValueFactory(
                 new PropertyValueFactory<>("medicineID")
         );
@@ -99,7 +94,6 @@ public class MedicineTableView {
                 colID, colName, colStrength, colReqPres, colCategoryID
         );
 
-        // ===== Buttons style =====
         back.setStyle(buttonStyle());
         ref.setStyle(buttonStyle());
         deleteB.setStyle(buttonStyle());
@@ -113,26 +107,22 @@ public class MedicineTableView {
         deleteB.setDisable(true);
         updateB.setDisable(true);
 
-        // ===== Title =====
         mt.setStyle(
                 "-fx-text-fill: #0c343d;" +
                 "-fx-font-weight: bold;" +
                 "-fx-font-size:40px;"
         );
 
-        // ===== Buttons layout =====
         buttons.getChildren().addAll(back, ref, updateB, deleteB);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
 
-        // ===== Main layout =====
         all.getChildren().addAll(mt, searchH, table, buttons);
         all.setAlignment(Pos.CENTER);
         all.setSpacing(20);
         all.setStyle("-fx-background-color: #a2c4c9;");
     }
 
-    // ===== Reusable button style =====
     private String buttonStyle() {
         return "-fx-background-color: #76a5af;" +
                "-fx-text-fill: #0c343d;" +
@@ -142,14 +132,221 @@ public class MedicineTableView {
                "-fx-border-radius: 25;";
     }
 
-    // ===== Getters =====
-    public VBox getAll() { return all; }
-    public TableView<Medicine> getTable() { return table; }
+	public Label getMt() {
+		return mt;
+	}
 
-    public Button getBack() { return back; }
-    public Button getRef() { return ref; }
-    public Button getDeleteB() { return deleteB; }
-    public Button getUpdateB() { return updateB; }
-    public Button getSearchB() { return searchB; }
-    public TextField getSearchT() { return searchT; }
+	public void setMt(Label mt) {
+		this.mt = mt;
+	}
+
+	public Image getSearchM() {
+		return searchM;
+	}
+
+	public void setSearchM(Image searchM) {
+		this.searchM = searchM;
+	}
+
+	public ImageView getSearchVM() {
+		return searchVM;
+	}
+
+	public void setSearchVM(ImageView searchVM) {
+		this.searchVM = searchVM;
+	}
+
+	public Button getSearchB() {
+		return searchB;
+	}
+
+	public void setSearchB(Button searchB) {
+		this.searchB = searchB;
+	}
+
+	public Label getSearchL() {
+		return searchL;
+	}
+
+	public void setSearchL(Label searchL) {
+		this.searchL = searchL;
+	}
+
+	public TextField getSearchT() {
+		return searchT;
+	}
+
+	public void setSearchT(TextField searchT) {
+		this.searchT = searchT;
+	}
+
+	public HBox getSearchH() {
+		return searchH;
+	}
+
+	public void setSearchH(HBox searchH) {
+		this.searchH = searchH;
+	}
+
+	public TableView<Medicine> getTable() {
+		return table;
+	}
+
+	public void setTable(TableView<Medicine> table) {
+		this.table = table;
+	}
+
+	public TableColumn<Medicine, Integer> getColID() {
+		return colID;
+	}
+
+	public void setColID(TableColumn<Medicine, Integer> colID) {
+		this.colID = colID;
+	}
+
+	public TableColumn<Medicine, String> getColName() {
+		return colName;
+	}
+
+	public void setColName(TableColumn<Medicine, String> colName) {
+		this.colName = colName;
+	}
+
+	public TableColumn<Medicine, String> getColStrength() {
+		return colStrength;
+	}
+
+	public void setColStrength(TableColumn<Medicine, String> colStrength) {
+		this.colStrength = colStrength;
+	}
+
+	public TableColumn<Medicine, Boolean> getColReqPres() {
+		return colReqPres;
+	}
+
+	public void setColReqPres(TableColumn<Medicine, Boolean> colReqPres) {
+		this.colReqPres = colReqPres;
+	}
+
+	public TableColumn<Medicine, Integer> getColCategoryID() {
+		return colCategoryID;
+	}
+
+	public void setColCategoryID(TableColumn<Medicine, Integer> colCategoryID) {
+		this.colCategoryID = colCategoryID;
+	}
+
+	public Image getBackM() {
+		return backM;
+	}
+
+	public void setBackM(Image backM) {
+		this.backM = backM;
+	}
+
+	public ImageView getBackVM() {
+		return backVM;
+	}
+
+	public void setBackVM(ImageView backVM) {
+		this.backVM = backVM;
+	}
+
+	public Button getBack() {
+		return back;
+	}
+
+	public void setBack(Button back) {
+		this.back = back;
+	}
+
+	public Image getRefM() {
+		return refM;
+	}
+
+	public void setRefM(Image refM) {
+		this.refM = refM;
+	}
+
+	public ImageView getRefVM() {
+		return refVM;
+	}
+
+	public void setRefVM(ImageView refVM) {
+		this.refVM = refVM;
+	}
+
+	public Button getRef() {
+		return ref;
+	}
+
+	public void setRef(Button ref) {
+		this.ref = ref;
+	}
+
+	public Image getDelM() {
+		return delM;
+	}
+
+	public void setDelM(Image delM) {
+		this.delM = delM;
+	}
+
+	public ImageView getDelVM() {
+		return delVM;
+	}
+
+	public void setDelVM(ImageView delVM) {
+		this.delVM = delVM;
+	}
+
+	public Button getDeleteB() {
+		return deleteB;
+	}
+
+	public void setDeleteB(Button deleteB) {
+		this.deleteB = deleteB;
+	}
+
+	public Image getUpM() {
+		return upM;
+	}
+
+	public void setUpM(Image upM) {
+		this.upM = upM;
+	}
+
+	public ImageView getUpVM() {
+		return upVM;
+	}
+
+	public void setUpVM(ImageView upVM) {
+		this.upVM = upVM;
+	}
+
+	public Button getUpdateB() {
+		return updateB;
+	}
+
+	public void setUpdateB(Button updateB) {
+		this.updateB = updateB;
+	}
+
+	public HBox getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(HBox buttons) {
+		this.buttons = buttons;
+	}
+
+	public VBox getAll() {
+		return all;
+	}
+
+	public void setAll(VBox all) {
+		this.all = all;
+	}
+
+    
 }

@@ -8,9 +8,7 @@ public class MedicineQ4Row {
     private boolean requiresPrescription;
     private String description;
 
-    public MedicineQ4Row(int medicineID, String medicineName,
-                          String strength, boolean requiresPrescription,
-                          String description) {
+    public MedicineQ4Row(int medicineID, String medicineName,String strength, boolean requiresPrescription,String description) {
         this.medicineID = medicineID;
         this.medicineName = medicineName;
         this.strength = strength;

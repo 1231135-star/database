@@ -250,7 +250,6 @@ public class PrescriptionMedicineTableView {
 		this.refresh = refresh;
 	}
 
-
 	public Image getBackM() {
 		return backM;
 	}

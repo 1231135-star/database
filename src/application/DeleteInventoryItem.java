@@ -78,7 +78,8 @@ public class DeleteInventoryItem {
 		searchL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
 		searchL.setFont(Font.font(null, FontWeight.BOLD, 20));
 
-		searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 
 		searchVM.setFitWidth(42);
 		searchVM.setFitHeight(42);
@@ -154,9 +155,12 @@ public class DeleteInventoryItem {
 		buttons.setAlignment(Pos.CENTER);
 		buttons.setSpacing(20);
 
-		delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+		clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+				+ "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 
 		delete.setDisable(true);
 
@@ -527,5 +531,6 @@ public class DeleteInventoryItem {
 	public void setAll(VBox all) {
 		this.all = all;
 	}
+
 
 }

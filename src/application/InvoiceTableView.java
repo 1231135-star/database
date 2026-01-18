@@ -31,7 +31,6 @@ public class InvoiceTableView {
 
     private TableView<Invoice> table = new TableView<>();
 
-    // ✅ ALL COLUMNS (match DB)
     private TableColumn<Invoice, Integer> colID = new TableColumn<>("InvoiceID");
     private TableColumn<Invoice, LocalDate> colDate = new TableColumn<>("Date");
     private TableColumn<Invoice, LocalTime> colTime = new TableColumn<>("Time");

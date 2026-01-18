@@ -45,7 +45,7 @@ public class DeleteBranch {
 	private TextField eT = new TextField();
 	private HBox eH = new HBox();
 
-	private Image deleteM = new Image("icons8-remove-employee-100.png"); // نفس الأيقونة
+	private Image deleteM = new Image("icons8-remove-employee-100.png");
 	private ImageView deleteVM = new ImageView(deleteM);
 	private Button delete = new Button("Delete", deleteVM);
 
