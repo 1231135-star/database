@@ -82,9 +82,10 @@ public class BranchQ5TableView {
 		ObservableList<BranchQ5Row> list = FXCollections.observableArrayList();
 
 		String sql = """
-				SELECT BranchID, BranchName, Address, PhoneNumber
-				FROM Branch
-				""";
+		        select branchid, branchname, address, phonenumber
+		        from branch
+		        """;
+
 
 		try (Connection con = DatabaseConnection.getConnection();
 			 PreparedStatement ps = con.prepareStatement(sql);

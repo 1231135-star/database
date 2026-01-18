@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,9 @@ public class CustomerTableView {
     private TableColumn<Customer, String> emailC = new TableColumn<>("Email");
     private TableColumn<Customer, String> addressC = new TableColumn<>("Address");
 
+    private TableColumn<Customer, LocalDate> dobC = new TableColumn<>("Date Of Birth");
+    private TableColumn<Customer, String> genderC = new TableColumn<>("Gender");
+
     private Image refreshM = new Image("icons8-refresh-100.png");
     private ImageView refreshVM = new ImageView(refreshM);
     private Button refresh = new Button("Refresh", refreshVM);
@@ -51,25 +55,27 @@ public class CustomerTableView {
         phoneC.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         emailC.setCellValueFactory(new PropertyValueFactory<>("email"));
         addressC.setCellValueFactory(new PropertyValueFactory<>("address"));
+        dobC.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
+        genderC.setCellValueFactory(new PropertyValueFactory<>("gender"));
 
-        cidC.setPrefWidth(120);
+        cidC.setPrefWidth(110);
         nameC.setPrefWidth(180);
         phoneC.setPrefWidth(150);
         emailC.setPrefWidth(180);
-        addressC.setPrefWidth(220);
+        addressC.setPrefWidth(200);
+        dobC.setPrefWidth(150);
+        genderC.setPrefWidth(100);
 
-        table.getColumns().addAll(cidC, nameC, phoneC, emailC, addressC);
+        table.getColumns().addAll(cidC, nameC, phoneC, emailC, addressC, dobC, genderC);
         table.setItems(data);
         table.setStyle("-fx-font-size:16px;");
 
         refreshVM.setFitWidth(35);
         refreshVM.setFitHeight(35);
-
         backVM.setFitWidth(35);
         backVM.setFitHeight(35);
 
         refresh.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-
         back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
 
         buttons.getChildren().addAll(refresh, back);
@@ -97,7 +103,17 @@ public class CustomerTableView {
                 String email = rs.getString("Email");
                 String address = rs.getString("Address");
 
-                data.add(new Customer(id, name, phone, email, address));
+           
+                java.sql.Date dob = rs.getDate("DateOfBirth");
+                LocalDate dobL =null ;
+                if(dob == null) {
+                	dobL =null ;}
+                else{
+                	dobL=dob.toLocalDate();
+                }
+                String gender = rs.getString("Gender");
+
+                data.add(new Customer(id, name, phone, email, address, dobL, gender));
             }
 
             rs.close();
@@ -172,6 +188,22 @@ public class CustomerTableView {
 		this.addressC = addressC;
 	}
 
+	public TableColumn<Customer, LocalDate> getDobC() {
+		return dobC;
+	}
+
+	public void setDobC(TableColumn<Customer, LocalDate> dobC) {
+		this.dobC = dobC;
+	}
+
+	public TableColumn<Customer, String> getGenderC() {
+		return genderC;
+	}
+
+	public void setGenderC(TableColumn<Customer, String> genderC) {
+		this.genderC = genderC;
+	}
+
 	public Image getRefreshM() {
 		return refreshM;
 	}
@@ -235,7 +267,5 @@ public class CustomerTableView {
 	public void setAll(VBox all) {
 		this.all = all;
 	}
-
-   
 
 }

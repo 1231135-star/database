@@ -81,44 +81,47 @@ public class InvoiceQ33TableView {
         ObservableList<InvoiceQ33Row> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT 
-                    b.BranchID,
-                    b.BranchName,
+        	    select
+        	        b.branchid, b.branchname,
+        	        s.totalsales,
+        	        s.totalsales - p.totalcost as totalprofit,
+        	        case when bm.bestmedicine is null then 'none' else bm.bestmedicine end as bestmedicine,
+        	        case when bm.bestqty is null then 0 else bm.bestqty end as bestqty
+        	    from branch b
 
-                    IFNULL(SUM(i.TotalAmount),0) AS TotalSales,
+        	    left join (
+        	        select b2.branchid,
+        	               case when sum(i.totalamount) is null then 0 else sum(i.totalamount) end as totalsales
+        	        from branch b2
+        	        left join invoice i on i.branchid = b2.branchid
+        	        group by b2.branchid
+        	    ) s on s.branchid = b.branchid
 
-                    (IFNULL(SUM(i.TotalAmount),0) - 
-                     IFNULL((SELECT SUM(p.TotalCost) 
-                             FROM Purchase p 
-                             WHERE p.BranchID=b.BranchID),0)
-                    ) AS TotalProfit,
+        	    left join (
+        	        select b3.branchid,
+        	               case when sum(p.totalcost) is null then 0 else sum(p.totalcost) end as totalcost
+        	        from branch b3
+        	        left join purchase p on p.branchid = b3.branchid
+        	        group by b3.branchid
+        	    ) p on p.branchid = b.branchid
 
-                    (
-                       SELECT m.MedName
-                       FROM Invoice i2
-                       JOIN Invoice_Item ii2 ON i2.InvoiceID = ii2.InvoiceID
-                       JOIN Medicine m ON m.MedID = ii2.MedID
-                       WHERE i2.BranchID = b.BranchID
-                       GROUP BY m.MedID, m.MedName
-                       ORDER BY SUM(ii2.Quantity) DESC
-                       LIMIT 1
-                    ) AS BestMedicine,
+        	    left join (
+        	        select t.branchid, t.medicinename as bestmedicine, t.qty as bestqty
+        	        from (
+        	            select i.branchid, m.medicinename, sum(ii.quantity) as qty,
+        	                   row_number() over(partition by i.branchid order by sum(ii.quantity) desc) rn
+        	            from invoice i
+        	            join invoice_item ii on ii.invoiceid = i.invoiceid
+        	            join inventory_item inv on inv.inventoryitemid = ii.inventoryitemid
+        	            join medicine m on m.medicineid = inv.medicineid
+        	            group by i.branchid, m.medicineid, m.medicinename
+        	        ) t
+        	        where t.rn = 1
+        	    ) bm on bm.branchid = b.branchid
 
-                    (
-                       SELECT IFNULL(SUM(ii3.Quantity),0)
-                       FROM Invoice i3
-                       JOIN Invoice_Item ii3 ON i3.InvoiceID = ii3.InvoiceID
-                       WHERE i3.BranchID = b.BranchID
-                       GROUP BY ii3.MedID
-                       ORDER BY SUM(ii3.Quantity) DESC
-                       LIMIT 1
-                    ) AS BestQty
+        	    order by s.totalsales desc
+        	    """;
 
-                FROM Branch b
-                LEFT JOIN Invoice i ON i.BranchID = b.BranchID
-                GROUP BY b.BranchID, b.BranchName
-                ORDER BY TotalSales DESC
-                """;
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);

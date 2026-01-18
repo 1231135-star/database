@@ -79,36 +79,26 @@ public class InvoiceQ19TableView {
         ObservableList<InvoiceQ19Row> list = FXCollections.observableArrayList();
 
         String sql = """
-                select 
-                    b.branchid as branchid,
-                    b.branchname as branchname,
+        	    select b.branchid, b.branchname, s.totalsales,
+        	           s.totalsales - p.totalcost as totalprofit,
+        	           dw.totalloss
+        	    from branch b
+        	    left join (
+        	        select branchid, case when sum(totalamount) is null then 0 else sum(totalamount) end totalsales
+        	        from invoice group by branchid
+        	    ) s on s.branchid=b.branchid
+        	    left join (
+        	        select branchid, case when sum(totalcost) is null then 0 else sum(totalcost) end totalcost
+        	        from purchase group by branchid
+        	    ) p on p.branchid=b.branchid
+        	    left join (
+        	        select branchid, case when sum(lossamount) is null then 0 else sum(lossamount) end totalloss
+        	        from damagedwithdrawn group by branchid
+        	    ) dw on dw.branchid=b.branchid
+        	    order by s.totalsales desc
+        	    """;
 
-                    ifnull(sum(i.totalamount), 0) as totalsales,
 
-                    (
-                        ifnull(sum(i.totalamount), 0) -
-                        ifnull(
-                            (
-                                select sum(p.totalcost)
-                                from purchase p
-                                where p.branchid = b.branchid
-                            ), 0
-                        )
-                    ) as totalprofit,
-
-                    ifnull(
-                        (
-                            select sum(dw.lossamount)
-                            from damagedwithdrawn dw
-                            where dw.branchid = b.branchid
-                        ), 0
-                    ) as totalloss
-
-                from branch b
-                left join invoice i on i.branchid = b.branchid
-                group by b.branchid, b.branchname
-                order by totalsales desc
-                """;
 
 
         try (Connection con = DatabaseConnection.getConnection();

@@ -116,18 +116,20 @@ public class InvoiceQ32TableView {
         ObservableList<InvoiceQ32Row> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT 
-                    m.MedID,
-                    m.MedName,
-                    IFNULL(SUM(ii.Quantity),0) AS TotalQty,
-                    IFNULL(SUM(ii.Quantity * ii.UnitPrice),0) AS TotalSales
-                FROM Invoice i
-                JOIN Invoice_Item ii ON i.InvoiceID = ii.InvoiceID
-                JOIN Medicine m ON m.MedID = ii.MedID
-                WHERE i.InvoiceDate BETWEEN ? AND ?
-                GROUP BY m.MedID, m.MedName
-                ORDER BY TotalSales DESC
-                """;
+        	    select
+        	        m.medicineid as medicineid,
+        	        m.medicinename as medicinename,
+        	        sum(ii.quantity) as totalqty,
+        	        sum(ii.quantity * ii.unitprice) as totalsales
+        	    from invoice i
+        	    join invoice_item ii on i.invoiceid = ii.invoiceid
+        	    join inventory_item inv on inv.inventoryitemid = ii.inventoryitemid
+        	    join medicine m on m.medicineid = inv.medicineid
+        	    where i.invoicedate between ? and ?
+        	    group by m.medicineid, m.medicinename
+        	    order by totalsales desc
+        	    """;
+
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

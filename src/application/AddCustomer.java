@@ -1,9 +1,7 @@
 package application;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -33,6 +31,22 @@ public class AddCustomer {
     private TextField addT = new TextField();
     private HBox addH = new HBox();
 
+    private Label dobL = new Label("Date Of Birth :");
+    private DatePicker dobP = new DatePicker();
+    private HBox dobH = new HBox();
+
+    private Label genderL = new Label("Gender :");
+    private ComboBox<String> genderC = new ComboBox<>();
+    private HBox genderH = new HBox();
+
+    private Label userL = new Label("Username :");
+    private TextField userT = new TextField();
+    private HBox userH = new HBox();
+
+    private Label passL = new Label("Password :");
+    private PasswordField passT = new PasswordField();
+    private HBox passH = new HBox();
+
     private Image addM = new Image("icons8-add-administrator-100.png");
     private ImageView addVM = new ImageView(addM);
     private Button add = new Button("Add", addVM);
@@ -50,46 +64,112 @@ public class AddCustomer {
 
     public AddCustomer() {
 
-        cidH.getChildren().addAll(cidL, cidT);
-        cidL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        genderC.getItems().addAll("Male", "Female");
+        cidH.getChildren().addAll(cidL,cidT);
         cidH.setAlignment(Pos.CENTER);
         cidH.setSpacing(20);
-
-        nameH.getChildren().addAll(nameL, nameT);
-        nameL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        
+        nameH.getChildren().addAll(nameL,nameT);
         nameH.setAlignment(Pos.CENTER);
         nameH.setSpacing(20);
-
-        pnH.getChildren().addAll(pnL, pnT);
-        pnL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        
+        pnH.getChildren().addAll(pnL,pnT);
         pnH.setAlignment(Pos.CENTER);
         pnH.setSpacing(20);
-
-        eH.getChildren().addAll(eL, eT);
-        eL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        
+        eH.getChildren().addAll(eL,eT);
         eH.setAlignment(Pos.CENTER);
         eH.setSpacing(20);
-
-        addH.getChildren().addAll(addL, addT);
-        addL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        
+        addH.getChildren().addAll(addL,addT);
         addH.setAlignment(Pos.CENTER);
         addH.setSpacing(20);
+
+        dobH.getChildren().addAll(dobL, dobP);
+        dobL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        dobH.setAlignment(Pos.CENTER);
+        dobH.setSpacing(20);
+
+        genderH.getChildren().addAll(genderL, genderC);
+        genderL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        genderH.setAlignment(Pos.CENTER);
+        genderH.setSpacing(20);
+
 
         buttons.getChildren().addAll(add, back, clear);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
 
-        clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-        back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-        add.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        userH.getChildren().addAll(userL, userT);
+        userH.setAlignment(Pos.CENTER);
+        userH.setSpacing(20);
 
-        all.getChildren().addAll(addCust, cidH, nameH, pnH, eH, addH, buttons);
+        passH.getChildren().addAll(passL, passT);
+        passH.setAlignment(Pos.CENTER);
+        passH.setSpacing(20);
+
+        userL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        passL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+
+        add.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+
+        all.getChildren().addAll(addCust, cidH, nameH, pnH, eH, addH, dobH, genderH, userH, passH, buttons);
         addCust.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
 
         all.setAlignment(Pos.CENTER);
         all.setSpacing(20);
         all.setStyle("-fx-background-color: #a2c4c9;");
     }
+
+	public Label getUserL() {
+		return userL;
+	}
+
+	public void setUserL(Label userL) {
+		this.userL = userL;
+	}
+
+	public TextField getUserT() {
+		return userT;
+	}
+
+	public void setUserT(TextField userT) {
+		this.userT = userT;
+	}
+
+	public HBox getUserH() {
+		return userH;
+	}
+
+	public void setUserH(HBox userH) {
+		this.userH = userH;
+	}
+
+	public Label getPassL() {
+		return passL;
+	}
+
+	public void setPassL(Label passL) {
+		this.passL = passL;
+	}
+
+	public PasswordField getPassT() {
+		return passT;
+	}
+
+	public void setPassT(PasswordField passT) {
+		this.passT = passT;
+	}
+
+	public HBox getPassH() {
+		return passH;
+	}
+
+	public void setPassH(HBox passH) {
+		this.passH = passH;
+	}
 
 	public Label getAddCust() {
 		return addCust;
@@ -219,6 +299,54 @@ public class AddCustomer {
 		this.addH = addH;
 	}
 
+	public Label getDobL() {
+		return dobL;
+	}
+
+	public void setDobL(Label dobL) {
+		this.dobL = dobL;
+	}
+
+	public DatePicker getDobP() {
+		return dobP;
+	}
+
+	public void setDobP(DatePicker dobP) {
+		this.dobP = dobP;
+	}
+
+	public HBox getDobH() {
+		return dobH;
+	}
+
+	public void setDobH(HBox dobH) {
+		this.dobH = dobH;
+	}
+
+	public Label getGenderL() {
+		return genderL;
+	}
+
+	public void setGenderL(Label genderL) {
+		this.genderL = genderL;
+	}
+
+	public ComboBox<String> getGenderC() {
+		return genderC;
+	}
+
+	public void setGenderC(ComboBox<String> genderC) {
+		this.genderC = genderC;
+	}
+
+	public HBox getGenderH() {
+		return genderH;
+	}
+
+	public void setGenderH(HBox genderH) {
+		this.genderH = genderH;
+	}
+
 	public Image getAddM() {
 		return addM;
 	}
@@ -307,4 +435,6 @@ public class AddCustomer {
 		this.all = all;
 	}
 
+
+   
 }

@@ -117,11 +117,12 @@ public class EmployeeQ6TableView {
 		}
 
 		String sql = """
-			SELECT e.EmpID, e.FullName, e.Position, e.Salary, b.BranchName
-			FROM Employee e
-			JOIN Branch b ON e.BranchID = b.BranchID
-			WHERE b.BranchID = ?
-		""";
+		        select e.empid, e.fullname, e.qualification, e.salary, b.branchname
+		        from employee e
+		        join branch b on e.branchid = b.branchid
+		        where b.branchid = ?
+		        """;
+
 
 		ObservableList<Q6EmployeeRow> list = FXCollections.observableArrayList();
 
@@ -168,7 +169,7 @@ public class EmployeeQ6TableView {
 	private ObservableList<BranchItem> loadBranches() {
 		ObservableList<BranchItem> list = FXCollections.observableArrayList();
 
-		String sql = "SELECT BranchID, BranchName FROM Branch";
+		String sql = "select branchid, branchname from branch";
 
 		try (Connection con = DatabaseConnection.getConnection();
 			 PreparedStatement ps = con.prepareStatement(sql);

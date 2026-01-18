@@ -1,0 +1,3 @@
+1;1;1;3;Damaged;18.00;2025-12-01;Box damaged in storage
+2;3;2;5;Withdrawn;15.00;2025-12-10;Expired batch removed
+3;6;3;1;Damaged;7.00;2025-12-15;Packaging issue

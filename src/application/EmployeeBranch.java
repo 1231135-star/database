@@ -11,11 +11,11 @@ public class EmployeeBranch {
 	        this.bName = bName;
 	    }
 
-		public String getfName() {
+		public String getFName() {
 			return fName;
 		}
 
-		public void setfName(String fName) {
+		public void setFName(String fName) {
 			this.fName = fName;
 		}
 
@@ -27,11 +27,11 @@ public class EmployeeBranch {
 			this.qual = qual;
 		}
 
-		public String getbName() {
+		public String getBName() {
 			return bName;
 		}
 
-		public void setbName(String bName) {
+		public void setBName(String bName) {
 			this.bName = bName;
 		}
 

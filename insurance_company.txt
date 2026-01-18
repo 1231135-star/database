@@ -1,0 +1,2 @@
+1;PalHealth Insurance;INS-2001;0596000001;support@palhealth.com;Ramallah
+2;SafeCare Insurance;INS-2002;0596000002;info@safecare.com;Nablus

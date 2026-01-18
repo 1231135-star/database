@@ -117,13 +117,13 @@ public class EmployeeQ8TableView {
 		}
 
 		String sql = """
-			SELECT e.EmpID, e.FullName, SUM(i.TotalAmount) AS TotalSales
-			FROM Invoice i
-			JOIN Employee e ON i.EmpID = e.EmpID
-			GROUP BY e.EmpID, e.FullName
-			ORDER BY TotalSales DESC
-			LIMIT ?
-		""";
+		        select e.empid, e.fullname, sum(i.totalamount) as totalsales
+		        from invoice i
+		        join employee e on i.empid = e.empid
+		        group by e.empid, e.fullname
+		        order by totalsales desc
+		        """;
+
 
 		ObservableList<Q8EmployeeRow> list = FXCollections.observableArrayList();
 

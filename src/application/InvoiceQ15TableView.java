@@ -78,11 +78,12 @@ public class InvoiceQ15TableView {
 		ObservableList<InvoiceQ15Row> list = FXCollections.observableArrayList();
 
 		String sql = """
-				SELECT i.InvoiceID, i.InvoiceDate, i.TotalAmount, b.BranchName
-				FROM Invoice i
-				JOIN Branch b ON i.BranchID = b.BranchID
-				ORDER BY i.InvoiceDate DESC
-				""";
+		        select i.invoiceid, i.invoicedate, i.totalamount, b.branchname
+		        from invoice i
+		        join branch b on i.branchid = b.branchid
+		        order by i.invoicedate desc
+		        """;
+
 
 		try (Connection con = DatabaseConnection.getConnection();
 			 PreparedStatement ps = con.prepareStatement(sql);

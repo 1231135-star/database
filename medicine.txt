@@ -1,0 +1,6 @@
+1;Amoxicillin;500mg;1;Antibiotic capsule;1
+2;Azithromycin;250mg;1;Antibiotic tablets;1
+3;Paracetamol;500mg;0;Pain reliever tablets;2
+4;Ibuprofen;400mg;0;Anti-inflammatory tablets;2
+5;Vitamin C;1000mg;0;Supplement tablets;3
+6;Moisturizing Cream;50ml;0;Skin moisturizing cream;4

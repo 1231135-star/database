@@ -1,0 +1,3 @@
+1;PharmaCare Co;SUP-1001;0598000001;contact@pharmacare.com;Ramallah Industrial Zone
+2;MedSupply Ltd;SUP-1002;0598000002;info@medsupply.com;Nablus - Rafidia
+3;HealthLine;SUP-1003;0598000003;sales@healthline.com;Jerusalem - Business Park

@@ -71,21 +71,21 @@ public class InvoiceQ18TableView {
 
     private ObservableList<InvoiceQ18Row> loadData() {
         ObservableList<InvoiceQ18Row> list = FXCollections.observableArrayList();
-
         String sql = """
-                SELECT
-                   (SELECT IFNULL(SUM(TotalAmount),0)
-                    FROM Invoice
-                    WHERE MONTH(InvoiceDate)=MONTH(CURDATE())
-                    AND YEAR(InvoiceDate)=YEAR(CURDATE())
-                   ) AS TotalSales,
+                select
+                   (select ifnull(sum(totalamount), 0)
+                    from invoice
+                    where month(invoicedate) = month(curdate())
+                      and year(invoicedate)  = year(curdate())
+                   ) as totalsales,
 
-                   (SELECT IFNULL(SUM(TotalCost),0)
-                    FROM Purchase
-                    WHERE MONTH(PurchaseDate)=MONTH(CURDATE())
-                    AND YEAR(PurchaseDate)=YEAR(CURDATE())
-                   ) AS TotalPurchases
+                   (select ifnull(sum(totalcost), 0)
+                    from purchase
+                    where month(purchasedate) = month(curdate())
+                      and year(purchasedate)  = year(curdate())
+                   ) as totalpurchases
                 """;
+
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);

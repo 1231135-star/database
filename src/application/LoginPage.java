@@ -1,5 +1,9 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -42,8 +46,8 @@ public class LoginPage {
 
     public LoginPage() {
 
-        roleC.getItems().addAll("Admin", "Manegar", "Employee", "Customer","Guest");
-        roleC.setValue("Guest");
+        roleC.getItems().addAll("Admin", "Manegar", "Employee", "Customer");
+        roleC.setValue("Admin");
 
         userH.getChildren().addAll(userL, userT);
         userL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
@@ -86,7 +90,7 @@ public class LoginPage {
         clear.setOnAction(e -> {
             userT.clear();
             passT.clear();
-            roleC.setValue("Guest");
+            roleC.setValue("Admin");
         });
     }
     
@@ -147,29 +151,84 @@ public class LoginPage {
 	    String p = passT.getText().trim();
 	    String r = roleC.getValue();
 
-	    // Admin account
-	    if (r.equals("Admin") && u.equals("admin") && p.equals("admin123")) return true;
+	    if (r == null) {
+	    	return false;
+	    }
+	    if (r.equalsIgnoreCase("Admin")) {
+	        return u.equals("admin") && p.equals("admin123");
+	    }
 
-	    // Manager account
-	    if (r.equals("MANAGER") && u.equals("manager") && p.equals("manager123")) return true;
+	    
+	    if (u.isEmpty() || p.isEmpty()) {
+	    	return false;
+	    }
 
-	    // Employee account
-	    if (r.equals("EMPLOYEE") && u.equals("emp") && p.equals("emp123")) return true;
+	    if (r.equalsIgnoreCase("Customer")) {
 
-	    // Customer login from DB
-	    if (r.equals("CUSTOMER")) {
+	        String sql = "select customerid from customer where username=? and password=?";
 
-	        if (u.isEmpty() || p.isEmpty()) return false;
+	        try (Connection con = DatabaseConnection.getConnection();
+	             PreparedStatement ps = con.prepareStatement(sql)) {
 
-	        // phone must be digits
-	        if (!u.matches("\\d+")) return false;
+	            ps.setString(1, u);
+	            ps.setString(2, p);
 
-	        // customerId must be digits
-	        if (!p.matches("\\d+")) return false;
+	            ResultSet rs = ps.executeQuery();
+	            boolean ok = rs.next();
+	            rs.close();
+	            return ok;
 
-	        int customerID = Integer.parseInt(p);
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            return false;
+	        }
+	    }
 
-	      // return DBCustomer.existsCustomer(customerID, u);
+	    if (r.equalsIgnoreCase("Employee") || r.equalsIgnoreCase("Manager")) {
+
+	        if (!u.matches("\\d+")) {
+	        	return false;
+	        }
+
+	        int empId = Integer.parseInt(u);
+	        String license = p; // password = licenseno
+
+	        String empSql = "select empid from employee where empid=? and licenseno=?";
+
+	        try (Connection con = DatabaseConnection.getConnection();
+	             PreparedStatement ps = con.prepareStatement(empSql)) {
+
+	            ps.setInt(1, empId);
+	            ps.setString(2, license);
+
+	            ResultSet rs = ps.executeQuery();
+	            boolean isEmployee = rs.next();
+	            rs.close();
+
+	            if (!isEmployee) {
+	            	return false;
+	            }
+
+	            if (r.equalsIgnoreCase("Employee")) {
+	            	return true;
+	            }
+
+	            String managerSql = "select branchid from branch where managerid=?";
+
+	            try (PreparedStatement ps2 = con.prepareStatement(managerSql)) {
+	                ps2.setInt(1, empId);
+
+	                ResultSet rs2 = ps2.executeQuery();
+	                boolean isManager = rs2.next();
+	                rs2.close();
+
+	                return isManager;
+	            }
+
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	            return false;
+	        }
 	    }
 
 	    return false;

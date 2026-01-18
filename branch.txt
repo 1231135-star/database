@@ -1,0 +1,3 @@
+4;Main Branch;Ramallah - Al Manara;0599000001;main@marycare.com;101;08:00:00;22:00:00;Friday
+2;BZU Branch;Birzeit University;0599000002;bzu@marycare.com;102;09:00:00;21:00:00;Saturday
+3;Nablus Branch;Nablus - Downtown;0599000003;nablus@marycare.com;103;08:30:00;22:30:00;Friday

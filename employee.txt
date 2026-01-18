@@ -1,0 +1,5 @@
+101;Rami Taha;Pharmacist;EMP-LIC-5001;Ramallah;402123456;0594000001;rami@marycare.com;4500.00;1
+102;Hala Jaber;Pharmacist;EMP-LIC-5002;Birzeit;402223456;0594000002;hala@marycare.com;4300.00;2
+103;Samer Yasin;Pharmacist;EMP-LIC-5003;Nablus;402323456;0594000003;samer@marycare.com;4400.00;3
+104;Yazan Musa;Assistant;EMP-LIC-5004;Ramallah;402423456;0594000004;yazan@marycare.com;2800.00;1
+105;Noor Ahmad;Cashier;EMP-LIC-5005;Birzeit;402523456;0594000005;noor@marycare.com;2500.00;2

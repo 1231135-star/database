@@ -1,5 +1,9 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -31,6 +35,14 @@ public class SignUpCustomer {
     private TextField addressT = new TextField();
     private HBox addressH = new HBox();
 
+    private Label passL = new Label("Password :");
+    private TextField passT = new TextField();
+    private HBox passH = new HBox();
+
+    private Label usernameL = new Label("UserName :");
+    private TextField usernameT = new TextField();
+    private HBox usernameH = new HBox();
+
     private Image suM = new Image("icons8-sign-up-100.png");
     private ImageView suVM = new ImageView(suM);
     private Button create = new Button("create account",suVM);
@@ -52,19 +64,23 @@ public class SignUpCustomer {
         phoneH.getChildren().addAll(phoneL, phoneT);
         emailH.getChildren().addAll(emailL, emailT);
         addressH.getChildren().addAll(addressL, addressT);
+        passH.getChildren().addAll(passL, passT);
+        usernameH.getChildren().addAll(usernameL, usernameT);
 
 
         idL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
         nameL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
         phoneL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
         emailL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
-        addressL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        passL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
 
         idH.setAlignment(Pos.CENTER); idH.setSpacing(20);
         nameH.setAlignment(Pos.CENTER); nameH.setSpacing(20);
         phoneH.setAlignment(Pos.CENTER); phoneH.setSpacing(20);
         emailH.setAlignment(Pos.CENTER); emailH.setSpacing(20);
-        addressH.setAlignment(Pos.CENTER); addressH.setSpacing(20);
+        passH.setAlignment(Pos.CENTER); addressH.setSpacing(20);
+        usernameH.setAlignment(Pos.CENTER); addressH.setSpacing(20);
+        usernameH.setSpacing(20);
 
         create.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
         back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
@@ -76,7 +92,7 @@ public class SignUpCustomer {
 
         title.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
 
-        all.getChildren().addAll(title, idH, nameH, phoneH, emailH, addressH, buttons);
+        all.getChildren().addAll(title, idH, nameH, phoneH, emailH, addressH,passH,usernameH, buttons);
         all.setAlignment(Pos.CENTER);
         all.setSpacing(20);
         all.setStyle("-fx-background-color: #a2c4c9;");
@@ -88,44 +104,110 @@ public class SignUpCustomer {
             emailT.clear();
             addressT.clear();
         });
-
         create.setOnAction(e -> {
 
             String id = idT.getText().trim();
             String name = nameT.getText().trim();
             String phone = phoneT.getText().trim();
+            String username = usernameT.getText().trim();
+            String pass = passT.getText().trim();
 
-            if (id.isEmpty() || name.isEmpty() || phone.isEmpty()) {
+            if (id.isEmpty() || name.isEmpty() || phone.isEmpty() || username.isEmpty() || pass.isEmpty()) {
                 Alert a = new Alert(Alert.AlertType.ERROR);
-                a.setTitle("error empty feilds");
-                a.setHeaderText("error empty feilds");
-                a.setContentText("customer ID name, and phone are required");
+                a.setTitle("Error");
+                a.setHeaderText("Empty fields");
+                a.setContentText("Please fill all fields.");
                 a.showAndWait();
                 return;
             }
 
             if (!id.matches("\\d+")) {
                 Alert a = new Alert(Alert.AlertType.ERROR);
-                a.setTitle("invalid customer id");
-                a.setContentText("invalid customer id");
+                a.setTitle("Error");
+                a.setContentText("Invalid customer ID (digits only).");
                 a.showAndWait();
                 return;
             }
 
             if (!phone.matches("\\d+")) {
                 Alert a = new Alert(Alert.AlertType.ERROR);
-                a.setTitle("invalid phone number");
-                a.setContentText("invalid phone number");
+                a.setTitle("Error");
+                a.setContentText("Invalid phone number (digits only).");
                 a.showAndWait();
                 return;
             }
 
-            Alert ok = new Alert(Alert.AlertType.INFORMATION);
-            ok.setTitle("success");
-            ok.setHeaderText("account created Succesfuly");
-            ok.setContentText("account created Succesfuly");
-            ok.showAndWait();
+            int customerID = Integer.parseInt(id);
+
+            String checkIdSql = "select customerid from customer where customerid=?";
+            String checkUserSql = "select username from customer where username=?";
+            String insertSql = """
+                insert into customer (customerid, fullname, phonenumber, username, password)
+                values (?, ?, ?, ?, ?)
+                """;
+
+            try (Connection con = DatabaseConnection.getConnection()) {
+
+                try (PreparedStatement ps = con.prepareStatement(checkIdSql)) {
+                    ps.setInt(1, customerID);
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()) {
+                        Alert a = new Alert(Alert.AlertType.ERROR);
+                        a.setTitle("Error");
+                        a.setHeaderText("Customer ID already exists");
+                        a.setContentText("Choose another ID.");
+                        a.showAndWait();
+                        return;
+                    }
+                }
+
+                try (PreparedStatement ps = con.prepareStatement(checkUserSql)) {
+                    ps.setString(1, username);
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()) {
+                        Alert a = new Alert(Alert.AlertType.ERROR);
+                        a.setTitle("Error");
+                        a.setHeaderText("Username already used");
+                        a.setContentText("Choose another username.");
+                        a.showAndWait();
+                        return;
+                    }
+                }
+
+                try (PreparedStatement ps = con.prepareStatement(insertSql)) {
+                    ps.setInt(1, customerID);
+                    ps.setString(2, name);
+                    ps.setString(3, phone);
+                    ps.setString(4, username);
+                    ps.setString(5, pass);
+                    ps.executeUpdate();
+                }
+
+                Alert ok = new Alert(Alert.AlertType.INFORMATION);
+                ok.setTitle("Success");
+                ok.setHeaderText("Account created successfully");
+                ok.setContentText("You can now login.");
+                ok.showAndWait();
+
+                idT.clear();
+                nameT.clear();
+                phoneT.clear();
+                usernameT.clear();
+                passT.clear();
+
+      
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("DB Error");
+                a.setHeaderText("Failed to create account");
+                a.setContentText(ex.getMessage());
+                a.showAndWait();
+            }
         });
+
+
     }
 
 	public Label getTitle() {
@@ -342,6 +424,54 @@ public class SignUpCustomer {
 
 	public void setAll(VBox all) {
 		this.all = all;
+	}
+
+	public Label getPassL() {
+		return passL;
+	}
+
+	public void setPassL(Label passL) {
+		this.passL = passL;
+	}
+
+	public TextField getPassT() {
+		return passT;
+	}
+
+	public void setPassT(TextField passT) {
+		this.passT = passT;
+	}
+
+	public HBox getPassH() {
+		return passH;
+	}
+
+	public void setPassH(HBox passH) {
+		this.passH = passH;
+	}
+
+	public Label getUsernameL() {
+		return usernameL;
+	}
+
+	public void setUsernameL(Label usernameL) {
+		this.usernameL = usernameL;
+	}
+
+	public TextField getUsernameT() {
+		return usernameT;
+	}
+
+	public void setUsernameT(TextField usernameT) {
+		this.usernameT = usernameT;
+	}
+
+	public HBox getUsernameH() {
+		return usernameH;
+	}
+
+	public void setUsernameH(HBox usernameH) {
+		this.usernameH = usernameH;
 	}
 
    

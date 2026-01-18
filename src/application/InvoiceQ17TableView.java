@@ -78,11 +78,12 @@ public class InvoiceQ17TableView {
         ObservableList<InvoiceQ17Row> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT i.InvoiceID, i.InvoiceDate, i.TotalAmount, e.FullName
-                FROM Invoice i
-                JOIN Employee e ON i.EmpID = e.EmpID
-                ORDER BY i.InvoiceDate DESC
+                select i.invoiceid, i.invoicedate, i.totalamount, e.fullname
+                from invoice i
+                join employee e on i.empid = e.empid
+                order by i.invoicedate desc
                 """;
+
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);

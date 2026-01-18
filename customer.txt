@@ -1,0 +1,3 @@
+1;Ahmad Hasan;0597000001;ahmad@gmail.com;Ramallah;2002-05-13;Male
+2;Sara Khaled;0597000002;sara@gmail.com;Birzeit;2003-10-02;Female
+3;Mohammad Ali;0597000003;mohammad@gmail.com;Nablus;2001-03-21;Male

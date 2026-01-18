@@ -77,21 +77,34 @@ public class InvoiceQ20TableView {
         ObservableList<InvoiceQ20Row> list = FXCollections.observableArrayList();
 
         String sql = """
-                SELECT 
-                    b.BranchID,
-                    b.BranchName,
-                    IFNULL(SUM(i.TotalAmount),0) AS TotalSales,
-                    (IFNULL(SUM(i.TotalAmount),0) - 
-                     IFNULL((SELECT SUM(p.TotalCost) 
-                             FROM Purchase p 
-                             WHERE p.BranchID=b.BranchID),0)
-                    ) AS TotalProfit
-                FROM Branch b
-                LEFT JOIN Invoice i ON i.BranchID=b.BranchID
-                GROUP BY b.BranchID, b.BranchName
-                ORDER BY TotalSales DESC, TotalProfit DESC
-                LIMIT 1
-                """;
+        	    select
+        	        x.branchid, x.branchname, x.totalsales, x.totalprofit
+        	    from (
+        	        select
+        	            b.branchid, b.branchname,
+        	            case when sum(i.totalamount) is null then 0 else sum(i.totalamount) end as totalsales,
+        	            (
+        	                case when sum(i.totalamount) is null then 0 else sum(i.totalamount) end
+        	                -
+        	                case when sum(p.totalcost) is null then 0 else sum(p.totalcost) end
+        	            ) as totalprofit
+        	        from branch b
+        	        left join invoice i on i.branchid = b.branchid
+        	        left join purchase p on p.branchid = b.branchid
+        	        group by b.branchid, b.branchname
+        	    ) x
+        	    where x.totalsales = (
+        	        select max(y.totalsales)
+        	        from (
+        	            select
+        	                b2.branchid,
+        	                case when sum(i2.totalamount) is null then 0 else sum(i2.totalamount) end as totalsales
+        	            from branch b2
+        	            left join invoice i2 on i2.branchid = b2.branchid
+        	            group by b2.branchid
+        	        ) y
+        	    )
+        	    """;
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);

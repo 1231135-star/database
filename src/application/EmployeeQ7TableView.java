@@ -141,19 +141,20 @@ public class EmployeeQ7TableView {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append("""
-				SELECT e.EmpID, e.FullName, e.Position, e.Salary, b.BranchName
-				FROM Employee e
-				JOIN Branch b ON e.BranchID = b.BranchID
-				WHERE
-				""");
+		        select e.empid, e.fullname, e.qualification, e.salary, b.branchname
+		        from employee e
+		        join branch b on e.branchid = b.branchid
+		        where
+		        """);
 
 		if (!salaryText.isEmpty() && selectedBranch != null) {
-			sql.append(" e.Salary > ? OR b.BranchID = ? ");
+		    sql.append(" e.salary > ? or b.branchid = ? ");
 		} else if (!salaryText.isEmpty()) {
-			sql.append(" e.Salary > ? ");
+		    sql.append(" e.salary > ? ");
 		} else {
-			sql.append(" b.BranchID = ? ");
+		    sql.append(" b.branchid = ? ");
 		}
+
 
 		ObservableList<Q7EmployeeRow> list = FXCollections.observableArrayList();
 
@@ -200,7 +201,7 @@ public class EmployeeQ7TableView {
 	private ObservableList<BranchItem> loadB() {
 		ObservableList<BranchItem> list = FXCollections.observableArrayList();
 
-		String sql = "SELECT BranchID, BranchName FROM Branch";
+		String sql = "select branchid, branchname from branch";
 
 		try (Connection con = DatabaseConnection.getConnection();
 				PreparedStatement ps = con.prepareStatement(sql);

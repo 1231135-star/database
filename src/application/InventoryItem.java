@@ -1,85 +1,105 @@
 package application;
+
 import java.time.LocalDate;
 
 public class InventoryItem {
-	
-	    private int inventoryItemID;
-	    private int medicineID;
-	    private int supplierID;
-	    private int branchID;
-	    private int quantity;
-	    private LocalDate expiryDate;
-	    private double purchasePrice;
 
-	    public InventoryItem() {}
+    private int inventoryitemid;
+    private String batchnumber;
+    private int quantityavailable;
+    private LocalDate expirydate;
+    private LocalDate receiveddate;
+    private double purchaseprice;
 
-	    public InventoryItem(int inventoryItemID, int medicineID, int supplierID,
-	                         int branchID, int quantity,
-	                         LocalDate expiryDate, double purchasePrice) {
-	        this.inventoryItemID = inventoryItemID;
-	        this.medicineID = medicineID;
-	        this.supplierID = supplierID;
-	        this.branchID = branchID;
-	        this.quantity = quantity;
-	        this.expiryDate = expiryDate;
-	        this.purchasePrice = purchasePrice;
-	    }
+    private int medicineid;
+    private int supplierid;
+    private int branchid;
 
-	    public int getInventoryItemID() {
-	        return inventoryItemID;
-	    }
+    public InventoryItem(int inventoryitemid, String batchnumber, int quantityavailable,
+                         LocalDate expirydate, LocalDate receiveddate, double purchaseprice,
+                         int medicineid, int supplierid, int branchid) {
 
-	    public void setInventoryItemID(int inventoryItemID) {
-	        this.inventoryItemID = inventoryItemID;
-	    }
+        this.inventoryitemid = inventoryitemid;
+        this.batchnumber = batchnumber;
+        this.quantityavailable = quantityavailable;
+        this.expirydate = expirydate;
+        this.receiveddate = receiveddate;
+        this.purchaseprice = purchaseprice;
+        this.medicineid = medicineid;
+        this.supplierid = supplierid;
+        this.branchid = branchid;
+    }
 
-	    public int getMedicineID() {
-	        return medicineID;
-	    }
-
-	    public void setMedicineID(int medicineID) {
-	        this.medicineID = medicineID;
-	    }
-
-	    public int getSupplierID() {
-	        return supplierID;
-	    }
-
-	    public void setSupplierID(int supplierID) {
-	        this.supplierID = supplierID;
-	    }
-
-	    public int getBranchID() {
-	        return branchID;
-	    }
-
-	    public void setBranchID(int branchID) {
-	        this.branchID = branchID;
-	    }
-
-	    public int getQuantity() {
-	        return quantity;
-	    }
-
-	    public void setQuantity(int quantity) {
-	        this.quantity = quantity;
-	    }
-
-	    public LocalDate getExpiryDate() {
-	        return expiryDate;
-	    }
-
-	    public void setExpiryDate(LocalDate expiryDate) {
-	        this.expiryDate = expiryDate;
-	    }
-
-	    public double getPurchasePrice() {
-	        return purchasePrice;
-	    }
-
-	    public void setPurchasePrice(double purchasePrice) {
-	        this.purchasePrice = purchasePrice;
-	    }
+	public int getInventoryitemid() {
+		return inventoryitemid;
 	}
 
+	public void setInventoryitemid(int inventoryitemid) {
+		this.inventoryitemid = inventoryitemid;
+	}
 
+	public String getBatchnumber() {
+		return batchnumber;
+	}
+
+	public void setBatchnumber(String batchnumber) {
+		this.batchnumber = batchnumber;
+	}
+
+	public int getQuantityavailable() {
+		return quantityavailable;
+	}
+
+	public void setQuantityavailable(int quantityavailable) {
+		this.quantityavailable = quantityavailable;
+	}
+
+	public LocalDate getExpirydate() {
+		return expirydate;
+	}
+
+	public void setExpirydate(LocalDate expirydate) {
+		this.expirydate = expirydate;
+	}
+
+	public LocalDate getReceiveddate() {
+		return receiveddate;
+	}
+
+	public void setReceiveddate(LocalDate receiveddate) {
+		this.receiveddate = receiveddate;
+	}
+
+	public double getPurchaseprice() {
+		return purchaseprice;
+	}
+
+	public void setPurchaseprice(double purchaseprice) {
+		this.purchaseprice = purchaseprice;
+	}
+
+	public int getMedicineid() {
+		return medicineid;
+	}
+
+	public void setMedicineid(int medicineid) {
+		this.medicineid = medicineid;
+	}
+
+	public int getSupplierid() {
+		return supplierid;
+	}
+
+	public void setSupplierid(int supplierid) {
+		this.supplierid = supplierid;
+	}
+
+	public int getBranchid() {
+		return branchid;
+	}
+
+	public void setBranchid(int branchid) {
+		this.branchid = branchid;
+	}
+
+}

@@ -15,8 +15,7 @@ public class MainPage {
 
 	private MenuBar menuBar = new MenuBar();
 	private Menu fileM = new Menu("file");
-	private MenuItem readDictionry = new MenuItem("read dicionry file");
-	private MenuItem writeDictionry = new MenuItem("write into dicionry file");
+	private MenuItem readAll = new MenuItem("read all data");
 
 	private Menu exitM = new Menu("exit");
 	private MenuItem exit = new MenuItem("exit");
@@ -167,7 +166,7 @@ public class MainPage {
 		tab.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
 		statTab.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
 
-		fileM.getItems().addAll(readDictionry, writeDictionry);
+		fileM.getItems().addAll(readAll);
 
 		account.getItems().addAll(logout);
 		account.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
@@ -227,12 +226,10 @@ public class MainPage {
 	}
 	public void applyRole(String role) {
 
-		// everything
 		if (role.equals("Admin")) {
 			return;
 		}
 
-		// manager
 		if (role.equals("Manager")) {
 			branch.setVisible(false);
 			ic.setVisible(false);
@@ -261,7 +258,6 @@ public class MainPage {
 			return;
 		}
 
-		// customer
 		if (role.equals("Customer")) {
 			branch.setVisible(false);
 			cat.setVisible(false);
@@ -282,6 +278,13 @@ public class MainPage {
 
 			return;
 		}
+	}
+	
+	public MenuItem getReadAll() {
+		return readAll;
+	}
+	public void setReadAll(MenuItem readAll) {
+		this.readAll = readAll;
 	}
 	public Image getPh() {
 		return ph;
@@ -307,18 +310,8 @@ public class MainPage {
 	public void setFileM(Menu fileM) {
 		this.fileM = fileM;
 	}
-	public MenuItem getReadDictionry() {
-		return readDictionry;
-	}
-	public void setReadDictionry(MenuItem readDictionry) {
-		this.readDictionry = readDictionry;
-	}
-	public MenuItem getWriteDictionry() {
-		return writeDictionry;
-	}
-	public void setWriteDictionry(MenuItem writeDictionry) {
-		this.writeDictionry = writeDictionry;
-	}
+	
+	
 	public Menu getExitM() {
 		return exitM;
 	}

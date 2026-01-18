@@ -1,8 +1,10 @@
 package application;
 	
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -21,6 +23,32 @@ public class Main extends Application {
 		try {
 			BorderPane root = new BorderPane();
 			MainPage mb=new MainPage();
+			mb.getReadAll().setOnAction(e->{
+				DataFileReader r = new DataFileReader();
+
+				int total = r.readAll(
+				    new File("branch.txt"),
+				    new File("category.txt"),
+				    new File("supplier.txt"),
+				    new File("customer.txt"),
+				    new File("insurance_company.txt"),
+				    new File("doctor.txt"),
+				    new File("medicine.txt"),
+				    new File("employee.txt"),
+				    new File("insurance_policy.txt"),
+				    new File("inventory_item.txt"),
+				    new File("invoice.txt"),
+				    new File("invoice_item.txt"),
+				    new File("payment.txt"),
+				    new File("prescription.txt"),
+				    new File("prescription_medicine.txt"),
+				    new File("purchase.txt"),
+				    new File("damagedwithdrawn.txt")
+				);
+
+				System.out.println("TOTAL INSERTED: " + total);
+
+			});
 			LoginPage login=new LoginPage();
 			SignUpCustomer signupC = new SignUpCustomer();
 			Scene signupScene = new Scene(signupC.getAll(), 450, 450);
@@ -59,9 +87,10 @@ public class Main extends Application {
 			    }
 
 			    String sql = """
-			            INSERT INTO Branch (BranchID, BranchName, Address, PhoneNumber, Email)
-			            VALUES (?, ?, ?, ?, ?)
+			            insert into branch (branchid, branchname, address, phonenumber, email)
+			            values (?, ?, ?, ?, ?)
 			            """;
+
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -111,7 +140,7 @@ public class Main extends Application {
 			});
 			db.getSearchB().setOnAction(e -> {
 
-		        String sql = "SELECT * FROM Branch WHERE BranchID = ?";
+				String sql = "select * from branch where branchid = ?";
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
 
@@ -159,7 +188,7 @@ public class Main extends Application {
 			});
 
 			db.getDelete().setOnAction(e -> {
-	            String sql = "DELETE FROM Branch WHERE BranchID = ?";
+				String sql = "delete from branch where branchid = ?";
 
 				try (Connection con = DatabaseConnection.getConnection();
 				         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -273,7 +302,7 @@ public class Main extends Application {
 
 			    if (confirm.getResult() != ButtonType.OK) return;
 
-			    String sql = "DELETE FROM Branch WHERE BranchID=?";
+			    String sql = "delete from branch where branchid = ?";
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -316,7 +345,7 @@ public class Main extends Application {
 			    ab.geteT().clear();
 			});
 			ab.getAdd().setOnAction(e -> {
-		        String sql = "INSERT INTO Branch (BranchID, BranchName, Address, PhoneNumber, Email) VALUES (?, ?, ?, ?, ?)";
+				String sql = "insert into branch (branchid, branchname, address, phonenumber, email) values (?, ?, ?, ?, ?)";
 
 				 try (Connection con = DatabaseConnection.getConnection();
 				         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -379,7 +408,7 @@ public class Main extends Application {
 			    ub.getEdit().setDisable(true);
 			});
 			ub.getSearchB().setOnAction(e -> {
-		        String sql = "SELECT * FROM Branch WHERE BranchID = ?";
+				String sql = "select * from branch where branchid = ?";
 
 				try (Connection con = DatabaseConnection.getConnection();
 				         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -428,7 +457,7 @@ public class Main extends Application {
 			});
 
 			ub.getEdit().setOnAction(e -> {
-		        String sql = "UPDATE Branch SET BranchName=?, Address=?, PhoneNumber=?, Email=? WHERE BranchID=?";
+				String sql = "update branch set branchname=?, address=?, phonenumber=?, email=? where branchid=?";
 
 				try (Connection con = DatabaseConnection.getConnection();
 				         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -544,7 +573,7 @@ public class Main extends Application {
 			        return;
 			    }
 
-			    String sql = "INSERT INTO Category (CategoryID, CategoryName, Description) VALUES (?, ?, ?)";
+			    String sql = "insert into category (categoryid, categoryname, description) values (?, ?, ?)";
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -592,7 +621,7 @@ public class Main extends Application {
 			        return;
 			    }
 
-			    String sql = "SELECT * FROM Category WHERE CategoryID=?";
+			    String sql = "select * from category where categoryid = ?";
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -632,7 +661,7 @@ public class Main extends Application {
 
 			    if (confirm.showAndWait().get().getText().equals("OK")) {
 
-			        String sql = "DELETE FROM Category WHERE CategoryID=?";
+			    	String sql = "delete from category where categoryid = ?";
 
 			        try (Connection con = DatabaseConnection.getConnection();
 			             PreparedStatement ps = con.prepareStatement(sql)) {
@@ -670,7 +699,7 @@ public class Main extends Application {
 			    try { id = Integer.parseInt(idT); }
 			    catch (Exception ex) { return; }
 
-			    String sql = "SELECT * FROM Category WHERE CategoryID=?";
+			    String sql = "select * from category where categoryid = ?";
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -705,7 +734,7 @@ public class Main extends Application {
 
 			    int id = Integer.parseInt(idT);
 
-			    String sql = "UPDATE Category SET CategoryName=?, Description=? WHERE CategoryID=?";
+			    String sql = "update category set categoryname=?, description=? where categoryid=?";
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -809,7 +838,7 @@ public class Main extends Application {
 
 			    if (confirm.getResult() != ButtonType.OK) return;
 
-			    String sql = "DELETE FROM Category WHERE CategoryID=?";
+			    String sql = "delete from category where categoryid = ?";
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -877,13 +906,34 @@ public class Main extends Application {
 			    acs.getPnT().clear();
 			    acs.geteT().clear();
 			    acs.getAddT().clear();
+			    acs.getUserT().clear();
+			    acs.getPassT().clear();
+			    acs.getDobP().setValue(null);
+			    acs.getGenderC().setValue(null);
 			});
-			acs.getAdd().setOnAction(e -> {
-		        String sql = "INSERT INTO Customer (CustomerID, FullName, PhoneNumber, Email, Address) VALUES (?, ?, ?, ?, ?)";
 
-				try (Connection con = DatabaseConnection.getConnection();
-				         PreparedStatement ps = con.prepareStatement(sql)) {
-			        if (acs.getCidT().getText().trim().isEmpty() ||acs.getNameT().getText().trim().isEmpty() ||acs.getPnT().getText().trim().isEmpty() ||acs.geteT().getText().trim().isEmpty() ||acs.getAddT().getText().trim().isEmpty()) {
+			acs.getAdd().setOnAction(e -> {
+
+			    String insertSql = """
+			        insert into customer
+			        (customerid, fullname, phonenumber, email, address, dateofbirth, gender, username, password)
+			        values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+			        """;
+
+			    String checkUserSql = "select username from customer where username=?";
+
+			    try (Connection con = DatabaseConnection.getConnection()) {
+
+			        
+			        if (acs.getCidT().getText().trim().isEmpty() ||
+			            acs.getNameT().getText().trim().isEmpty() ||
+			            acs.getPnT().getText().trim().isEmpty() ||
+			            acs.geteT().getText().trim().isEmpty() ||
+			            acs.getAddT().getText().trim().isEmpty() ||
+			            acs.getDobP().getValue() == null ||
+			            acs.getGenderC().getValue() == null ||
+			            acs.getUserT().getText().trim().isEmpty() ||
+			            acs.getPassT().getText().trim().isEmpty()) {
 
 			            Alert a = new Alert(Alert.AlertType.ERROR);
 			            a.setTitle("Missing Data");
@@ -893,41 +943,80 @@ public class Main extends Application {
 			            return;
 			        }
 
-			     int id = Integer.parseInt(acs.getCidT().getText().trim());
-			        String name = acs.getNameT().getText().trim();
+			        String idText = acs.getCidT().getText().trim();
 			        String phone = acs.getPnT().getText().trim();
-			        String email = acs.geteT().getText().trim();
-			        String address = acs.getAddT().getText().trim();
+			        String username = acs.getUserT().getText().trim();
+			        String password = acs.getPassT().getText().trim();
 
+			        if (!idText.matches("\\d+")) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Invalid ID");
+			            a.setContentText("Customer ID must be digits only.");
+			            a.showAndWait();
+			            return;
+			        }
 
-			        ps.setInt(1, id);
-			        ps.setString(2, name);
-			        ps.setString(3, phone);
-			        ps.setString(4, email);
-			        ps.setString(5, address);
+			        if (!phone.matches("\\d+")) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Invalid Phone");
+			            a.setContentText("Phone number must be digits only.");
+			            a.showAndWait();
+			            return;
+			        }
 
-			        ps.executeUpdate();
-			        ps.close();
+			        try (PreparedStatement psCheck = con.prepareStatement(checkUserSql)) {
+			            psCheck.setString(1, username);
+			            ResultSet rs = psCheck.executeQuery();
+			            if (rs.next()) {
+			                Alert a = new Alert(Alert.AlertType.ERROR);
+			                a.setTitle("Username Exists");
+			                a.setContentText("This username is already used.");
+			                a.showAndWait();
+			                return;
+			            }
+			        }
+
+			        
+			        try (PreparedStatement ps = con.prepareStatement(insertSql)) {
+
+			            int id = Integer.parseInt(idText);
+			            String name = acs.getNameT().getText().trim();
+			            String email = acs.geteT().getText().trim();
+			            String address = acs.getAddT().getText().trim();
+			            java.sql.Date dob = java.sql.Date.valueOf(acs.getDobP().getValue());
+			            String gender = acs.getGenderC().getValue();
+
+			            ps.setInt(1, id);
+			            ps.setString(2, name);
+			            ps.setString(3, phone);
+			            ps.setString(4, email);
+			            ps.setString(5, address);
+			            ps.setDate(6, dob);
+			            ps.setString(7, gender);
+			            ps.setString(8, username);
+			            ps.setString(9, password);
+
+			            ps.executeUpdate();
+			        }
 
 			        Alert done = new Alert(Alert.AlertType.INFORMATION);
 			        done.setTitle("Done");
-			        done.setHeaderText("Customer Added Successfully");
-			        done.setContentText("Customer ID: " + id);
+			        done.setHeaderText("Account created successfully");
+			        done.setContentText("Customer ID: " + acs.getCidT().getText().trim());
 			        done.showAndWait();
 
-			        acs.getCidT().clear();
-			        acs.getNameT().clear();
-			        acs.getPnT().clear();
-			        acs.geteT().clear();
-			        acs.getAddT().clear();
+			        acs.getClear().fire();
 
 			    } catch (Exception ex) {
 			        Alert a = new Alert(Alert.AlertType.ERROR);
-			        a.setTitle(ex.getMessage());
+			        a.setTitle("Error");
+			        a.setHeaderText("Error");
 			        a.setContentText(ex.getMessage());
 			        a.showAndWait();
 			    }
 			});
+
+
 			DeleteCustomer dcs=new DeleteCustomer();
 			dcs.getClear().setOnAction(e -> {
 			    dcs.getSearchT().clear();
@@ -936,15 +1025,18 @@ public class Main extends Application {
 			    dcs.getPnT().clear();
 			    dcs.geteT().clear();
 			    dcs.getAddT().clear();
+			    dcs.getDobP().setValue(null);
+			    dcs.getGenderC().setValue(null);
 			    dcs.getDelete().setDisable(true);
 			});
 
-		
 			dcs.getSearchB().setOnAction(e -> {
-		        String sql = "SELECT * FROM Customer WHERE CustomerID = ?";
 
-				try (Connection con = DatabaseConnection.getConnection();
-				         PreparedStatement ps = con.prepareStatement(sql)) {
+				String sql = "select * from customer where customerid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
 			        if (dcs.getSearchT().getText().trim().isEmpty()) {
 			            Alert a = new Alert(Alert.AlertType.ERROR);
 			            a.setTitle("Missing ID");
@@ -966,6 +1058,14 @@ public class Main extends Application {
 			            dcs.geteT().setText(rs.getString("Email"));
 			            dcs.getAddT().setText(rs.getString("Address"));
 
+			            java.sql.Date dob = rs.getDate("DateOfBirth");
+			            if (dob != null)
+			                dcs.getDobP().setValue(dob.toLocalDate());
+			            else
+			                dcs.getDobP().setValue(null);
+
+			            dcs.getGenderC().setValue(rs.getString("Gender"));
+
 			            dcs.getDelete().setDisable(false);
 			        } else {
 			            Alert a = new Alert(Alert.AlertType.ERROR);
@@ -978,22 +1078,23 @@ public class Main extends Application {
 			        }
 
 			        rs.close();
-			        ps.close();
 
 			    } catch (Exception ex) {
 			        Alert a = new Alert(Alert.AlertType.ERROR);
-			        a.setTitle(ex.getMessage());
+			        a.setTitle("Error");
+			        a.setHeaderText("Error");
 			        a.setContentText(ex.getMessage());
 			        a.showAndWait();
 			    }
 			});
 
-			
 			dcs.getDelete().setOnAction(e -> {
-	            String sql = "DELETE FROM Customer WHERE CustomerID = ?";
 
-				try (Connection con = DatabaseConnection.getConnection();
-				         PreparedStatement ps = con.prepareStatement(sql)) {
+				String sql = "delete from customer where customerid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
 			        int id = Integer.parseInt(dcs.getCidT().getText().trim());
 
 			        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1002,10 +1103,10 @@ public class Main extends Application {
 			        confirm.setContentText("Delete Customer ID: " + id);
 
 			        if (confirm.showAndWait().get().getText().equals("OK")) {
+
 			            ps.setInt(1, id);
 
 			            int deleted = ps.executeUpdate();
-			            ps.close();
 
 			            if (deleted > 0) {
 			                Alert done = new Alert(Alert.AlertType.INFORMATION);
@@ -1020,13 +1121,13 @@ public class Main extends Application {
 
 			    } catch (Exception ex) {
 			        Alert a = new Alert(Alert.AlertType.ERROR);
-			        a.setTitle(ex.getMessage());
+			        a.setTitle("Error");
+			        a.setHeaderText("Error");
 			        a.setContentText(ex.getMessage());
 			        a.showAndWait();
 			    }
 			});
 			UpdateCustomer ucs=new UpdateCustomer();
-
 			ucs.getClear().setOnAction(e -> {
 			    ucs.getSearchT().clear();
 			    ucs.getCidT().clear();
@@ -1034,15 +1135,18 @@ public class Main extends Application {
 			    ucs.getPnT().clear();
 			    ucs.geteT().clear();
 			    ucs.getAddT().clear();
+			    ucs.getDobP().setValue(null);
+			    ucs.getGenderC().setValue(null);
 			    ucs.getEdit().setDisable(true);
 			});
 
-			
 			ucs.getSearchB().setOnAction(e -> {
-		        String sql = "SELECT * FROM Customer WHERE CustomerID = ?";
 
-				try (Connection con = DatabaseConnection.getConnection();
-				         PreparedStatement ps = con.prepareStatement(sql)) {
+				String sql = "select * from customer where customerid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
 			        if (ucs.getSearchT().getText().trim().isEmpty()) {
 			            Alert a = new Alert(Alert.AlertType.ERROR);
 			            a.setTitle("Missing ID");
@@ -1058,13 +1162,23 @@ public class Main extends Application {
 			        ResultSet rs = ps.executeQuery();
 
 			        if (rs.next()) {
+
 			            ucs.getCidT().setText(rs.getString("CustomerID"));
 			            ucs.getNameT().setText(rs.getString("FullName"));
 			            ucs.getPnT().setText(rs.getString("PhoneNumber"));
 			            ucs.geteT().setText(rs.getString("Email"));
 			            ucs.getAddT().setText(rs.getString("Address"));
 
+			            java.sql.Date dob = rs.getDate("DateOfBirth");
+			            if (dob != null)
+			                ucs.getDobP().setValue(dob.toLocalDate());
+			            else
+			                ucs.getDobP().setValue(null);
+
+			            ucs.getGenderC().setValue(rs.getString("Gender"));
+
 			            ucs.getEdit().setDisable(false);
+
 			        } else {
 			            Alert a = new Alert(Alert.AlertType.ERROR);
 			            a.setTitle("Not Found");
@@ -1076,27 +1190,32 @@ public class Main extends Application {
 			        }
 
 			        rs.close();
-			        ps.close();
 
 			    } catch (Exception ex) {
 			        Alert a = new Alert(Alert.AlertType.ERROR);
-			        a.setTitle(ex.getMessage());
+			        a.setTitle("Error");
+			        a.setHeaderText("Error");
 			        a.setContentText(ex.getMessage());
 			        a.showAndWait();
 			    }
 			});
 
 			ucs.getEdit().setOnAction(e -> {
-		        String sql = "UPDATE Customer SET FullName=?, PhoneNumber=?, Email=?, Address=? WHERE CustomerID=?";
 
-				try (Connection con = DatabaseConnection.getConnection();
-				         PreparedStatement ps = con.prepareStatement(sql)) {
+				String sql = "update customer set fullname=?, phonenumber=?, email=?, address=?, dateofbirth=?, gender=? where customerid=?";
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
 			        int id = Integer.parseInt(ucs.getCidT().getText().trim());
 
 			        if (ucs.getNameT().getText().trim().isEmpty() ||
 			            ucs.getPnT().getText().trim().isEmpty() ||
 			            ucs.geteT().getText().trim().isEmpty() ||
-			            ucs.getAddT().getText().trim().isEmpty()) {
+			            ucs.getAddT().getText().trim().isEmpty() ||
+			            ucs.getDobP().getValue() == null ||
+			            ucs.getGenderC().getValue() == null) {
 
 			            Alert a = new Alert(Alert.AlertType.ERROR);
 			            a.setTitle("Missing Data");
@@ -1106,15 +1225,23 @@ public class Main extends Application {
 			            return;
 			        }
 
+			        String name = ucs.getNameT().getText().trim();
+			        String phone = ucs.getPnT().getText().trim();
+			        String email = ucs.geteT().getText().trim();
+			        String address = ucs.getAddT().getText().trim();
 
-			        ps.setString(1, ucs.getNameT().getText().trim());
-			        ps.setString(2, ucs.getPnT().getText().trim());
-			        ps.setString(3, ucs.geteT().getText().trim());
-			        ps.setString(4, ucs.getAddT().getText().trim());
-			        ps.setInt(5, id);
+			        java.sql.Date dob = java.sql.Date.valueOf(ucs.getDobP().getValue());
+			        String gender = ucs.getGenderC().getValue();
+
+			        ps.setString(1, name);
+			        ps.setString(2, phone);
+			        ps.setString(3, email);
+			        ps.setString(4, address);
+			        ps.setDate(5, dob);
+			        ps.setString(6, gender);
+			        ps.setInt(7, id);
 
 			        int updated = ps.executeUpdate();
-			        ps.close();
 
 			        if (updated > 0) {
 			            Alert done = new Alert(Alert.AlertType.INFORMATION);
@@ -1122,18 +1249,23 @@ public class Main extends Application {
 			            done.setHeaderText("Customer Updated Successfully");
 			            done.setContentText("Customer ID: " + id);
 			            done.showAndWait();
+
+			            ucs.getEdit().setDisable(true);
 			        }
 
 			    } catch (Exception ex) {
 			        Alert a = new Alert(Alert.AlertType.ERROR);
-			        a.setTitle(ex.getMessage());
+			        a.setTitle("Error");
+			        a.setHeaderText("Error");
 			        a.setContentText(ex.getMessage());
 			        a.showAndWait();
 			    }
 			});
-
 			CustomerTableView ct=new CustomerTableView();
 
+			ct.getRefresh().setOnAction(e->{
+				ct.getTable().setItems(loadCustomers());
+			});
 			Scene acsscene = new Scene(acs.getAll(),400,400);
 			Scene dcsscene = new Scene(dcs.getAll(),400,400);
 			Scene ucsscene = new Scene(ucs.getAll(),400,400);
@@ -1152,11 +1284,320 @@ public class Main extends Application {
 				primaryStage.setScene(ctscene);
 			});
 			
-			AddDoctor ad=new AddDoctor();
+			AddDoctor ad = new AddDoctor();
+
+			ad.getAdd().setOnAction(e -> {
+				  String sql = """
+				            insert into doctor (doctorid, fullname, licensenumber, phonenumber, email, clinicaddress)
+				            values (?, ?, ?, ?, ?, ?)
+				            """;
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(ad.getdIDT().getText().trim());
+			        String name = ad.getfNT().getText().trim();
+			        String license = ad.getLN().getText().trim();
+			        String phone = ad.getpNT().getText().trim();
+			        String email = ad.getEmT().getText().trim();
+			        String addr = ad.getAddT().getText().trim();
+
+			        // validation بسيط
+			        if (name.isEmpty() || license.isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Error");
+			            a.setHeaderText(null);
+			            a.setContentText("Full Name and License Number are required ❌");
+			            a.showAndWait();
+			            return;
+			        }
+
+			      
+
+			        ps.setInt(1, id);
+			        ps.setString(2, name);
+			        ps.setString(3, license);
+			        ps.setString(4, phone.isEmpty() ? null : phone);
+			        ps.setString(5, email.isEmpty() ? null : email);
+			        ps.setString(6, addr.isEmpty() ? null : addr);
+
+			        ps.executeUpdate();
+			        ps.close();
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("Success");
+			        a.setHeaderText(null);
+			        a.setContentText("Doctor Added Successfully");
+			        a.showAndWait();
+
+			        // clear fields
+			        ad.getdIDT().clear();
+			        ad.getfNT().clear();
+			        ad.getLN().clear();
+			        ad.getpNT().clear();
+			        ad.getEmT().clear();
+			        ad.getAddT().clear();
+
+			    } catch (NumberFormatException ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText("Doctor ID must be a valid number ❌");
+			        a.showAndWait();
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText("Error Adding Doctor ❌\nCheck ID / License Number (must be unique).");
+			        a.showAndWait();
+			    }
+			});
+
+
+
 			DeleteDoctor dd=new DeleteDoctor();
+
+			dd.getSearchB().setOnAction(e -> {
+				 String sql = """
+				            select doctorid, fullname, licensenumber, phonenumber, email, clinicaddress
+				            from doctor
+				            where doctorid = ?
+				            """;
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(dd.getSearchT().getText().trim());
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dd.getDocIDT().setText(String.valueOf(rs.getInt("doctorid")));
+			            dd.getDocNT().setText(rs.getString("fullname"));
+
+			            dd.getLicT().setText(rs.getString("licensenumber"));
+
+			            dd.getPnT().setText(rs.getString("phonenumber"));
+			            dd.geteT().setText(rs.getString("email"));
+			            dd.getCaT().setText(rs.getString("clinicaddress"));
+
+			            dd.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.WARNING);
+			            a.setTitle("Not Found");
+			            a.setHeaderText(null);
+			            a.setContentText("Doctor not found ❌");
+			            a.showAndWait();
+
+			            dd.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText("Invalid Doctor ID ❌");
+			        a.showAndWait();
+			    }
+			});
+			dd.getDelete().setOnAction(e -> {
+		        String sql = "delete from doctor where doctorid = ?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(dd.getDocIDT().getText().trim());
+
+			        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			        confirm.setTitle("Confirm Delete");
+			        confirm.setHeaderText(null);
+			        confirm.setContentText("Are you sure you want to delete this doctor?");
+			        if (confirm.showAndWait().get() != ButtonType.OK) return;
+			        ps.setInt(1, id);
+
+			        int rows = ps.executeUpdate();
+			        ps.close();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Success");
+			            a.setHeaderText(null);
+			            a.setContentText("Doctor deleted successfully");
+			            a.showAndWait();
+
+			            // clear fields
+			            dd.getSearchT().clear();
+			            dd.getDocIDT().clear();
+			            dd.getDocNT().clear();
+			            dd.getLicT().clear();
+			            dd.getPnT().clear();
+			            dd.geteT().clear();
+			            dd.getCaT().clear();
+
+			            dd.getDelete().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText("Error deleting doctor ❌");
+			        a.showAndWait();
+			    }
+			});
+			dd.getClear().setOnAction(e -> {
+			    dd.getSearchT().clear();
+			    dd.getDocIDT().clear();
+			    dd.getDocNT().clear();
+			    dd.getLicT().clear();
+			    dd.getPnT().clear();
+			    dd.geteT().clear();
+			    dd.getCaT().clear();
+
+			    dd.getDelete().setDisable(true);
+			});
+
 			UpdateDoctor ud=new UpdateDoctor();
+			ud.getSearchB().setOnAction(e -> {
+				 String sql = """
+				            select doctorid, fullname, licensenumber, phonenumber, email, clinicaddress
+				            from doctor
+				            where doctorid = ?
+				            """;
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(ud.getSearchT().getText().trim());
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            ud.getDocIDT().setText(String.valueOf(rs.getInt("doctorid")));
+			            ud.getDocNT().setText(rs.getString("fullname"));
+
+			            ud.getLicT().setText(rs.getString("licensenumber"));
+
+			            ud.getPnT().setText(rs.getString("phonenumber"));
+			            ud.geteT().setText(rs.getString("email"));
+			            ud.getCaT().setText(rs.getString("clinicaddress"));
+
+			            ud.getDocNT().setEditable(true);
+			            ud.getLicT().setEditable(true);
+			            ud.getPnT().setEditable(true);
+			            ud.geteT().setEditable(true);
+			            ud.getCaT().setEditable(true);
+
+			            ud.getEdit().setDisable(false);
+
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.WARNING);
+			            a.setTitle("Not Found");
+			            a.setHeaderText(null);
+			            a.setContentText("Doctor not found");
+			            a.showAndWait();
+
+			            ud.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText("Invalid Doctor ID");
+			        a.showAndWait();
+			    }
+			});
+			ud.getEdit().setOnAction(e -> {
+				 String sql = """
+				            update doctor
+				            set fullname = ?,
+				                licensenumber = ?,
+				                phonenumber = ?,
+				                email = ?,
+				                clinicaddress = ?
+				            where doctorid = ?
+				            """;
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(ud.getDocIDT().getText().trim());
+
+			        String name = ud.getDocNT().getText().trim();
+			        String license = ud.getLicT().getText().trim();
+			        String phone = ud.getPnT().getText().trim();
+			        String email = ud.geteT().getText().trim();
+			        String addr = ud.getCaT().getText().trim();
+
+			        if (name.isEmpty() || license.isEmpty()) {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Error");
+			            a.setHeaderText(null);
+			            a.setContentText("Full Name and License Number are required");
+			            a.showAndWait();
+			            return;
+			        }
+
+			        ps.setString(1, name);
+			        ps.setString(2, license);
+			        ps.setString(3, phone.isEmpty() ? null : phone);
+			        ps.setString(4, email.isEmpty() ? null : email);
+			        ps.setString(5, addr.isEmpty() ? null : addr);
+			        ps.setInt(6, id);
+
+			        int rows = ps.executeUpdate();
+			        ps.close();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Success");
+			            a.setHeaderText(null);
+			            a.setContentText("Doctor updated successfully");
+			            a.showAndWait();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText("Error updating doctor\nCheck License Number unique.");
+			        a.showAndWait();
+			    }
+			});
+			ud.getClear().setOnAction(e -> {
+			    ud.getSearchT().clear();
+			    ud.getDocIDT().clear();
+			    ud.getDocNT().clear();
+			    ud.getLicT().clear();
+			    ud.getPnT().clear();
+			    ud.geteT().clear();
+			    ud.getCaT().clear();
+
+			    ud.getDocNT().setEditable(false);
+			    ud.getLicT().setEditable(false);
+			    ud.getPnT().setEditable(false);
+			    ud.geteT().setEditable(false);
+			    ud.getCaT().setEditable(false);
+
+			    ud.getEdit().setDisable(true);
+			});
+
 			DoctorTableView dt=new DoctorTableView();
 
+			dt.getRef().setOnAction(e->{
+				try (Connection con = DatabaseConnection.getConnection()) {
+					dt.loadDoctorsData(con);
+					}
+				catch(Exception ex) {
+					 Alert a = new Alert(Alert.AlertType.ERROR);
+				        a.setTitle(ex.getMessage());
+				        a.setContentText(ex.getMessage());
+				        a.showAndWait();
+				}}
+					);
+				
 			Scene adscene = new Scene(ad.getAll(),400,400);
 			Scene ddscene = new Scene(dd.getAll(),400,400);
 			Scene udscene = new Scene(ud.getAll(),400,400);
@@ -1207,9 +1648,9 @@ public class Main extends Application {
 				    }
 
 				    String sql = """
-				        INSERT INTO Employee (EmpID, FullName, Position, Salary, BranchID)
-				        VALUES (?, ?, ?, ?, ?)
-				    """;
+				            insert into employee (empid, fullname, qualification, salary, branchid)
+				            values (?, ?, ?, ?, ?)
+				            """;
 
 				    try (Connection con = DatabaseConnection.getConnection();
 				         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1281,11 +1722,12 @@ public class Main extends Application {
 			    }
 
 			    String sql = """
-			        SELECT EmpID, FullName, Qualification, ProfessionalLicenseNumber, Address,
-			               NationalID, PhoneNumber, Email, Salary, BranchID
-			        FROM Employee
-			        WHERE EmpID = ?
-			    """;
+			            select empid, fullname, qualification, licenseno, address,
+			                   nationalid, phonenumber, email, salary, branchid
+			            from employee
+			            where empid = ?
+			            """;
+
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1364,7 +1806,7 @@ public class Main extends Application {
 			    }
 
 
-			        String sql = "DELETE FROM Employee WHERE EmpID=?";
+			    String sql = "delete from employee where empid = ?";
 
 			        try (Connection con = DatabaseConnection.getConnection();
 			             PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1445,13 +1887,13 @@ public class Main extends Application {
 			        a.showAndWait();
 			        return;
 			    }
-
 			    String sql = """
-			        SELECT EmpID, FullName, Qualification, ProfessionalLicenseNumber, Address,
-			               NationalID, PhoneNumber, Email, Salary, BranchID
-			        FROM Employee
-			        WHERE EmpID = ?
-			    """;
+			            select empid, fullname, qualification, licenseno, address,
+			                   nationalid, phonenumber, email, salary, branchid
+			            from employee
+			            where empid = ?
+			            """;
+
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1519,22 +1961,23 @@ public class Main extends Application {
 			    String position = ue.getPnT().getText().trim();
 			    String st = ue.getsT().getText().trim();
 			    String btt = ue.getBidT().getText().trim();
-
-			    StringBuilder sql = new StringBuilder("UPDATE Employee SET ");
+			    StringBuilder sql = new StringBuilder("update employee set ");
 			    java.util.ArrayList<Object> params = new java.util.ArrayList<>();
 
 			    if (!name.isEmpty()) {
-			        sql.append("FullName=?, ");
+			        sql.append("fullname=?, ");
 			        params.add(name);
 			    }
+
 			    if (!position.isEmpty()) {
-			        sql.append("Position=?, ");
+			        sql.append("qualification=?, ");
 			        params.add(position);
 			    }
+
 			    if (!st.isEmpty()) {
 			        try {
 			            double salary = Double.parseDouble(st);
-			            sql.append("Salary=?, ");
+			            sql.append("salary=?, ");
 			            params.add(salary);
 			        } catch (Exception ex) {
 			            Alert a = new Alert(Alert.AlertType.ERROR);
@@ -1544,10 +1987,11 @@ public class Main extends Application {
 			            return;
 			        }
 			    }
+
 			    if (!btt.isEmpty()) {
 			        try {
 			            int branchID = Integer.parseInt(btt);
-			            sql.append("BranchID=?, ");
+			            sql.append("branchid=?, ");
 			            params.add(branchID);
 			        } catch (Exception ex) {
 			            Alert a = new Alert(Alert.AlertType.ERROR);
@@ -1558,8 +2002,17 @@ public class Main extends Application {
 			        }
 			    }
 
-			    sql.setLength(sql.length() - 2);
-			    sql.append(" WHERE EmpID=?");
+			    if (params.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.WARNING);
+			        a.setTitle("No changes");
+			        a.setContentText("Please enter at least one field to update.");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    sql.setLength(sql.length() - 2); // remove last ", "
+			    sql.append(" where empid=?");
+
 			    params.add(id);
 
 			    try (Connection con = DatabaseConnection.getConnection();
@@ -1703,7 +2156,7 @@ public class Main extends Application {
 			        return;
 			    }
 
-			    String sql = "DELETE FROM Employee WHERE EmpID=?";
+			    String sql = "delete from employee where empid = ?";
 
 			    try (Connection con = DatabaseConnection.getConnection();
 			         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1839,10 +2292,224 @@ public class Main extends Application {
 
 			
 			AddIC aic=new AddIC();
+			aic.getAdd().setOnAction(e -> {
+				String sql = "insert into insurance_company values (?, ?, ?, ?, ?, ?)";
+
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(aic.getIdT().getText().trim());
+			        String name = aic.getNameT().getText().trim();
+			        String lic = aic.getLicT().getText().trim();
+			        String phone = aic.getPhoneT().getText().trim();
+			        String email = aic.getEmailT().getText().trim();
+			        String addr = aic.getAddressT().getText().trim();
+
+			        ps.setInt(1, id);
+			        ps.setString(2, name);
+			        ps.setString(3, lic);
+			        ps.setString(4, phone);
+			        ps.setString(5, email);
+			        ps.setString(6, addr);
+
+			        ps.executeUpdate();
+			        ps.close();
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("Done");
+			        a.setHeaderText("Insurance company added successfully");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText("Cannot add insurance company");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+
 			DeleteIC dic=new DeleteIC();
+			dic.getSearchB().setOnAction(e -> {
+				String sql = "select * from insurance_company where insurancecompanyid = ?";
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(dic.getSearchT().getText().trim());
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dic.getIdT().setText(rs.getInt("insurancecompanyid") + "");
+			            dic.getNameT().setText(rs.getString("companyname"));
+			            dic.getLicT().setText(rs.getString("licenseno"));
+			            dic.getPhoneT().setText(rs.getString("phonenumber"));
+			            dic.getEmailT().setText(rs.getString("email"));
+			            dic.getAddressT().setText(rs.getString("address"));
+
+			            dic.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setHeaderText("Not found");
+			            a.showAndWait();
+			            dic.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setHeaderText("Search erro");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			dic.getDelete().setOnAction(e -> {
+				String sql = "delete from insurance_company where insurancecompanyid = ?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(dic.getIdT().getText().trim());
+
+			        ps.setInt(1, id);
+			        ps.executeUpdate();
+			        ps.close();
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setHeaderText("Deleted successfully");
+			        a.showAndWait();
+
+			        dic.getDelete().setDisable(true);
+
+			        dic.getIdT().clear();
+			        dic.getNameT().clear();
+			        dic.getLicT().clear();
+			        dic.getPhoneT().clear();
+			        dic.getEmailT().clear();
+			        dic.getAddressT().clear();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setHeaderText("Cannot delete");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			aic.getClear().setOnAction(e -> {
+			    aic.getIdT().clear();
+			    aic.getNameT().clear();
+			    aic.getLicT().clear();
+			    aic.getPhoneT().clear();
+			    aic.getEmailT().clear();
+			    aic.getAddressT().clear();
+			});
+			dic.getClear().setOnAction(e -> {
+				dic.getSearchT().clear();
+			    dic.getIdT().clear();
+			    dic.getNameT().clear();
+			    dic.getLicT().clear();
+			    dic.getPhoneT().clear();
+			    dic.getEmailT().clear();
+			    dic.getAddressT().clear();
+			    dic.getDelete().setDisable(true);
+			});
+			
 			UpdateIC uic=new UpdateIC();
+			uic.getClear().setOnAction(e -> {
+				uic.getSearchT().clear();
+			    uic.getIdT().clear();
+			    uic.getNameT().clear();
+			    uic.getLicT().clear();
+			    uic.getPhoneT().clear();
+			    uic.getEmailT().clear();
+			    uic.getAddressT().clear();
+			    uic.getEdit().setDisable(true);
+			});
+			uic.getSearchB().setOnAction(e -> {
+				String sql = "select * from insurance_company where insurancecompanyid = ?";
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(uic.getSearchT().getText().trim());
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            uic.getIdT().setText(rs.getInt("insurancecompanyid") + "");
+			            uic.getNameT().setText(rs.getString("companyname"));
+			            uic.getLicT().setText(rs.getString("licenseno"));
+			            uic.getPhoneT().setText(rs.getString("phonenumber"));
+			            uic.getEmailT().setText(rs.getString("email"));
+			            uic.getAddressT().setText(rs.getString("address"));
+
+			            uic.getEdit().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setHeaderText("Not found");
+			            a.showAndWait();
+			            uic.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+			        ps.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText("Search error ❌");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			uic.getEdit().setOnAction(e -> {
+				String sql = "update insurance_company set companyname=?, licenseno=?, phonenumber=?, email=?, address=? where insurancecompanyid=?";
+
+				try (Connection con = DatabaseConnection.getConnection();
+				         PreparedStatement ps = con.prepareStatement(sql)) {
+			        int id = Integer.parseInt(uic.getIdT().getText().trim());
+			        String name = uic.getNameT().getText().trim();
+			        String lic = uic.getLicT().getText().trim();
+			        String phone = uic.getPhoneT().getText().trim();
+			        String email = uic.getEmailT().getText().trim();
+			        String addr = uic.getAddressT().getText().trim();
+
+
+			        
+			        ps.setString(1, name);
+			        ps.setString(2, lic);
+			        ps.setString(3, phone);
+			        ps.setString(4, email);
+			        ps.setString(5, addr);
+			        ps.setInt(6, id);
+
+			        ps.executeUpdate();
+			        ps.close();
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setHeaderText("Updated successfully");
+			        a.showAndWait();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setHeaderText("Cannot update");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			InsuranceCompanyTableView ict=new InsuranceCompanyTableView();
 
+			ict.getRef().setOnAction(e->{
+				try (Connection con = DatabaseConnection.getConnection()){
+					ict.loadData(con);	
+				 } catch (Exception ex) {
+				        Alert a = new Alert(Alert.AlertType.ERROR);
+				        a.setHeaderText("Cannot update");
+				        a.setContentText(ex.getMessage());
+				        a.showAndWait();
+				    }
+				
+			});
 			Scene aicscene = new Scene(aic.getAll(),400,400);
 			Scene dicscene = new Scene(dic.getAll(),400,400);
 			Scene uicscene = new Scene(uic.getAll(),400,400);
@@ -1862,9 +2529,500 @@ public class Main extends Application {
 			});
 			
 			AddInvoice aiv=new AddInvoice();
+			aiv.getClear().setOnAction(e -> {
+			    aiv.getIdT().clear();
+			    aiv.getDateT().clear();
+			    aiv.getTimeT().clear();
+			    aiv.getSubT().clear();
+			    aiv.getDisT().clear();
+			    aiv.getTaxT().clear();
+			    aiv.getTotalT().clear();
+			    aiv.getPayT().clear();
+			    aiv.getCidT().clear();
+			    aiv.getEidT().clear();
+			    aiv.getBidT().clear();
+			});
+
+			aiv.getAdd().setOnAction(e -> {
+
+			    if (aiv.getIdT().getText().trim().isEmpty()
+			            || aiv.getDateT().getText().trim().isEmpty()
+			            || aiv.getTimeT().getText().trim().isEmpty()
+			            || aiv.getSubT().getText().trim().isEmpty()
+			            || aiv.getDisT().getText().trim().isEmpty()
+			            || aiv.getTaxT().getText().trim().isEmpty()
+			            || aiv.getTotalT().getText().trim().isEmpty()
+			            || aiv.getPayT().getText().trim().isEmpty()
+			            || aiv.getCidT().getText().trim().isEmpty()
+			            || aiv.getEidT().getText().trim().isEmpty()
+			            || aiv.getBidT().getText().trim().isEmpty()) {
+
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id, cid, eid, bid;
+			    double sub, dis, tax, total;
+			    java.sql.Date date;
+			    java.sql.Time time;
+			    String pay;
+
+			    try {
+			        id = Integer.parseInt(aiv.getIdT().getText().trim());
+			        cid = Integer.parseInt(aiv.getCidT().getText().trim());
+			        eid = Integer.parseInt(aiv.getEidT().getText().trim());
+			        bid = Integer.parseInt(aiv.getBidT().getText().trim());
+
+			        sub = Double.parseDouble(aiv.getSubT().getText().trim());
+			        dis = Double.parseDouble(aiv.getDisT().getText().trim());
+			        tax = Double.parseDouble(aiv.getTaxT().getText().trim());
+			        total = Double.parseDouble(aiv.getTotalT().getText().trim());
+
+			        date = java.sql.Date.valueOf(aiv.getDateT().getText().trim()); // YYYY-MM-DD
+			        time = java.sql.Time.valueOf(aiv.getTimeT().getText().trim()); // HH:MM:SS
+
+			        pay = aiv.getPayT().getText().trim();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid input");
+			        a.setContentText("Check: IDs integer, numbers double, date/time format");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            insert into invoice
+			            (invoiceid, invoicedate, invoicetime, subtotal, discount, tax, totalamount,
+			             paymentstatus, customerid, empid, branchid)
+			            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			            """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ps.setDate(2, date);
+			        ps.setTime(3, time);
+			        ps.setDouble(4, sub);
+			        ps.setDouble(5, dis);
+			        ps.setDouble(6, tax);
+			        ps.setDouble(7, total);
+			        ps.setString(8, pay);
+			        ps.setInt(9, cid);
+			        ps.setInt(10, eid);
+			        ps.setInt(11, bid);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Invoice inserted successfully!");
+			            a.showAndWait();
+			            aiv.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			DeleteInvoice div=new DeleteInvoice();
+			div.getClear().setOnAction(e -> {
+			    div.getSearchT().clear();
+			    div.getIdT().clear();
+			    div.getDateT().clear();
+			    div.getTimeT().clear();
+			    div.getSubT().clear();
+			    div.getDisT().clear();
+			    div.getTaxT().clear();
+			    div.getTotalT().clear();
+			    div.getPayT().clear();
+			    div.getCidT().clear();
+			    div.getEidT().clear();
+			    div.getBidT().clear();
+			    div.getDelete().setDisable(true);
+			});
+
+			div.getSearchB().setOnAction(e -> {
+
+			    String idT = div.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setContentText("Please enter Invoice ID.");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(idT); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Invoice ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            select invoiceid, invoicedate, invoicetime, subtotal, discount, tax,
+			                   totalamount, paymentstatus, customerid, empid, branchid
+			            from invoice
+			            where invoiceid = ?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            div.getIdT().setText(rs.getInt("invoiceid") + "");
+			            div.getDateT().setText(rs.getDate("invoicedate") + "");
+			            div.getTimeT().setText(rs.getTime("invoicetime") + "");
+			            div.getSubT().setText(rs.getDouble("subtotal") + "");
+			            div.getDisT().setText(rs.getDouble("discount") + "");
+			            div.getTaxT().setText(rs.getDouble("tax") + "");
+			            div.getTotalT().setText(rs.getDouble("totalamount") + "");
+			            div.getPayT().setText(rs.getString("paymentstatus"));
+			            div.getCidT().setText(rs.getInt("customerid") + "");
+			            div.getEidT().setText(rs.getInt("empid") + "");
+			            div.getBidT().setText(rs.getInt("branchid") + "");
+
+			            div.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No invoice with ID = " + id);
+			            a.showAndWait();
+			            div.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			div.getDelete().setOnAction(e -> {
+
+			    if (div.getIdT().getText().trim().isEmpty()) return;
+
+			    int id = Integer.parseInt(div.getIdT().getText().trim());
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm Delete");
+			    confirm.setHeaderText("Are you sure?");
+			    confirm.setContentText("Delete Invoice ID: " + id);
+
+			    if (confirm.showAndWait().get() != ButtonType.OK) return;
+
+			    String sql = "delete from invoice where invoiceid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Invoice deleted successfully!");
+			            a.showAndWait();
+			            div.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			UpdateInvoice uiv=new UpdateInvoice();
+			uiv.getClear().setOnAction(e -> {
+			    uiv.getSearchT().clear();
+			    uiv.getIdT().clear();
+			    uiv.getDateT().clear();
+			    uiv.getTimeT().clear();
+			    uiv.getSubT().clear();
+			    uiv.getDisT().clear();
+			    uiv.getTaxT().clear();
+			    uiv.getTotalT().clear();
+			    uiv.getPayT().clear();
+			    uiv.getCidT().clear();
+			    uiv.getEidT().clear();
+			    uiv.getBidT().clear();
+			    uiv.getEdit().setDisable(true);
+			});
+
+			uiv.getSearchB().setOnAction(e -> {
+
+			    String idT = uiv.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setContentText("Please enter Invoice ID.");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(idT); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Invoice ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            select invoiceid, invoicedate, invoicetime, subtotal, discount, tax,
+			                   totalamount, paymentstatus, customerid, empid, branchid
+			            from invoice
+			            where invoiceid = ?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            uiv.getIdT().setText(rs.getInt("invoiceid") + "");
+			            uiv.getDateT().setText(rs.getDate("invoicedate") + "");
+			            uiv.getTimeT().setText(rs.getTime("invoicetime") + "");
+			            uiv.getSubT().setText(rs.getDouble("subtotal") + "");
+			            uiv.getDisT().setText(rs.getDouble("discount") + "");
+			            uiv.getTaxT().setText(rs.getDouble("tax") + "");
+			            uiv.getTotalT().setText(rs.getDouble("totalamount") + "");
+			            uiv.getPayT().setText(rs.getString("paymentstatus"));
+			            uiv.getCidT().setText(rs.getInt("customerid") + "");
+			            uiv.getEidT().setText(rs.getInt("empid") + "");
+			            uiv.getBidT().setText(rs.getInt("branchid") + "");
+
+			            uiv.getEdit().setDisable(false);
+
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No invoice with ID = " + id);
+			            a.showAndWait();
+			            uiv.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			uiv.getEdit().setOnAction(e -> {
+
+			    if (uiv.getIdT().getText().trim().isEmpty()) return;
+
+			    int id, cid, eid, bid;
+			    double sub, dis, tax, total;
+			    java.sql.Date date;
+			    java.sql.Time time;
+			    String pay;
+
+			    try {
+			        id = Integer.parseInt(uiv.getIdT().getText().trim());
+			        cid = Integer.parseInt(uiv.getCidT().getText().trim());
+			        eid = Integer.parseInt(uiv.getEidT().getText().trim());
+			        bid = Integer.parseInt(uiv.getBidT().getText().trim());
+
+			        sub = Double.parseDouble(uiv.getSubT().getText().trim());
+			        dis = Double.parseDouble(uiv.getDisT().getText().trim());
+			        tax = Double.parseDouble(uiv.getTaxT().getText().trim());
+			        total = Double.parseDouble(uiv.getTotalT().getText().trim());
+
+			        date = java.sql.Date.valueOf(uiv.getDateT().getText().trim());
+			        time = java.sql.Time.valueOf(uiv.getTimeT().getText().trim());
+
+			        pay = uiv.getPayT().getText().trim();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid input");
+			        a.setContentText("Check all values and formats!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            update invoice
+			            set invoicedate=?, invoicetime=?, subtotal=?, discount=?, tax=?, totalamount=?,
+			                paymentstatus=?, customerid=?, empid=?, branchid=?
+			            where invoiceid=?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setDate(1, date);
+			        ps.setTime(2, time);
+			        ps.setDouble(3, sub);
+			        ps.setDouble(4, dis);
+			        ps.setDouble(5, tax);
+			        ps.setDouble(6, total);
+			        ps.setString(7, pay);
+			        ps.setInt(8, cid);
+			        ps.setInt(9, eid);
+			        ps.setInt(10, bid);
+			        ps.setInt(11, id);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Invoice updated successfully!");
+			            a.showAndWait();
+			            uiv.getEdit().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			InvoiceTableView it=new InvoiceTableView();
+	
+			it.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+			    if (newV != null) {
+			        it.getDeleteB().setDisable(false);
+			        it.getUpdateB().setDisable(false);
+			    } else {
+			        it.getDeleteB().setDisable(true);
+			        it.getUpdateB().setDisable(true);
+			    }
+			});
+
+			it.getRef().setOnAction(e -> {
+			    it.getSearchT().clear();
+			    it.getTable().setItems(loadAllInvoices());
+			    it.getTable().getSelectionModel().clearSelection();
+			});
+			it.getSearchB().setOnAction(e -> {
+
+			    String idT = it.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        it.getTable().setItems(loadAllInvoices());
+
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("All invoices");
+			        a.setContentText("All invoices loaded");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Invoice ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ObservableList<Invoice> result = searchInvoiceById(id);
+
+			    if (result.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Not found");
+			        a.setContentText("No invoice with this ID");
+			        a.showAndWait();
+			        it.getTable().setItems(FXCollections.observableArrayList());
+			        return;
+			    }
+
+			    it.getTable().setItems(result);
+			});
+			it.getDeleteB().setOnAction(e -> {
+
+			    Invoice selected = it.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select an invoice first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm delete");
+			    confirm.setContentText("Delete this invoice?");
+			    confirm.showAndWait();
+
+			    if (confirm.getResult() != ButtonType.OK) return;
+
+			    String sql = "delete from invoice where invoiceid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, selected.getInvoiceID());
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Deleted");
+			            a.setContentText("Invoice deleted successfully!");
+			            a.showAndWait();
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not found");
+			            a.setContentText("Invoice not found");
+			            a.showAndWait();
+			        }
+
+			        it.getTable().setItems(loadAllInvoices());
+			        it.getTable().getSelectionModel().clearSelection();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+	
 			InvoiceBranchTableView ibt = new InvoiceBranchTableView();
 			SalesTransactionTableView stt = new SalesTransactionTableView();
 			InvoiceQ15TableView q15 = new InvoiceQ15TableView();
@@ -1915,7 +3073,53 @@ public class Main extends Application {
 			Scene aivscene = new Scene(aiv.getAll(),400,400);
 			Scene divscene = new Scene(div.getAll(),400,400);
 			Scene uivscene = new Scene(uiv.getAll(),400,400);
+			it.getUpdateB().setOnAction(e -> {
+
+			    Invoice selected = it.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select an invoice first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    uiv.getIdT().setText(selected.getInvoiceID() + "");
+
+			    if(selected.getInvoiceDate() == null) {
+			    	uiv.getDateT().setText("");
+			    } else {
+			    	selected.getInvoiceDate().toString();
+			    }
+			    if(selected.getInvoiceTime() == null) {
+			    	uiv.getTimeT().setText("");
+			    }else {
+			    	selected.getInvoiceTime().toString();
+			    }
+
+			    uiv.getSubT().setText(selected.getSubtotal() + "");
+			    uiv.getDisT().setText(selected.getDiscount() + "");
+			    uiv.getTaxT().setText(selected.getTax() + "");
+			    uiv.getTotalT().setText(selected.getTotalAmount() + "");
+
+			    uiv.getPayT().setText(selected.getPaymentStatus());
+
+			    uiv.getCidT().setText(selected.getCustomerID() + "");
+			    uiv.getEidT().setText(selected.getEmpID() + "");
+			    uiv.getBidT().setText(selected.getBranchID() + "");
+
+			    uiv.getEdit().setDisable(false);
+
+			    primaryStage.setScene(uivscene);
+			});
+
 			Scene itscene = new Scene(it.getAll(),400,400);
+
+			mb.getIt().setOnAction(e -> {
+			    it.getTable().setItems(loadAllInvoices());
+			    primaryStage.setScene(itscene);
+			});
 
 			mb.getAiv().setOnAction(e->{
 				primaryStage.setScene(aivscene);
@@ -1930,17 +3134,7 @@ public class Main extends Application {
 				primaryStage.setScene(itscene);
 			});
 
-			mb.getQ15().setOnAction(e ->{
-				 primaryStage.setScene(ibtscene);
-			});
-			mb.getQ17().setOnAction(e -> {
-				primaryStage.setScene(sttscene);
-			});
-			mb.getQ18().setOnAction(e -> primaryStage.setScene(itscene));
-			mb.getQ19().setOnAction(e -> primaryStage.setScene(itscene));
-			mb.getQ20().setOnAction(e -> primaryStage.setScene(itscene));
-			mb.getQ32().setOnAction(e -> primaryStage.setScene(itscene));
-			mb.getQ33().setOnAction(e -> primaryStage.setScene(itscene));
+			
 			
 			AddInvoiceItem aivi=new AddInvoiceItem();
 			DeleteInvoiceItem divi=new DeleteInvoiceItem();
@@ -2011,25 +3205,510 @@ public class Main extends Application {
 				primaryStage.setScene(mtscene);
 			});
 
-			mb.getQ4().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ9().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ10().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ11().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ12().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ13().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ14().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ16().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ24().setOnAction(e -> primaryStage.setScene(mtscene));
-			mb.getQ25().setOnAction(e -> primaryStage.setScene(mtscene));
 			
-			AddPayment apay=new AddPayment();
-			DeletePayment dpay=new DeletePayment();
-			UpdatePayment upay=new UpdatePayment();
-			PaymentTableView payt=new PaymentTableView();
+			AddPayment apay = new AddPayment();
+
+			apay.getClear().setOnAction(e -> {
+			    apay.getIdT().clear();
+			    apay.getDateT().setText(null);  
+			    apay.getTypeT().clear();
+			    apay.getAmountT().clear();
+			    apay.getRefT().clear();
+			    apay.getInvT().clear();
+			    apay.getPolT().clear();
+			});
+
+			apay.getAdd().setOnAction(e -> {
+
+			    if (apay.getIdT().getText().trim().isEmpty()
+			            || apay.getDateT().getText() == null
+			            || apay.getTypeT().getText().trim().isEmpty()
+			            || apay.getAmountT().getText().trim().isEmpty()
+			            || apay.getInvT().getText().trim().isEmpty()) {
+
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setHeaderText(null);
+			        a.setContentText("Please fill all required fields ❌");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int pid, invoiceId;
+			    double amount;
+			    java.sql.Date date;
+			    String type, ref;
+			    Integer policyId = null;
+
+			    try {
+			        pid = Integer.parseInt(apay.getIdT().getText().trim());
+			        invoiceId = Integer.parseInt(apay.getInvT().getText().trim());
+			        amount = Double.parseDouble(apay.getAmountT().getText().trim());
+
+			        date = java.sql.Date.valueOf(apay.getDateT().getText());
+			        type = apay.getTypeT().getText().trim();
+			        ref = apay.getRefT().getText().trim();
+
+			        if (!apay.getPolT().getText().trim().isEmpty()) {
+			            policyId = Integer.parseInt(apay.getPolT().getText().trim());
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setHeaderText(null);
+			        a.setContentText("Check IDs/Amount inputs ❌");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            insert into payment (paymentid, paymentdate, paymenttype, amount, referencenumber, invoiceid, policyid)
+			            values (?, ?, ?, ?, ?, ?, ?)
+			            """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, pid);
+			        ps.setDate(2, date);
+			        ps.setString(3, type);
+			        ps.setDouble(4, amount);
+
+			        if (ref.isEmpty()) ps.setNull(5, java.sql.Types.VARCHAR);
+			        else ps.setString(5, ref);
+
+			        ps.setInt(6, invoiceId);
+
+			        if (policyId == null) ps.setNull(7, java.sql.Types.INTEGER);
+			        else ps.setInt(7, policyId);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setHeaderText(null);
+			            a.setContentText("Payment added successfully");
+			            a.showAndWait();
+			            apay.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setHeaderText(null);
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			DeletePayment dpay = new DeletePayment();
+
+			dpay.getClear().setOnAction(e -> {
+			    dpay.getSearchT().clear();
+			    dpay.getIdT().clear();
+			    dpay.getDateT().clear();
+			    dpay.getTypeT().clear();
+			    dpay.getAmountT().clear();
+			    dpay.getRefT().clear();
+			    dpay.getInvT().clear();
+			    dpay.getPolT().clear();
+			    dpay.getDelete().setDisable(true);
+			});
+
+			dpay.getSearchB().setOnAction(e -> {
+
+			    if (dpay.getSearchT().getText().trim().isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setHeaderText(null);
+			        a.setContentText("Please enter Payment ID.");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(dpay.getSearchT().getText().trim());
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setHeaderText(null);
+			        a.setContentText("Payment ID must be integer ❌");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = "select * from payment where paymentid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dpay.getIdT().setText(rs.getInt("paymentid") + "");
+			            dpay.getDateT().setText(rs.getDate("paymentdate") + "");
+			            dpay.getTypeT().setText(rs.getString("paymenttype"));
+			            dpay.getAmountT().setText(rs.getDouble("amount") + "");
+			            dpay.getRefT().setText(rs.getString("referencenumber"));
+			            dpay.getInvT().setText(rs.getInt("invoiceid") + "");
+
+			            int pol = rs.getInt("policyid");
+			            if (rs.wasNull()) dpay.getPolT().setText("");
+			            else dpay.getPolT().setText(pol + "");
+
+			            dpay.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setHeaderText(null);
+			            a.setContentText("No payment with ID = " + id);
+			            a.showAndWait();
+			            dpay.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			dpay.getDelete().setOnAction(e -> {
+
+			    if (dpay.getIdT().getText().trim().isEmpty()) return;
+
+			    int id = Integer.parseInt(dpay.getIdT().getText().trim());
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm Delete");
+			    confirm.setHeaderText("Are you sure?");
+			    confirm.setContentText("Delete Payment ID: " + id);
+
+			    if (confirm.showAndWait().get() != ButtonType.OK) return;
+
+			    String sql = "delete from payment where paymentid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setHeaderText(null);
+			            a.setContentText("Payment deleted successfully");
+			            a.showAndWait();
+			            dpay.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete Failed");
+			        a.setHeaderText(null);
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			UpdatePayment upay = new UpdatePayment();
+
+			upay.getClear().setOnAction(e -> {
+			    upay.getSearchT().clear();
+			    upay.getIdT().clear();
+			    upay.getDateT().setText(null);
+			    upay.getTypeT().clear();
+			    upay.getAmountT().clear();
+			    upay.getRefT().clear();
+			    upay.getInvT().clear();
+			    upay.getPolT().clear();
+			    upay.getEdit().setDisable(true);
+			});
+
+			upay.getSearchB().setOnAction(e -> {
+
+			    if (upay.getSearchT().getText().trim().isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setHeaderText(null);
+			        a.setContentText("Please enter Payment ID.");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(upay.getSearchT().getText().trim()); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setHeaderText(null);
+			        a.setContentText("Payment ID must be integer ❌");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = "select * from payment where paymentid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            upay.getIdT().setText(rs.getInt("paymentid") + "");
+			            java.sql.Date d = rs.getDate("paymentdate");
+			            if (d != null) {
+			            	upay.getDateT().setText(d.toLocalDate()+"");
+			            }
+
+			            upay.getTypeT().setText(rs.getString("paymenttype"));
+			            upay.getAmountT().setText(rs.getDouble("amount") + "");
+			            upay.getRefT().setText(rs.getString("referencenumber"));
+			            upay.getInvT().setText(rs.getInt("invoiceid") + "");
+
+			            int pol = rs.getInt("policyid");
+			            if (rs.wasNull()) upay.getPolT().setText("");
+			            else upay.getPolT().setText(pol + "");
+
+			            upay.getEdit().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setHeaderText(null);
+			            a.setContentText("No payment with ID = " + id);
+			            a.showAndWait();
+			            upay.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setHeaderText(null);
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			upay.getEdit().setOnAction(e -> {
+
+			    if (upay.getIdT().getText().trim().isEmpty()) {
+			    	return;
+			    }
+
+			    int pid, invoiceId;
+			    double amount;
+			    java.sql.Date date;
+			    String type, ref;
+			    Integer policyId = null;
+
+			    try {
+			        pid = Integer.parseInt(upay.getIdT().getText().trim());
+			        invoiceId = Integer.parseInt(upay.getInvT().getText().trim());
+			        amount = Double.parseDouble(upay.getAmountT().getText().trim());
+
+			        date = java.sql.Date.valueOf(upay.getDateT().getText());
+			        type = upay.getTypeT().getText().trim();
+			        ref = upay.getRefT().getText().trim();
+
+			        if (!upay.getPolT().getText().trim().isEmpty())
+			            policyId = Integer.parseInt(upay.getPolT().getText().trim());
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid input");
+			        a.setHeaderText(null);
+			        a.setContentText("Check values again");
+			        a.showAndWait();
+			        return;
+			    }
+			    String sql = """
+			            update payment
+			            set paymentdate=?, paymenttype=?, amount=?, referencenumber=?, invoiceid=?, policyid=?
+			            where paymentid=?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setDate(1, date);
+			        ps.setString(2, type);
+			        ps.setDouble(3, amount);
+
+			        if (ref.isEmpty()) ps.setNull(4, java.sql.Types.VARCHAR);
+			        else ps.setString(4, ref);
+
+			        ps.setInt(5, invoiceId);
+
+			        if (policyId == null) ps.setNull(6, java.sql.Types.INTEGER);
+			        else ps.setInt(6, policyId);
+
+			        ps.setInt(7, pid);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setHeaderText(null);
+			            a.setContentText("Payment updated successfully");
+			            a.showAndWait();
+			            upay.getEdit().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setHeaderText(null);
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			PaymentTableView payt = new PaymentTableView();
+			Scene upayscene = new Scene(upay.getAll(),400,400);
+
+			payt.getRef().setOnAction(e -> {
+			    payt.getSearchT().clear();
+			    payt.getTable().setItems(loadAllPayments());
+			    payt.getTable().getSelectionModel().clearSelection();
+			});
+
+			payt.getSearchB().setOnAction(e -> {
+
+			    String idT = payt.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        payt.getTable().setItems(loadAllPayments());
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("All Payments");
+			        a.setContentText("All payments loaded");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(idT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Payment ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ObservableList<Payment> result = searchPaymentById(id);
+
+			    if (result.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Not found");
+			        a.setContentText("No payment with this ID");
+			        a.showAndWait();
+			        payt.getTable().setItems(FXCollections.observableArrayList());
+			        return;
+			    }
+
+			    payt.getTable().setItems(result);
+			});
+
+			payt.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+			    if (newV != null) {
+			        payt.getDeleteB().setDisable(false);
+			        payt.getUpdateB().setDisable(false);
+			    } else {
+			        payt.getDeleteB().setDisable(true);
+			        payt.getUpdateB().setDisable(true);
+			    }
+			});
+
+			payt.getDeleteB().setOnAction(e -> {
+
+			    Payment selected = payt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a payment first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm delete");
+			    confirm.setContentText("Delete this payment?");
+			    confirm.showAndWait();
+
+			    if (confirm.getResult() != ButtonType.OK) return;
+
+			    String sql = "delete from payment where paymentid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, selected.getPaymentID());
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Deleted");
+			            a.setContentText("Payment deleted successfully!");
+			            a.showAndWait();
+			        }
+
+			        payt.getTable().setItems(loadAllPayments());
+			        payt.getTable().getSelectionModel().clearSelection();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			payt.getUpdateB().setOnAction(e -> {
+
+			    Payment selected = payt.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a payment first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    upay.getIdT().setText(selected.getPaymentID() + "");
+			    if (selected.getPaymentDate() != null) {
+			        upay.getDateT().setText(selected.getPaymentDate()+"");
+			    }
+			    upay.getTypeT().setText(selected.getPaymentType());
+			    upay.getAmountT().setText(selected.getAmount() + "");
+			    upay.getRefT().setText(selected.getReferenceNumber());
+			    upay.getInvT().setText(selected.getInvoiceID() + "");
+			    if(String.valueOf(selected.getPolicyID()+"").isEmpty()) {
+			    	upay.getPolT().setText("");
+			    }else {
+			    	upay.getPolT().setText(selected.getPolicyID() + "");
+			    } 
+
+			    upay.getEdit().setDisable(false);
+
+			    primaryStage.setScene(upayscene);
+			});
 
 			Scene apayscene = new Scene(apay.getAll(),400,400);
 			Scene dpayscene = new Scene(dpay.getAll(),400,400);
-			Scene upayscene = new Scene(upay.getAll(),400,400);
 			Scene paytscene = new Scene(payt.getAll(),400,400);
 
 			mb.getApay().setOnAction(e->{
@@ -2045,32 +3724,455 @@ public class Main extends Application {
 				primaryStage.setScene(paytscene);
 			});
 			
-			AddPerMed apermed=new AddPerMed();
-			DeletePerMed dpermed=new DeletePerMed();
-			UpdatePerMed upermed=new UpdatePerMed();
-
-			Scene apermedscene = new Scene(apermed.getAll(),400,400);
-			Scene dpermedscene = new Scene(dpermed.getAll(),400,400);
-			Scene upermedscene = new Scene(upermed.getAll(),400,400);
-
-			mb.getAperMed().setOnAction(e->{
-				primaryStage.setScene(apermedscene);
-			});
-			mb.getDperMed().setOnAction(e->{
-				primaryStage.setScene(dpermedscene);
-			});
-			mb.getUperMed().setOnAction(e->{
-				primaryStage.setScene(upermedscene);
-			});
 			
 			AddPre aper=new AddPre();
+			aper.getClear().setOnAction(e -> {
+			    aper.getIdT().clear();
+			    aper.getDateT().setText(null);
+			    aper.getNotesT().clear();
+			    aper.getDocT().clear();
+			    aper.getInvT().clear();
+			});
+
+			aper.getAdd().setOnAction(e -> {
+
+			    String idT = aper.getIdT().getText().trim();
+			    String notes = aper.getNotesT().getText().trim();
+			    String docT = aper.getDocT().getText().trim();
+			    String invT = aper.getInvT().getText().trim();
+
+			    if (idT.isEmpty() || aper.getDateT().getText() == null || docT.isEmpty() || invT.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all required fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id, docID, invID;
+			    try {
+			        id = Integer.parseInt(idT);
+			        docID = Integer.parseInt(docT);
+			        invID = Integer.parseInt(invT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("IDs must be integers");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    java.sql.Date issueDate = java.sql.Date.valueOf(aper.getDateT().getText());
+			    String sql = """
+			            insert into prescription (prescriptionid, issuedate, notes, doctorid, invoiceid)
+			            values (?, ?, ?, ?, ?)
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ps.setDate(2, issueDate);
+			        ps.setString(3, notes.isEmpty() ? null : notes);
+			        ps.setInt(4, docID);
+			        ps.setInt(5, invID);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Prescription inserted successfully!");
+			            a.showAndWait();
+
+			            aper.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			DeletePre dper=new DeletePre();
+			dper.getClear().setOnAction(e -> {
+			    dper.getSearchT().clear();
+			    dper.getIdT().clear();
+			    dper.getDateT().clear();
+			    dper.getNotesT().clear();
+			    dper.getDocT().clear();
+			    dper.getInvT().clear();
+			    dper.getDelete().setDisable(true);
+			});
+
+			dper.getSearchB().setOnAction(e -> {
+
+			    String searchT = dper.getSearchT().getText().trim();
+			    if (searchT.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setContentText("Please enter Prescription ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try {
+			        id = Integer.parseInt(searchT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Prescription ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            select prescriptionid, issuedate, notes, doctorid, invoiceid
+			            from prescription
+			            where prescriptionid = ?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dper.getIdT().setText(rs.getInt("prescriptionid") + "");
+			            dper.getDateT().setText(rs.getDate("issuedate") + "");
+			            dper.getNotesT().setText(rs.getString("notes"));
+			            dper.getDocT().setText(rs.getInt("doctorid") + "");
+			            dper.getInvT().setText(rs.getInt("invoiceid") + "");
+
+			            dper.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No Prescription with ID = " + id);
+			            a.showAndWait();
+			            dper.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			dper.getDelete().setOnAction(e -> {
+
+			    if (dper.getIdT().getText().trim().isEmpty()) {
+			    	return;
+			    }
+
+			    int id = Integer.parseInt(dper.getIdT().getText().trim());
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm Delete");
+			    confirm.setHeaderText("Are you sure?");
+			    confirm.setContentText("Delete Prescription ID: " + id);
+
+			    if (confirm.showAndWait().get() != ButtonType.OK) return;
+
+			    String sql = "delete from prescription where prescriptionid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+
+			        int rows = ps.executeUpdate();
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Prescription deleted successfully!");
+			            a.showAndWait();
+
+			            dper.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			UpdatePre uper=new UpdatePre();
+			uper.getClear().setOnAction(e -> {
+			    uper.getSearchT().clear();
+			    uper.getIdT().clear();
+			    uper.getDateT().setText(null);
+			    uper.getNotesT().clear();
+			    uper.getDocT().clear();
+			    uper.getInvT().clear();
+			    uper.getEdit().setDisable(true);
+			});
+
+			uper.getSearchB().setOnAction(e -> {
+
+			    String searchT = uper.getSearchT().getText().trim();
+			    if (searchT.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setContentText("Enter Prescription ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(searchT); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Prescription ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+			    String sql = """
+			            select prescriptionid, issuedate, notes, doctorid, invoiceid
+			            from prescription
+			            where prescriptionid = ?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            uper.getIdT().setText(rs.getInt("prescriptionid") + "");
+
+			            java.sql.Date d = rs.getDate("issuedate");
+			            if (d != null) {
+			            	uper.getDateT().setText(d.toLocalDate()+"");
+			            }
+
+			            uper.getNotesT().setText(rs.getString("notes"));
+			            uper.getDocT().setText(rs.getInt("doctorid") + "");
+			            uper.getInvT().setText(rs.getInt("invoiceid") + "");
+
+			            uper.getEdit().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No Prescription with ID = " + id);
+			            a.showAndWait();
+			            uper.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			uper.getEdit().setOnAction(e -> {
+
+			    if (uper.getIdT().getText().trim().isEmpty()) {
+			    	return;
+			    }
+
+			    int id, docID, invID;
+			    try {
+			        id = Integer.parseInt(uper.getIdT().getText().trim());
+			        docID = Integer.parseInt(uper.getDocT().getText().trim());
+			        invID = Integer.parseInt(uper.getInvT().getText().trim());
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("IDs must be integers");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    if (uper.getDateT().getText() == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Date");
+			        a.setContentText("Issue Date is required");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    java.sql.Date issueDate = java.sql.Date.valueOf(uper.getDateT().getText());
+			    String notes = uper.getNotesT().getText().trim();
+
+			    String sql = """
+			            update prescription
+			            set issuedate=?, notes=?, doctorid=?, invoiceid=?
+			            where prescriptionid=?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setDate(1, issueDate);
+			        ps.setString(2, notes.isEmpty() ? null : notes);
+			        ps.setInt(3, docID);
+			        ps.setInt(4, invID);
+			        ps.setInt(5, id);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Prescription updated successfully!");
+			            a.showAndWait();
+
+			            uper.getEdit().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
 			PrescriptionTableView pert=new PrescriptionTableView();
+			Scene uperscene = new Scene(uper.getAll(),400,400);
+
+			pert.getRef().setOnAction(e -> {
+			    pert.getSearchT().clear();
+			    pert.getTable().setItems(loadAllPrescriptions());
+			    pert.getTable().getSelectionModel().clearSelection();
+			});
+
+			pert.getSearchB().setOnAction(e -> {
+			    String idT = pert.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        pert.getTable().setItems(loadAllPrescriptions());
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("All Prescriptions");
+			        a.setContentText("All prescriptions loaded");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(idT); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Prescription ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ObservableList<Prescription> result = searchPrescriptionById(id);
+
+			    if (result.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Not found");
+			        a.setContentText("No prescription with this ID");
+			        a.showAndWait();
+			        pert.getTable().setItems(FXCollections.observableArrayList());
+			        return;
+			    }
+
+			    pert.getTable().setItems(result);
+			});
+
+			pert.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+			    if (newV != null) {
+			        pert.getDeleteB().setDisable(false);
+			        pert.getUpdateB().setDisable(false);
+			    } else {
+			        pert.getDeleteB().setDisable(true);
+			        pert.getUpdateB().setDisable(true);
+			    }
+			});
+
+			pert.getDeleteB().setOnAction(e -> {
+			    Prescription selected = pert.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a prescription first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm delete");
+			    confirm.setContentText("Delete this prescription?");
+			    confirm.showAndWait();
+
+			    if (confirm.getResult() != ButtonType.OK) return;
+
+			    String sql = "delete from prescription where prescriptionid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, selected.getPrescriptionID());
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Deleted");
+			            a.setContentText("Prescription deleted successfully!");
+			            a.showAndWait();
+			        }
+
+			        pert.getTable().setItems(loadAllPrescriptions());
+			        pert.getTable().getSelectionModel().clearSelection();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			pert.getUpdateB().setOnAction(e -> {
+			    Prescription selected = pert.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a prescription first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    uper.getIdT().setText(selected.getPrescriptionID() + "");
+			    if (selected.getIssueDate() != null)
+			        uper.getDateT().setText(selected.getIssueDate()+"");
+
+			    uper.getNotesT().setText(selected.getNotes());
+			    uper.getDocT().setText(selected.getDoctorID() + "");
+			    uper.getInvT().setText(selected.getInvoiceID() + "");
+
+			    uper.getEdit().setDisable(false);
+			    primaryStage.setScene(uperscene);
+			});
 
 			Scene aperscene = new Scene(aper.getAll(),400,400);
 			Scene dperscene = new Scene(dper.getAll(),400,400);
-			Scene uperscene = new Scene(uper.getAll(),400,400);
 			Scene pertscene = new Scene(pert.getAll(),400,400);
 
 			mb.getAper().setOnAction(e->{
@@ -2086,15 +4188,488 @@ public class Main extends Application {
 				primaryStage.setScene(pertscene);
 			});
 			
-			AddPurchase apur=new AddPurchase();
-			DeletePurchase dpur=new DeletePurchase();
-			UpdatePurchase upur=new UpdatePurchase();
-			PurchaseTableView purt=new PurchaseTableView();
+			AddPurchase apu = new AddPurchase();
 
-			Scene apurscene = new Scene(apur.getAll(),400,400);
-			Scene dpurscene = new Scene(dpur.getAll(),400,400);
-			Scene upurscene = new Scene(upur.getAll(),400,400);
-			Scene purtscene = new Scene(purt.getAll(),400,400);
+			apu.getClear().setOnAction(e -> {
+			    apu.getIdT().clear();
+			    apu.getDateT().setText(null);
+			    apu.getCostT().clear();
+			    apu.getPayT().clear();
+			    apu.getSidT().clear();
+			    apu.getBidT().clear();
+			});
+
+			apu.getAdd().setOnAction(e -> {
+
+			    String idT = apu.getIdT().getText().trim();
+			    String dateT = apu.getDateT().getText();
+			    String costT = apu.getCostT().getText().trim();
+			    String payT = apu.getPayT().getText().trim();
+			    String supT = apu.getSidT().getText().trim();
+			    String branchT = apu.getBidT().getText().trim();
+
+			    if (idT.isEmpty() || dateT == null || dateT.trim().isEmpty() || costT.isEmpty()
+			            || payT.isEmpty() || supT.isEmpty() || branchT.isEmpty()) {
+
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all required fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id, supID, branchID;
+			    double cost;
+
+			    try {
+			        id = Integer.parseInt(idT);
+			        supID = Integer.parseInt(supT);
+			        branchID = Integer.parseInt(branchT);
+			        cost = Double.parseDouble(costT);
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("IDs must be integers and Total Cost must be numeric");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    java.sql.Date purchaseDate;
+			    try {
+			        purchaseDate = java.sql.Date.valueOf(dateT.trim());
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Date");
+			        a.setContentText("Date must be like YYYY-MM-DD");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            insert into purchase (purchaseid, purchasedate, totalcost, paymentstatus, supplierid, branchid)
+			            values (?, ?, ?, ?, ?, ?)
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ps.setDate(2, purchaseDate);
+			        ps.setDouble(3, cost);
+			        ps.setString(4, payT);
+			        ps.setInt(5, supID);
+			        ps.setInt(6, branchID);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Purchase inserted successfully!");
+			            a.showAndWait();
+
+			            apu.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			DeletePurchase dpu = new DeletePurchase();
+
+			dpu.getClear().setOnAction(e -> {
+			    dpu.getSearchT().clear();
+			    dpu.getIdT().clear();
+			    dpu.getDateT().clear();
+			    dpu.getCostT().clear();
+			    dpu.getPayT().clear();
+			    dpu.getSidT().clear();
+			    dpu.getBidT().clear();
+			    dpu.getDelete().setDisable(true);
+			});
+
+			dpu.getSearchB().setOnAction(e -> {
+
+			    String searchT = dpu.getSearchT().getText().trim();
+
+			    if (searchT.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setContentText("Please enter Purchase ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(searchT); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Purchase ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            select purchaseid, purchasedate, totalcost, paymentstatus, supplierid, branchid
+			            from purchase
+			            where purchaseid = ?
+			            """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dpu.getIdT().setText(rs.getInt("purchaseid") + "");
+			            dpu.getDateT().setText(rs.getDate("purchasedate") + "");
+			            dpu.getCostT().setText(rs.getDouble("totalcost") + "");
+			            dpu.getPayT().setText(rs.getString("paymentstatus"));
+			            dpu.getSidT().setText(rs.getInt("supplierid") + "");
+			            dpu.getBidT().setText(rs.getInt("branchid") + "");
+
+			            dpu.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No Purchase with ID = " + id);
+			            a.showAndWait();
+			            dpu.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			dpu.getDelete().setOnAction(e -> {
+
+			    if (dpu.getIdT().getText().trim().isEmpty()) return;
+
+			    int id = Integer.parseInt(dpu.getIdT().getText().trim());
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm Delete");
+			    confirm.setHeaderText("Are you sure?");
+			    confirm.setContentText("Delete Purchase ID: " + id);
+
+			    if (confirm.showAndWait().get() != ButtonType.OK) return;
+
+			    String sql = "delete from purchase where purchaseid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Purchase deleted successfully!");
+			            a.showAndWait();
+
+			            dpu.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			UpdatePurchase upu = new UpdatePurchase();
+
+			upu.getClear().setOnAction(e -> {
+			    upu.getSearchT().clear();
+			    upu.getIdT().clear();
+			    upu.getDateT().setText(null);
+			    upu.getCostT().clear();
+			    upu.getPayT().clear();
+			    upu.getSidT().clear();
+			    upu.getBidT().clear();
+			    upu.getEdit().setDisable(true);
+			});
+
+			upu.getSearchB().setOnAction(e -> {
+
+			    String searchT = upu.getSearchT().getText().trim();
+			    if (searchT.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing ID");
+			        a.setContentText("Enter Purchase ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(searchT); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Purchase ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            select purchaseid, purchasedate, totalcost, paymentstatus, supplierid, branchid
+			            from purchase
+			            where purchaseid = ?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, id);
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            upu.getIdT().setText(rs.getInt("purchaseid") + "");
+
+			            java.sql.Date d = rs.getDate("purchasedate");
+			            if (d != null)
+			                upu.getDateT().setText(d.toLocalDate() + "");
+
+			            upu.getCostT().setText(rs.getDouble("totalcost") + "");
+			            upu.getPayT().setText(rs.getString("paymentstatus"));
+			            upu.getSidT().setText(rs.getInt("supplierid") + "");
+			            upu.getBidT().setText(rs.getInt("branchid") + "");
+
+			            upu.getEdit().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No Purchase with ID = " + id);
+			            a.showAndWait();
+			            upu.getEdit().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			upu.getEdit().setOnAction(e -> {
+
+			    if (upu.getIdT().getText().trim().isEmpty()) return;
+
+			    int id, supID, branchID;
+			    double cost;
+
+			    try {
+			        id = Integer.parseInt(upu.getIdT().getText().trim());
+			        supID = Integer.parseInt(upu.getSidT().getText().trim());
+			        branchID = Integer.parseInt(upu.getBidT().getText().trim());
+			        cost = Double.parseDouble(upu.getCostT().getText().trim());
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("IDs must be integers and Total Cost must be numeric");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    if (upu.getDateT().getText() == null || upu.getDateT().getText().trim().isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Date");
+			        a.setContentText("Purchase Date is required");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    java.sql.Date purchaseDate;
+			    try {
+			        purchaseDate = java.sql.Date.valueOf(upu.getDateT().getText().trim());
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Date");
+			        a.setContentText("Date must be like YYYY-MM-DD");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String pay = upu.getPayT().getText().trim();
+
+			    String sql = """
+			            update purchase
+			            set purchasedate=?, totalcost=?, paymentstatus=?, supplierid=?, branchid=?
+			            where purchaseid=?
+			            """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setDate(1, purchaseDate);
+			        ps.setDouble(2, cost);
+			        ps.setString(3, pay);
+			        ps.setInt(4, supID);
+			        ps.setInt(5, branchID);
+			        ps.setInt(6, id);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Purchase updated successfully!");
+			            a.showAndWait();
+
+			            upu.getEdit().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			PurchaseTableView put = new PurchaseTableView();
+			Scene upuscene = new Scene(upu.getAll(),400,400);
+
+			put.getRefreshB().setOnAction(e -> {
+			    put.getSearchT().clear();
+			    put.getTable().setItems(loadAllPurchases());
+			    put.getTable().getSelectionModel().clearSelection();
+			});
+
+			put.getSearchB().setOnAction(e -> {
+			    String idT = put.getSearchT().getText().trim();
+
+			    if (idT.isEmpty()) {
+			        put.getTable().setItems(loadAllPurchases());
+			        Alert a = new Alert(Alert.AlertType.INFORMATION);
+			        a.setTitle("All Purchases");
+			        a.setContentText("All purchases loaded");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int id;
+			    try { id = Integer.parseInt(idT); }
+			    catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("Purchase ID must be integer");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    ObservableList<Purchase> result = searchPurchaseById(id);
+
+			    if (result.isEmpty()) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Not found");
+			        a.setContentText("No purchase with this ID");
+			        a.showAndWait();
+			        put.getTable().setItems(FXCollections.observableArrayList());
+			        return;
+			    }
+
+			    put.getTable().setItems(result);
+			});
+
+			put.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+			    if (newV != null) {
+			        put.getDeleteB().setDisable(false);
+			        put.getUpdateB().setDisable(false);
+			    } else {
+			        put.getDeleteB().setDisable(true);
+			        put.getUpdateB().setDisable(true);
+			    }
+			});
+
+			put.getDeleteB().setOnAction(e -> {
+			    Purchase selected = put.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a purchase first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm delete");
+			    confirm.setContentText("Delete this purchase?");
+			    confirm.showAndWait();
+
+			    if (confirm.getResult() != ButtonType.OK) return;
+
+			    String sql = "delete from purchase where purchaseid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, selected.getPurchaseID());
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Deleted");
+			            a.setContentText("Purchase deleted successfully!");
+			            a.showAndWait();
+			        }
+
+			        put.getTable().setItems(loadAllPurchases());
+			        put.getTable().getSelectionModel().clearSelection();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+
+			put.getUpdateB().setOnAction(e -> {
+			    Purchase selected = put.getTable().getSelectionModel().getSelectedItem();
+
+			    if (selected == null) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("No selection");
+			        a.setContentText("Select a purchase first!");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    upu.getIdT().setText(selected.getPurchaseID() + "");
+			    if (selected.getPurchaseDate() != null)
+			        upu.getDateT().setText(selected.getPurchaseDate() + "");
+
+			    upu.getCostT().setText(selected.getTotalCost() + "");
+			    upu.getPayT().setText(selected.getPaymentStatus());
+			    upu.getSidT().setText(selected.getSupplierID() + "");
+			    upu.getBidT().setText(selected.getBranchID() + "");
+
+			    upu.getEdit().setDisable(false);
+			    primaryStage.setScene(upuscene);
+			});
+
+			Scene apurscene = new Scene(apu.getAll(),400,400);
+			Scene dpurscene = new Scene(dpu.getAll(),400,400);
+			Scene purtscene = new Scene(put.getAll(),400,400);
 
 			mb.getApur().setOnAction(e->{
 				primaryStage.setScene(apurscene);
@@ -2103,7 +4678,7 @@ public class Main extends Application {
 				primaryStage.setScene(dpurscene);
 			});
 			mb.getUpur().setOnAction(e->{
-				primaryStage.setScene(upurscene);
+				primaryStage.setScene(upuscene);
 			});
 			mb.getPurt().setOnAction(e->{
 				primaryStage.setScene(purtscene);
@@ -2131,10 +4706,6 @@ public class Main extends Application {
 			mb.getSt().setOnAction(e->{
 				primaryStage.setScene(stscene);
 			});
-
-			mb.getQ21().setOnAction(e -> primaryStage.setScene(stscene));
-			mb.getQ22().setOnAction(e -> primaryStage.setScene(stscene));
-			mb.getQ23().setOnAction(e -> primaryStage.setScene(stscene));
 
 			AddInventoryItem ain=new AddInventoryItem();
 			DeleteInventoryItem din=new DeleteInventoryItem();
@@ -2195,6 +4766,258 @@ public class Main extends Application {
 			    login.getPassT().setText(null);
 			    login.getUserT().setText(null);
 			});
+			AddPrescriptionMedicine apermed = new AddPrescriptionMedicine();
+
+			apermed.getClear().setOnAction(e -> {
+			    apermed.getPidT().clear();
+			    apermed.getMidT().clear();
+			    apermed.getDosT().clear();
+			});
+
+			apermed.getAdd().setOnAction(e -> {
+
+			    if (apermed.getPidT().getText().trim().isEmpty()
+			            || apermed.getMidT().getText().trim().isEmpty()
+			            || apermed.getDosT().getText().trim().isEmpty()) {
+
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing Data");
+			        a.setContentText("Please fill all fields");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int preID, medID;
+			    String dosage;
+
+			    try {
+			        preID = Integer.parseInt(apermed.getPidT().getText().trim());
+			        medID = Integer.parseInt(apermed.getMidT().getText().trim());
+			        dosage = apermed.getDosT().getText().trim();
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid Input");
+			        a.setContentText("IDs must be integers");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            insert into prescription_medicine (prescriptionid, medicineid, dosage)
+			            values (?, ?, ?)
+			            """;
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, preID);
+			        ps.setInt(2, medID);
+			        ps.setString(3, dosage);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Inserted successfully!");
+			            a.showAndWait();
+			            apermed.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Insert Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			DeletePrescriptionMedicine dpermed = new DeletePrescriptionMedicine();
+
+			dpermed.getClear().setOnAction(e -> {
+			    dpermed.getSpidT().clear();
+			    dpermed.getSmidT().clear();
+
+			    dpermed.getPidT().clear();
+			    dpermed.getMidT().clear();
+			    dpermed.getDosT().clear();
+
+			    dpermed.getDelete().setDisable(true);
+			});
+
+			dpermed.getSearchB().setOnAction(e -> {
+
+			    if (dpermed.getSpidT().getText().trim().isEmpty()
+			            || dpermed.getSmidT().getText().trim().isEmpty()) {
+
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Missing IDs");
+			        a.setContentText("Enter Prescription ID and Medicine ID");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    int preID, medID;
+			    try {
+			        preID = Integer.parseInt(dpermed.getSpidT().getText().trim());
+			        medID = Integer.parseInt(dpermed.getSmidT().getText().trim());
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid");
+			        a.setContentText("IDs must be integers");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            select prescriptionid, medicineid, dosage
+			            from prescription_medicine
+			            where prescriptionid = ? and medicineid = ?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, preID);
+			        ps.setInt(2, medID);
+
+			        ResultSet rs = ps.executeQuery();
+
+			        if (rs.next()) {
+			            dpermed.getPidT().setText(rs.getInt("prescriptionid") + "");
+			            dpermed.getMidT().setText(rs.getInt("medicineid") + "");
+			            dpermed.getDosT().setText(rs.getString("dosage"));
+
+			            dpermed.getDelete().setDisable(false);
+			        } else {
+			            Alert a = new Alert(Alert.AlertType.ERROR);
+			            a.setTitle("Not Found");
+			            a.setContentText("No record found!");
+			            a.showAndWait();
+			            dpermed.getDelete().setDisable(true);
+			        }
+
+			        rs.close();
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Error");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			dpermed.getDelete().setOnAction(e -> {
+
+			    if (dpermed.getPidT().getText().trim().isEmpty()
+			            || dpermed.getMidT().getText().trim().isEmpty())
+			        return;
+
+			    int preID = Integer.parseInt(dpermed.getPidT().getText().trim());
+			    int medID = Integer.parseInt(dpermed.getMidT().getText().trim());
+
+			    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+			    confirm.setTitle("Confirm Delete");
+			    confirm.setHeaderText("Are you sure?");
+			    confirm.setContentText("Delete Prescription Medicine?");
+			    if (confirm.showAndWait().get() != ButtonType.OK) return;
+
+			    String sql = "delete from prescription_medicine where prescriptionid = ? and medicineid = ?";
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setInt(1, preID);
+			        ps.setInt(2, medID);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Deleted successfully!");
+			            a.showAndWait();
+			            dpermed.getClear().fire();
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Delete Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			UpdatePrescriptionMedicine upermed = new UpdatePrescriptionMedicine();
+
+			upermed.getEdit().setOnAction(e -> {
+
+			    if (upermed.getPidT().getText().trim().isEmpty()
+			            || upermed.getMidT().getText().trim().isEmpty())
+			        return;
+
+			    int preID, medID;
+			    String dosage;
+
+			    try {
+			        preID = Integer.parseInt(upermed.getPidT().getText().trim());
+			        medID = Integer.parseInt(upermed.getMidT().getText().trim());
+			        dosage = upermed.getDosT().getText().trim();
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Invalid input");
+			        a.setContentText("Check values again");
+			        a.showAndWait();
+			        return;
+			    }
+
+			    String sql = """
+			            update prescription_medicine
+			            set dosage=?
+			            where prescriptionid=? and medicineid=?
+			            """;
+
+
+			    try (Connection con = DatabaseConnection.getConnection();
+			         PreparedStatement ps = con.prepareStatement(sql)) {
+
+			        ps.setString(1, dosage);
+			        ps.setInt(2, preID);
+			        ps.setInt(3, medID);
+
+			        int rows = ps.executeUpdate();
+
+			        if (rows > 0) {
+			            Alert a = new Alert(Alert.AlertType.INFORMATION);
+			            a.setTitle("Done");
+			            a.setContentText("Updated successfully!");
+			            a.showAndWait();
+			            upermed.getEdit().setDisable(true);
+			        }
+
+			    } catch (Exception ex) {
+			        Alert a = new Alert(Alert.AlertType.ERROR);
+			        a.setTitle("Update Failed");
+			        a.setContentText(ex.getMessage());
+			        a.showAndWait();
+			    }
+			});
+			PrescriptionMedicineTableView premedt=new PrescriptionMedicineTableView();
+			
+			premedt.getRefresh().setOnAction(e -> {
+			    premedt.getTable().setItems(loadPreMed());
+			    premedt.getTable().getSelectionModel().clearSelection();
+			});
+			
+			premedt.getBack().setOnAction(e->{
+				primaryStage.setScene(mainScene);
+			});
+		
+			Scene apermedscene = new Scene(apermed.getAll(),400,400);
+			Scene dpermedscene = new Scene(dpermed.getAll(),400,400);
+			Scene upermedscene = new Scene(upermed.getAll(),400,400);
+
+			mb.getAperMed().setOnAction(e-> primaryStage.setScene(apermedscene));
+			mb.getDperMed().setOnAction(e-> primaryStage.setScene(dpermedscene));
+			mb.getUperMed().setOnAction(e-> primaryStage.setScene(upermedscene));
 
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
@@ -2342,13 +5165,13 @@ public class Main extends Application {
 				primaryStage.setScene(mainScene);
 			});
 			
-			apur.getBack().setOnAction(e->{
+			apu.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
-			dpur.getBack().setOnAction(e->{
+			dpu.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
-			upur.getBack().setOnAction(e->{
+			upu.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
 			
@@ -2400,7 +5223,7 @@ public class Main extends Application {
 			pert.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
-			purt.getBack().setOnAction(e->{
+			put.getBack().setOnAction(e->{
 				primaryStage.setScene(mainScene);
 			});
 			intt.getBack().setOnAction(e->{
@@ -2470,9 +5293,10 @@ public class Main extends Application {
 	    ObservableList<Employee> list = FXCollections.observableArrayList();
 
 	    String sql = """
-	        SELECT EmpID, FullName, Qualification, PhoneNumber, Salary, BranchID
-	        FROM Employee
-	    """;
+	            select empid, fullname, qualification, phonenumber, salary, branchid
+	            from employee
+	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql);
@@ -2500,10 +5324,11 @@ public class Main extends Application {
 	    ObservableList<Employee> list = FXCollections.observableArrayList();
 
 	    String sql = """
-	        SELECT EmpID, FullName, Qualification, PhoneNumber, Salary, BranchID
-	        FROM Employee
-	        WHERE EmpID = ?
-	    """;
+	            select empid, fullname, qualification, phonenumber, salary, branchid
+	            from employee
+	            where empid = ?
+	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -2533,10 +5358,11 @@ public class Main extends Application {
 	    ObservableList<EmployeeBranch> list = FXCollections.observableArrayList();
 
 	    String sql = """
-	            SELECT e.FullName, e.Qualification, e.Salary, b.BranchName
-	            FROM Employee e
-	            JOIN Branch b ON e.BranchID = b.BranchID
+	            select e.fullname, e.qualification, e.salary, b.branchname
+	            from employee e
+	            join branch b on e.branchid = b.branchid
 	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql);
@@ -2560,11 +5386,12 @@ public class Main extends Application {
 	    ObservableList<EmployeeBranch> list = FXCollections.observableArrayList();
 
 	    String sql = """
-	            SELECT e.FullName, e.Qualification, e.Salary, b.BranchName
-	            FROM Employee e
-	            JOIN Branch b ON e.BranchID = b.BranchID
-	            WHERE b.BranchID = ?
+	            select e.fullname, e.qualification, e.salary, b.branchname
+	            from employee e
+	            join branch b on e.branchid = b.branchid
+	            where b.branchid = ?
 	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -2591,9 +5418,10 @@ public class Main extends Application {
 	    ObservableList<Branch> list = FXCollections.observableArrayList();
 
 	    String sql = """
-	            SELECT BranchID, BranchName, Address, PhoneNumber, Email
-	            FROM Branch
+	            select branchid, branchname, address, phonenumber, email
+	            from branch
 	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql);
@@ -2617,12 +5445,12 @@ public class Main extends Application {
 
 	private ObservableList<Branch> searchBranchById(int id) {
 	    ObservableList<Branch> list = FXCollections.observableArrayList();
-
 	    String sql = """
-	            SELECT BranchID, BranchName, Address, PhoneNumber, Email
-	            FROM Branch
-	            WHERE BranchID = ?
+	            select branchid, branchname, address, phonenumber, email
+	            from branch
+	            where branchid = ?
 	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -2655,9 +5483,10 @@ public class Main extends Application {
 	    ObservableList<Category> list = FXCollections.observableArrayList();
 
 	    String sql = """
-	        SELECT CategoryID, CategoryName, Description
-	        FROM Category
-	    """;
+	            select categoryid, categoryname, description
+	            from category
+	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql);
@@ -2682,10 +5511,11 @@ public class Main extends Application {
 	    ObservableList<Category> list = FXCollections.observableArrayList();
 
 	    String sql = """
-	        SELECT CategoryID, CategoryName, Description
-	        FROM Category
-	        WHERE CategoryID = ?
-	    """;
+	            select categoryid, categoryname, description
+	            from category
+	            where categoryid = ?
+	            """;
+
 
 	    try (Connection con = DatabaseConnection.getConnection();
 	         PreparedStatement ps = con.prepareStatement(sql)) {
@@ -2708,5 +5538,377 @@ public class Main extends Application {
 
 	    return list;
 	}
+	private ObservableList<Invoice> loadAllInvoices() {
+	    ObservableList<Invoice> list = FXCollections.observableArrayList();
 
+	    String sql = """
+	            select invoiceid, invoicedate, invoicetime, subtotal, discount, tax,
+	                   totalamount, paymentstatus, customerid, empid, branchid
+	            from invoice
+	            """;
+
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            Invoice inv = new Invoice(
+	                    rs.getInt("invoiceid"),
+	                    rs.getDate("invoicedate") == null ? null : rs.getDate("invoicedate").toLocalDate(),
+	                    rs.getTime("invoicetime") == null ? null : rs.getTime("invoicetime").toLocalTime(),
+	                    rs.getDouble("subtotal"),
+	                    rs.getDouble("discount"),
+	                    rs.getDouble("tax"),
+	                    rs.getDouble("totalamount"),
+	                    rs.getString("paymentstatus"),
+	                    rs.getInt("customerid"),
+	                    rs.getInt("empid"),
+	                    rs.getInt("branchid")
+	            );
+	            list.add(inv);
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+	private ObservableList<Invoice> searchInvoiceById(int id) {
+
+	    ObservableList<Invoice> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	            select invoiceid, invoicedate, invoicetime, subtotal, discount, tax,
+	                   totalamount, paymentstatus, customerid, empid, branchid
+	            from invoice
+	            where invoiceid = ?
+	            """;
+
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, id);
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            Invoice inv = new Invoice(
+	                    rs.getInt("invoiceid"),
+	                    rs.getDate("invoicedate") == null ? null : rs.getDate("invoicedate").toLocalDate(),
+	                    rs.getTime("invoicetime") == null ? null : rs.getTime("invoicetime").toLocalTime(),
+	                    rs.getDouble("subtotal"),
+	                    rs.getDouble("discount"),
+	                    rs.getDouble("tax"),
+	                    rs.getDouble("totalamount"),
+	                    rs.getString("paymentstatus"),
+	                    rs.getInt("customerid"),
+	                    rs.getInt("empid"),
+	                    rs.getInt("branchid")
+	            );
+	            list.add(inv);
+	        }
+
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+	private ObservableList<Payment> loadAllPayments() {
+	    ObservableList<Payment> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	            select paymentid, paymentdate, paymenttype, amount, referencenumber, invoiceid, policyid
+	            from payment
+	            """;
+
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+
+	            Integer pol = rs.getInt("policyid");
+	            if (rs.wasNull()) pol = null;
+
+	            Payment p = new Payment(
+	                    rs.getInt("paymentid"),
+	                    rs.getDate("paymentdate") == null ? null : rs.getDate("paymentdate").toLocalDate(),
+	                    rs.getString("paymenttype"),
+	                    rs.getDouble("amount"),
+	                    rs.getString("referencenumber"),
+	                    rs.getInt("invoiceid"),
+	                    pol
+	            );
+
+	            list.add(p);
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+
+	private ObservableList<Payment> searchPaymentById(int id) {
+	    ObservableList<Payment> list = FXCollections.observableArrayList();
+
+	    String sql = """
+	            select paymentid, paymentdate, paymenttype, amount, referencenumber, invoiceid, policyid
+	            from payment
+	            where paymentid = ?
+	            """;
+
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, id);
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+
+	            Integer pol = rs.getInt("policyid");
+	            if (rs.wasNull()) pol = null;
+
+	            Payment p = new Payment(
+	                    rs.getInt("paymentid"),
+	                    rs.getDate("paymentdate") == null ? null : rs.getDate("paymentdate").toLocalDate(),
+	                    rs.getString("paymenttype"),
+	                    rs.getDouble("amount"),
+	                    rs.getString("referencenumber"),
+	                    rs.getInt("invoiceid"),
+	                    pol
+	            );
+
+	            list.add(p);
+	        }
+
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+	private ObservableList<Prescription> loadAllPrescriptions() {
+	    ObservableList<Prescription> list = FXCollections.observableArrayList();
+	    String sql = """
+	            select prescriptionid, issuedate, notes, doctorid, invoiceid
+	            from prescription
+	            """;
+
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            Prescription p = new Prescription(
+	                rs.getInt("prescriptionid"),
+	                rs.getDate("issuedate") == null ? null : rs.getDate("issuedate").toLocalDate(),
+	                rs.getString("notes"),
+	                rs.getInt("doctorid"),
+	                rs.getInt("invoiceid")
+	            );
+	            list.add(p);
+	        }
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+	    return list;
+	}
+
+	private ObservableList<Prescription> searchPrescriptionById(int id) {
+	    ObservableList<Prescription> list = FXCollections.observableArrayList();
+	    String sql = """
+	            select prescriptionid, issuedate, notes, doctorid, invoiceid
+	            from prescription
+	            where prescriptionid = ?
+	            """;
+
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, id);
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            Prescription p = new Prescription(
+	                rs.getInt("prescriptionid"),
+	                rs.getDate("issuedate") == null ? null : rs.getDate("issuedate").toLocalDate(),
+	                rs.getString("notes"),
+	                rs.getInt("doctorid"),
+	                rs.getInt("invoiceid")
+	            );
+	            list.add(p);
+	        }
+
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }
+
+	    return list;
+	}
+	private ObservableList<PrescriptionMedicineRow> loadPreMed() {
+	    ObservableList<PrescriptionMedicineRow> list = FXCollections.observableArrayList();
+
+	    String sql = "select * from prescription_medicine";
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            list.add(new PrescriptionMedicineRow(
+	                    rs.getInt("prescriptionid"),
+	                    rs.getInt("medicineid"),
+	                    rs.getString("dosage")
+	            ));
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
+	}
+	private ObservableList<Purchase> loadAllPurchases() {
+
+	    ObservableList<Purchase> list = FXCollections.observableArrayList();
+	    String sql = """
+	            select purchaseid, purchasedate, totalcost, paymentstatus, supplierid, branchid
+	            from purchase
+	            order by purchaseid
+	            """;
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+
+	            int id = rs.getInt("purchaseid");
+
+	            java.sql.Date d = rs.getDate("purchasedate");
+	            LocalDate date = (d != null) ? d.toLocalDate() : null;
+
+	            double cost = rs.getDouble("totalcost");
+	            String status = rs.getString("paymentstatus");
+
+	            int supplierID = rs.getInt("supplierid");
+	            int branchID = rs.getInt("branchid");
+
+	            Purchase p = new Purchase(id, date, cost, status, supplierID, branchID);
+
+	            list.add(p);
+	        }
+
+	    } catch (Exception ex) {
+	        Alert a = new Alert(Alert.AlertType.ERROR);
+	        a.setTitle("Load Failed");
+	        a.setContentText(ex.getMessage());
+	        a.showAndWait();
+	    }
+
+	    return list;
+	}
+	private ObservableList<Purchase> searchPurchaseById(int id) {
+
+	    ObservableList<Purchase> list = FXCollections.observableArrayList();
+	    String sql = """
+	            select purchaseid, purchasedate, totalcost, paymentstatus, supplierid, branchid
+	            from purchase
+	            where purchaseid = ?
+	            """;
+
+
+	    try (Connection con = DatabaseConnection.getConnection();
+	         PreparedStatement ps = con.prepareStatement(sql)) {
+
+	        ps.setInt(1, id);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+
+	            int pid = rs.getInt("purchaseid");
+
+	            java.sql.Date d = rs.getDate("purchasedate");
+	            LocalDate date; 
+	            if(d != null) {
+	            	date= d.toLocalDate(); }
+	            else {
+	            		date=null;
+	            }
+
+	            double cost = rs.getDouble("totalcost");
+	            String status = rs.getString("paymentstatus");
+
+	            int supplierID = rs.getInt("supplierid");
+	            int branchID = rs.getInt("branchid");
+
+	            Purchase p = new Purchase(pid, date, cost, status, supplierID, branchID);
+
+	            list.add(p);
+	        }
+
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        Alert a = new Alert(Alert.AlertType.ERROR);
+	        a.setTitle("Search Failed");
+	        a.setContentText(ex.getMessage());
+	        a.showAndWait();
+	    }
+
+	    return list;
+	}
+	 public static ObservableList<Customer> loadCustomers() {
+
+	        ObservableList<Customer> list = FXCollections.observableArrayList();
+
+	        String sql = """
+	                select customerid, fullname, phonenumber, email, address, dateofbirth, gender
+	                from customer
+	                order by customerid
+	                """;
+
+	        try (Connection con = DatabaseConnection.getConnection();
+	             PreparedStatement ps = con.prepareStatement(sql);
+	             ResultSet rs = ps.executeQuery()) {
+
+	            while (rs.next()) {
+
+	                int id = rs.getInt("customerid");
+	                String name = rs.getString("fullname");
+	                String phone = rs.getString("phonenumber");
+	                String email = rs.getString("email");
+	                String address = rs.getString("address");
+
+	                java.sql.Date dob = rs.getDate("dateofbirth");
+	                LocalDate dobL = (dob == null) ? null : dob.toLocalDate();
+
+	                String gender = rs.getString("gender");
+
+	                list.add(new Customer(id, name, phone, email, address, dobL, gender));
+	            }
+
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
+
+	        return list;
+	    }
 }

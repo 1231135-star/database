@@ -1,0 +1,4 @@
+1;Antibiotics;Medicines used to treat bacterial infections
+2;Painkillers;Pain relief and anti-inflammatory medicines
+3;Vitamins;Dietary supplements and vitamins
+4;Dermatology;Skin treatment products

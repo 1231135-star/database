@@ -1,9 +1,7 @@
 package application;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -42,7 +40,15 @@ public class DeleteCustomer {
     private TextField addT = new TextField();
     private HBox addH = new HBox();
 
-    private Image deleteM = new Image("icons8-remove-employee-100.png"); 
+    private Label dobL = new Label("Date Of Birth :");
+    private DatePicker dobP = new DatePicker();
+    private HBox dobH = new HBox();
+
+    private Label genderL = new Label("Gender :");
+    private ComboBox<String> genderC = new ComboBox<>();
+    private HBox genderH = new HBox();
+
+    private Image deleteM = new Image("icons8-remove-employee-100.png");
     private ImageView deleteVM = new ImageView(deleteM);
     private Button delete = new Button("Delete", deleteVM);
 
@@ -59,9 +65,12 @@ public class DeleteCustomer {
 
     public DeleteCustomer() {
 
+        genderC.getItems().addAll("Male", "Female");
+
         searchL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
         searchL.setFont(Font.font(null, FontWeight.BOLD, 20));
-        searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        searchB.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;"
+                + "-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
         searchVM.setFitWidth(42);
         searchVM.setFitHeight(42);
 
@@ -70,46 +79,55 @@ public class DeleteCustomer {
         searchH.setAlignment(Pos.CENTER);
 
         cidH.getChildren().addAll(cidL, cidT);
-        cidT.setEditable(false);
-        cidL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        cidH.setSpacing(10);
         cidH.setAlignment(Pos.CENTER);
-        cidH.setSpacing(20);
-
+        
         nameH.getChildren().addAll(nameL, nameT);
-        nameT.setEditable(false);
-        nameL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        nameH.setSpacing(10);
         nameH.setAlignment(Pos.CENTER);
-        nameH.setSpacing(20);
-
+        
         pnH.getChildren().addAll(pnL, pnT);
-        pnT.setEditable(false);
-        pnL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        pnH.setSpacing(10);
         pnH.setAlignment(Pos.CENTER);
-        pnH.setSpacing(20);
-
+        
         eH.getChildren().addAll(eL, eT);
-        eT.setEditable(false);
-        eL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        eH.setSpacing(10);
         eH.setAlignment(Pos.CENTER);
-        eH.setSpacing(20);
-
+        
         addH.getChildren().addAll(addL, addT);
-        addT.setEditable(false);
-        addL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        addH.setSpacing(10);
         addH.setAlignment(Pos.CENTER);
-        addH.setSpacing(20);
+
+        dobH.getChildren().addAll(dobL, dobP);
+        dobL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        dobH.setAlignment(Pos.CENTER);
+        dobH.setSpacing(20);
+
+        genderH.getChildren().addAll(genderL, genderC);
+        genderL.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:20px;");
+        genderH.setAlignment(Pos.CENTER);
+        genderH.setSpacing(20);
+
+        cidT.setEditable(false);
+        nameT.setEditable(false);
+        pnT.setEditable(false);
+        eT.setEditable(false);
+        addT.setEditable(false);
+        dobP.setDisable(true);
+        genderC.setDisable(true);
 
         buttons.getChildren().addAll(delete, back, clear);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(20);
 
-        clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-        back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
-        delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        delete.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        back.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+        clear.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;fx-font-weight: bold;-fx-font-size:20px;-fx-background-radius: 25;-fx-border-radius: 25;");
+
 
         delete.setDisable(true);
 
-        all.getChildren().addAll(dCust, searchH, cidH, nameH, pnH, eH, addH, buttons);
+        all.getChildren().addAll(dCust, searchH, cidH, nameH, pnH, eH, addH, dobH, genderH, buttons);
         dCust.setStyle("-fx-text-fill: #0c343d; -fx-font-weight: bold;-fx-font-size:30px;");
 
         all.setAlignment(Pos.CENTER);
@@ -293,6 +311,54 @@ public class DeleteCustomer {
 		this.addH = addH;
 	}
 
+	public Label getDobL() {
+		return dobL;
+	}
+
+	public void setDobL(Label dobL) {
+		this.dobL = dobL;
+	}
+
+	public DatePicker getDobP() {
+		return dobP;
+	}
+
+	public void setDobP(DatePicker dobP) {
+		this.dobP = dobP;
+	}
+
+	public HBox getDobH() {
+		return dobH;
+	}
+
+	public void setDobH(HBox dobH) {
+		this.dobH = dobH;
+	}
+
+	public Label getGenderL() {
+		return genderL;
+	}
+
+	public void setGenderL(Label genderL) {
+		this.genderL = genderL;
+	}
+
+	public ComboBox<String> getGenderC() {
+		return genderC;
+	}
+
+	public void setGenderC(ComboBox<String> genderC) {
+		this.genderC = genderC;
+	}
+
+	public HBox getGenderH() {
+		return genderH;
+	}
+
+	public void setGenderH(HBox genderH) {
+		this.genderH = genderH;
+	}
+
 	public Image getDeleteM() {
 		return deleteM;
 	}
@@ -381,5 +447,4 @@ public class DeleteCustomer {
 		this.all = all;
 	}
 
- 
 }
