@@ -3935,8 +3935,6 @@ public class Main extends Application {
 				primaryStage.setScene(mtscene);
 			});
 
-<<<<<<< HEAD
-=======
 			mb.getQ4().setOnAction(e -> primaryStage.setScene(medsScene));
 			mb.getQ9().setOnAction(e -> primaryStage.setScene(medsDetailsScene));
 			mb.getQ10().setOnAction(e -> primaryStage.setScene(medsExpiryScene));
@@ -3947,7 +3945,7 @@ public class Main extends Application {
 			mb.getQ16().setOnAction(e -> primaryStage.setScene(medsSalesScene ));
 			mb.getQ24().setOnAction(e -> primaryStage.setScene(medsDamagedScene));
 			mb.getQ25().setOnAction(e -> primaryStage.setScene(medsLossesScene));
->>>>>>> 9cf8d1f78b1783cbad79699a9fcae2157130e413
+
 			
 			AddPayment apay = new AddPayment();
 
@@ -5690,13 +5688,11 @@ public class Main extends Application {
 				primaryStage.setScene(stscene);
 			});
 
-<<<<<<< HEAD
-=======
 			mb.getQ21().setOnAction(e -> primaryStage.setScene(suppliersSupplyScene));
 			mb.getQ22().setOnAction(e -> primaryStage.setScene(suppliersByPeriodScene));
 			mb.getQ23().setOnAction(e -> primaryStage.setScene(largestOrdersScene));
 
->>>>>>> 9cf8d1f78b1783cbad79699a9fcae2157130e413
+
 			AddInventoryItem ain=new AddInventoryItem();
 			DeleteInventoryItem din=new DeleteInventoryItem();
 			UpdateInventoryItem uin=new UpdateInventoryItem();

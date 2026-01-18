@@ -83,7 +83,7 @@ public class InsurancePolicy {
 	    }
 
 	    public LocalDate getIssueDate() {
-	        return getIssueDate();
+	        return issueDate;
 	    }
 	}
 
