@@ -81,6 +81,10 @@ public class InsurancePolicy {
 	    public void setInsuranceCompanyID(int insuranceCompanyID) {
 	        this.insuranceCompanyID = insuranceCompanyID;
 	    }
+
+	    public LocalDate getIssueDate() {
+	        return getIssueDate();
+	    }
 	}
 
 

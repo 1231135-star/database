@@ -78,6 +78,8 @@ public class MainPage {
 	private MenuItem divi = new MenuItem("delete invoice item");
 	private MenuItem uivi = new MenuItem("update invoice item");
 	private MenuItem iit = new MenuItem("Invoice Items");
+	MenuItem qInvoiceItems = new MenuItem(    "Retrieve all invoice items with invoice number and medicine details"
+		);
 
 	private Menu ip = new Menu("Inssurence Policy");
 	private MenuItem aip = new MenuItem("add inssurence policy");
@@ -132,7 +134,6 @@ public class MainPage {
 	private MenuItem dsup = new MenuItem("delete supplier ");
 	private MenuItem usup = new MenuItem("update supplier ");
 	private MenuItem st = new MenuItem("Suppliers");
-
 	private MenuItem q21 = new MenuItem("Retrieve supplier names, number of supplied medicines, and supply dates.");
 	private MenuItem q22 = new MenuItem("Retrieve suppliers who provided specific medicines within a given time period.");
 	private MenuItem q23 = new MenuItem("Retrieve suppliers who made the largest total orders during the last month.");
@@ -160,7 +161,7 @@ public class MainPage {
 	public MainPage() {
 
 		menuBar.getMenus().addAll(account, fileM, branch, cat, e, cus, doctor, ic, in, iv, ivi, ip, med, pay, per, perMed,
-				pur, sup, exitM);
+				pur, sup, exitM );
 
 		fileM.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 15;");
 		exitM.setStyle("-fx-background-color: #76a5af; -fx-text-fill: #0c343d;-fx-font-weight: bold;-fx-font-size:11px;-fx-background-radius: 25;-fx-border-radius: 25;");
